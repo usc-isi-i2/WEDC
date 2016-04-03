@@ -1,0 +1,12 @@
+*.jar
+*.pyc
+*.ml
+*.json
+*.output
+*.raw
+*.npy
+*.pkl
+test.*
+*.txt
+
+
