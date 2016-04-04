@@ -21,31 +21,34 @@ from wedc.domain.service.keyword_extraction.base import *
 class TestDataLoaderMethods(unittest.TestCase):
     def setUp(self):
         # load data
-        # filename = 'san-francisco-maria.json'
-        # path = os.path.join(TEST_DATA_DIR, filename)
-        # self.posts = load_by_path(path)
-        self.posts = ['ss', 'ss']
+        filename = 'san-francisco-maria.json'
+        path = os.path.join(TEST_DATA_DIR, filename)
+        self.posts = load_by_path(path)
 
         # load path
         directory_name = tempfile.mkdtemp()
         self.from_file = tempfile.NamedTemporaryFile(suffix='', 
                                    prefix='w2v_', 
-                                   dir=directory_name,
+                                   mode='a+',
+                                   delete=False,
+                                   dir=directory_name
                                    )
         self.to_file = tempfile.NamedTemporaryFile(suffix='', 
                                    prefix='w2v_', 
+                                   # delete=False,
                                    dir=directory_name,
                                    )
         
-        posts = [str(_) for _ in self.posts]
+        self.posts = [str(' '.join(post)) for post in self.posts]
         print self.posts[0:1]
-        self.from_file.writelines(posts)
-        # print self.from_file.read()
+        self.from_file.writelines(self.posts)
+        # self.from_file.writelines(['first\n', 'second\n'])
+        # self.from_file.seek(0)
+        # print 'read: '+self.from_file.read()
         print 'gettempdir():', tempfile.gettempdir()
         print self.from_file.name
 
 
-        
     def test_word2vec(self):
         # word2vec.word2phrase(self.from_file.name, self.to_file.name, verbose=True)
         # print 'gettempdir():', self.to_file.gettempdir()

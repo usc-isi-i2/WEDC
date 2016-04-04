@@ -48,7 +48,8 @@ def post_parser(path):
             post_body = source[ES_POST_BODY][ES_POST_TEXT]
 
             post = Post(post_url, post_title, post_body)
-            posts.append(post)
+            if post:
+                posts.append(post)
             # break   # test one doc this time
             # test += 1
             # if test == 10:

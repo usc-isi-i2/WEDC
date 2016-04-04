@@ -16,7 +16,7 @@ class TestDataLoaderMethods(unittest.TestCase):
     def test_data_loader(self):
         posts = load_by_path(self.path)
         self.assertIsNotNone(posts)
-        print posts[0]
+        print posts[2]
 
     def tearDown(self):
         pass

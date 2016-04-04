@@ -1,3 +1,4 @@
+tests/data/*
 *.jar
 *.pyc
 *.ml
