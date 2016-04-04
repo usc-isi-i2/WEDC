@@ -52,7 +52,7 @@ def post_parser(path):
                 posts.append(post)
             # break   # test one doc this time
             # test += 1
-            # if test == 10:
+            # if test == 2:
             #     break
 
         except Exception as e: 

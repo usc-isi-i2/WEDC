@@ -34,15 +34,13 @@ class TestDataLoaderMethods(unittest.TestCase):
                                    dir=directory_name
                                    )
         self.to_file = tempfile.NamedTemporaryFile(suffix='', 
-                                   prefix='w2v_', 
+                                   prefix ='w2v_', 
                                    # delete=False,
                                    dir=directory_name,
                                    )
-        
-        self.posts = [str(' '.join(post)) for post in self.posts]
-        print self.posts[0:1]
-        self.from_file.writelines(self.posts)
-        # self.from_file.writelines(['first\n', 'second\n'])
+
+        self.posts = [' '.join(post) for post in self.posts]
+        self.from_file.writelines("%s\n" % l for l in self.posts)
         # self.from_file.seek(0)
         # print 'read: '+self.from_file.read()
         print 'gettempdir():', tempfile.gettempdir()
