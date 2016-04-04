@@ -16,7 +16,12 @@ class TestDataLoaderMethods(unittest.TestCase):
     def test_data_loader(self):
         posts = load_by_path(self.path)
         self.assertIsNotNone(posts)
-        print posts[2]
+        # print posts[2]
+        for post in posts:
+            if type(post) is list:
+                print post
+                break
+
 
     def tearDown(self):
         pass

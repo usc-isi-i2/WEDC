@@ -11,7 +11,7 @@ ES_POST_TEXT = 'text'
 
 def load(path):
     posts = post_parser(path)
-    posts = [_.body for _ in posts]
+    # posts = [_.body for _ in posts]
     return posts
     # print posts
 
@@ -25,7 +25,8 @@ def post_parser(path):
     pn_file.close()
     hits = raw['hits']['hits']
     posts = []
-    # test = 0    # test
+    test = 0    # test
+    # post_id = 0
     for hit in hits:
         try:
             source = hit[ES_POST_SOURCE]
@@ -49,11 +50,12 @@ def post_parser(path):
 
             post = Post(post_url, post_title, post_body)
             if post:
-                posts.append(post)
+                posts.append(post.body + '\n')
+                # post_id+=1 # str(post_id) + ' ' + 
             # break   # test one doc this time
-            # test += 1
-            # if test == 2:
-            #     break
+            test += 1
+            if test == 50:
+                break
 
         except Exception as e: 
             print "ERROR: " + str(e)

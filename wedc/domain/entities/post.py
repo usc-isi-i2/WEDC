@@ -1,6 +1,9 @@
 
 from nltk.tokenize import sent_tokenize
 from wedc.domain.core.common import str_helper
+from nltk.tokenize import word_tokenize
+from wedc.domain.vendor.nltk import stopword
+from wedc.domain.vendor.nltk import stem
 
 import re
 import string
@@ -14,15 +17,52 @@ class Post(object):
     def __init__(self, url, title, body):
         self.url = url
         self.title = title
-        self.body = self.parse_body(body)
+        self.body = self.parse_body_word(body)
 
     def initialize(self):
         """ initialize main conent of doc
         """
         pass
 
+    def parse_body_word(self,body):
+        contents = []
+        if isinstance(body, basestring):
+            contents.append(body)
+        else:
+            contents = body
 
-    def parse_body(self, body):
+        sentences = []
+        for content in contents:
+            sentences.extend([self.sentence_operation(sentence) for sentence in sent_tokenize(content)])
+
+        stop = stopword.get_stopwords()
+        tokens = {}
+
+        sentences = ' '.join(sentences)
+        tokens = [str(stem.stemming(token.encode('ascii', 'ignore'))) for token in word_tokenize(sentences) if token not in stop and not str_helper.hasNumbers(token) and not str_helper.hasPunctuation(token)]
+        # tokens = word_tokenize(sentences)
+        ans = ' '.join(tokens).lower()
+        # ans = ans.encode('ascii', 'ignore')
+
+        # for sentence in sentences:
+        #     for word in word_tokenize(sentence.lower()):
+        #         if word not in stop and not str_helper.hasNumbers(word) and not str_helper.hasPunctuation(word):
+        #             word = stem.stemming(word)
+        #             tokens.setdefault(word, 0)
+        #             tokens[word] += 1
+
+        # wp = pos_tag(tokens.keys())
+        # words = [row[0] for row in wp]
+
+        # if not str_helper.hasHTMLTag(sentence)
+        # encode('utf-8').splitlines()
+        
+        # ans = ' '.join(tokens.keys())
+        # ans = ans.encode('ascii', 'ignore')
+        return ans
+
+
+    def parse_body_sentence(self, body):
         contents = []
         if isinstance(body, basestring):
             contents.append(body)
@@ -35,13 +75,12 @@ class Post(object):
 
         # if not str_helper.hasHTMLTag(sentence)
         # encode('utf-8').splitlines()
-        
-        return sentences
+        return ' '.join(sentences) + '\n'
 
     def sentence_operation(self, sentence):
         sentence = remove_tags(sentence)
         sentence = re.sub(r'[\t\n\r]', ' ', sentence)
-        sentence = ' '.join(sentence.encode('utf-8').splitlines())
+        # sentence = ' '.join(sentence.encode('utf-8').splitlines())
         return sentence
 
 
