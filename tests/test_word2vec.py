@@ -1,7 +1,8 @@
 """ Test word2vec
 
 Example:
-http://nbviewer.jupyter.org/github/danielfrg/word2vec/blob/master/examples/word2vec.ipynb#
+http://nbviewer.jupyter.org/github/danielfrg/word2vec/blob/master/examples/doc2vec.ipynb
+http://nbviewer.jupyter.org/github/danielfrg/word2vec/blob/master/examples/word2vec.ipynb
 
 """
 
@@ -37,8 +38,11 @@ class TestDataLoaderMethods(unittest.TestCase):
     # """ set up model
     def test_setup_model(self):
         # word2vec.word2phrase(input_, output_phrases, verbose=True)
-        word2vec.word2vec(input_, output_bin, size=300, binary=1, verbose=False)
-        word2vec.word2vec(input_, output_txt, size=10, binary=0, verbose=False)
+        
+        # word2vec.word2vec(input_, output_bin, size=300, binary=1, verbose=False)
+        word2vec.word2vec(input_, output_bin, cbow=0, size=300, window=10, negative=5, hs=0, threads=12, iter_=20, min_count=5, verbose=False)
+
+        # word2vec.word2vec(input_, output_txt, size=10, binary=0, verbose=False)
         # word2vec.word2clusters(input_, output_clusters, 10, verbose=True)
     # """
 
@@ -53,10 +57,11 @@ class TestDataLoaderMethods(unittest.TestCase):
         vocab = model.vocab
         vectors = model.vectors
         # print vectors
+        print model.vocab
 
         assert vectors.shape[0] == vocab.shape[0]
-        assert vectors.shape[0] > 3000
-        assert vectors.shape[1] == 10
+        # assert vectors.shape[0] > 3000
+        # assert vectors.shape[1] == 10
 
     """
     def test_load_txt(self):
@@ -64,11 +69,12 @@ class TestDataLoaderMethods(unittest.TestCase):
         vocab = model.vocab
         vectors = model.vectors
 
-        assert vectors.shape[0] == vocab.shape[0]
-        assert vectors.shape[0] > 3000
-        assert vectors.shape[1] == 10
-    """
+        print model.vocab
 
+        assert vectors.shape[0] == vocab.shape[0]
+        # assert vectors.shape[0] > 3000
+        # assert vectors.shape[1] == 10
+        
     def test_prediction(self):
         model = word2vec.load(output_bin)
         indexes, metrics = model.cosine('the')
@@ -78,8 +84,7 @@ class TestDataLoaderMethods(unittest.TestCase):
         py_response = model.generate_response(indexes, metrics).tolist()
         assert len(py_response) == 10
         assert len(py_response[0]) == 2
-
-    """
+    
     def test_analogy(self):
         model = word2vec.load(output_txt)
         indexes, metrics = model.analogy(pos=['the', 'the'], neg=['the'], n=20)
@@ -110,11 +115,12 @@ if __name__ == '__main__':
 
     def run_other_test():
         suite = unittest.TestSuite()
+        suite.addTest(TestDataLoaderMethods("test_setup_model"))
         suite.addTest(TestDataLoaderMethods("test_load_bin"))
         runner = unittest.TextTestRunner()
         runner.run(suite)
 
-    run_model_test()
+    run_other_test()
 
 
 
