@@ -40,10 +40,10 @@ class TestDataLoaderMethods(unittest.TestCase):
         # word2vec.word2phrase(input_, output_phrases, verbose=True)
         
         # word2vec.word2vec(input_, output_bin, size=300, binary=1, verbose=False)
-        # word2vec.word2vec(input_, output_bin, binary=1, cbow=0, size=300, window=10, negative=5, hs=0, threads=12, iter_=20, min_count=5, verbose=False)
+        word2vec.word2vec(input_, output_bin, binary=1, cbow=0, size=300, window=10, negative=5, hs=0, threads=12, iter_=20, min_count=5, verbose=False)
 
         # word2vec.word2vec(input_, output_txt, size=10, binary=0, verbose=False)
-        word2vec.word2vec(input_, output_txt, binary=0, cbow=0, size=300, window=10, negative=5, hs=0, threads=12, iter_=20, min_count=5, verbose=False)
+        # word2vec.word2vec(input_, output_txt, binary=0, cbow=0, size=300, window=10, negative=5, hs=0, threads=12, iter_=20, min_count=5, verbose=False)
         # word2vec.word2clusters(input_, output_clusters, 10, verbose=True)
     # """
 
@@ -97,8 +97,10 @@ class TestDataLoaderMethods(unittest.TestCase):
         assert len(py_response[0]) == 2
     """
 
-    def test_word2vec(self):
-        pass
+    def test_similarity(self):
+        model = word2vec.load(output_bin)
+        indexes, metrics = model.cosine('my')
+        print model.vocab[indexes]
         
         
         
@@ -116,12 +118,13 @@ if __name__ == '__main__':
 
     def run_other_test():
         suite = unittest.TestSuite()
-        suite.addTest(TestDataLoaderMethods("test_setup_model"))
-        suite.addTest(TestDataLoaderMethods("test_load_bin"))
+        # suite.addTest(TestDataLoaderMethods("test_setup_model"))
+        # suite.addTest(TestDataLoaderMethods("test_load_bin"))
+        suite.addTest(TestDataLoaderMethods("test_similarity"))
         runner = unittest.TextTestRunner()
         runner.run(suite)
 
-    run_model_test()
+    run_other_test()
 
 
 
