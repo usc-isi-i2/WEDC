@@ -40,9 +40,10 @@ class TestDataLoaderMethods(unittest.TestCase):
         # word2vec.word2phrase(input_, output_phrases, verbose=True)
         
         # word2vec.word2vec(input_, output_bin, size=300, binary=1, verbose=False)
-        word2vec.word2vec(input_, output_bin, cbow=0, size=300, window=10, negative=5, hs=0, threads=12, iter_=20, min_count=5, verbose=False)
+        # word2vec.word2vec(input_, output_bin, binary=1, cbow=0, size=300, window=10, negative=5, hs=0, threads=12, iter_=20, min_count=5, verbose=False)
 
         # word2vec.word2vec(input_, output_txt, size=10, binary=0, verbose=False)
+        word2vec.word2vec(input_, output_txt, binary=0, cbow=0, size=300, window=10, negative=5, hs=0, threads=12, iter_=20, min_count=5, verbose=False)
         # word2vec.word2clusters(input_, output_clusters, 10, verbose=True)
     # """
 
@@ -120,7 +121,7 @@ if __name__ == '__main__':
         runner = unittest.TextTestRunner()
         runner.run(suite)
 
-    run_other_test()
+    run_model_test()
 
 
 
