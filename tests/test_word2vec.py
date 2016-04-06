@@ -128,8 +128,6 @@ class TestDataLoaderMethods(unittest.TestCase):
         print 'word:similarity pairs\n', pairs
 
         
-        
-        
     def tearDown(self):
         pass
 
