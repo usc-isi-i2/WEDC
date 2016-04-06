@@ -20,19 +20,36 @@ class TestDataLoaderMethods(unittest.TestCase):
         print 'Total posts: ', len(posts)
         print 'Time cost:', (time.time() - start_time), 'seconds'
         self.assertIsNotNone(posts)
+        # print posts
         # Total posts:  49974
         # Time cost: 133.985596895 seconds
         
-
         # for post in posts:
         #     self.assertFalse(type(post) is list)
             # if type(post) is list:
             #     print post
             #     break
 
+    def test_json_data(self):
+        import json
+        pn_file = open(self.path, 'rU')
+        raw = json.load(pn_file)
+        pn_file.close()
+
+        post_id = 12
+        hits = raw['hits']['hits']
+        post = hits[post_id]['_source']['hasBodyPart']['text']
+        print post
 
     def tearDown(self):
         pass
 
 if __name__ == '__main__':
-    unittest.main()
+    # unittest.main()
+    def run_main_test():
+        suite = unittest.TestSuite()
+        suite.addTest(TestDataLoaderMethods("test_json_data"))
+        runner = unittest.TextTestRunner()
+        runner.run(suite)
+
+    run_main_test()

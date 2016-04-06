@@ -14,6 +14,8 @@ import unittest
 import word2vec
 
 
+
+
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 TEST_DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
 
@@ -25,6 +27,7 @@ output_txt = os.path.expanduser(os.path.join(TEST_DATA_DIR,'vectors.txt'))
 
 from wedc.domain.service.data.base import *
 from wedc.domain.service.keyword_extraction.base import *
+from wedc.domain.vendor.nltk import stem
 
 class TestDataLoaderMethods(unittest.TestCase):
     def setUp(self):
@@ -117,7 +120,7 @@ class TestDataLoaderMethods(unittest.TestCase):
         # Time cost: 4.86683392525 seconds
     
     def test_word_similiarity(self):
-        target_word = 'massag'
+        target_word = stem.stemming('job')
         model = word2vec.load(output_bin)
         indexes, metrics = model.cosine(target_word)
 
@@ -140,10 +143,10 @@ if __name__ == '__main__':
     def run_main_test():
         suite = unittest.TestSuite()
         # suite.addTest(TestDataLoaderMethods("test_setup_input"))
-        suite.addTest(TestDataLoaderMethods("test_setup_model"))
+        # suite.addTest(TestDataLoaderMethods("test_setup_model"))
         # suite.addTest(TestDataLoaderMethods("test_load_bin"))
         # suite.addTest(TestDataLoaderMethods("test_all_similarity"))
-        # suite.addTest(TestDataLoaderMethods("test_word_similiarity"))
+        suite.addTest(TestDataLoaderMethods("test_word_similiarity"))
         runner = unittest.TextTestRunner()
         runner.run(suite)
 

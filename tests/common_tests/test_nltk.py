@@ -36,7 +36,7 @@ class TestDataLoaderMethods(unittest.TestCase):
         print in_word, ' : ', out_word
     
     def test_custom_word(self):
-        in_word = 'source incall'
+        in_word = 'source incall physicians phoneno'
         out_word = stem.stemming(in_word)
         print in_word, ' : ', out_word
 

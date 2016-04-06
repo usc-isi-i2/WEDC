@@ -34,15 +34,17 @@ def post_parser(path):
             post_url, post_title, post_body = None, None, None
             if ES_POST_SOURCE not in hit:
                 # this hit contains nothing
+                posts.append('\n')
                 continue
 
-            if ES_POST_URL not in source:
-                continue
+            # if ES_POST_URL not in source:
+            #     continue
 
-            if ES_POST_TITLE not in source:
-                continue
+            # if ES_POST_TITLE not in source:
+            #     continue
 
             if ES_POST_BODY not in source:
+                posts.append('\n')
                 continue
 
             post_url = source[ES_POST_URL]
@@ -51,11 +53,13 @@ def post_parser(path):
 
             post = Post(post_url, post_title, post_body)
             if post:
-                posts.append(post.body) # + '\n'
+                posts.append(post.body + '\n') # + '\n'
+            else:
+                posts.append('\n')
                 # post_id+=1 # str(post_id) + ' ' + 
             # break   # test one doc this time
             # test += 1
-            # if test == 1000:
+            # if test == 2000:
             #     break
 
         except Exception as e: 

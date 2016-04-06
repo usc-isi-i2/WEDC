@@ -10,10 +10,11 @@ from wedc.domain.vendor.nltk import stem
 from wedc.domain.core.http import domain
 
 domain_ext_list = domain.get_domain_ext_list()
+stop = stopword.get_stopwords()
 
 def remove_tags(text):
     tag_re = re.compile(r'<[^>]+>')
-    return tag_re.sub('', text)
+    return tag_re.sub(' ', text)
 
 def remove_url(text):
     # domain_ext_list = domain.get_domain_ext_list()
@@ -58,15 +59,15 @@ class Post(object):
         else:
             contents = body
 
+        """
         sentences = []
         for content in contents:
             sentences.extend([sentence for sentence in sent_tokenize(content)])
-        # print sentences
-        sentences = ' '.join(sentences)
+        sentences = ' '.join(sentences).lower()
         sentences = self.sentence_operation(sentences)
+        """
+        sentences = self.sentence_operation(' '.join(contents).lower())
 
-
-        stop = stopword.get_stopwords()
         # tokens = []
         # for token in word_tokenize(sentences):
         #     if token not in stop and not str_helper.hasPunctuation(token) and not has_url(token) and not str_helper.hasNumbers(token):
@@ -75,13 +76,14 @@ class Post(object):
         #         token = str(token)
         #         tokens.append(token)
 
-        tokens = [token for token in word_tokenize(sentences) if token not in stop and not str_helper.hasPunctuation(token) and not has_url(token) and not str_helper.hasNumbers(token)]
+        tokens = [self.token_operation(token) for token in word_tokenize(sentences) if token not in stop and not has_url(token)]
 
         # tokens = [str(stem.stemming(token.encode('ascii', 'ignore'))) for token in word_tokenize(sentences) if token not in stop and not str_helper.hasNumbers(token) and not str_helper.hasPunctuation(token)]
 
-        ans = ' '.join(tokens).lower()
-        ans = str(stem.stemming(ans.encode('ascii', 'ignore')))
-        return ans
+        ans = ' '.join(tokens)
+        # ans = str(stem.stemming(ans))
+        # print ans
+        return str(ans)
 
 
     def parse_body_sentence(self, body):
@@ -99,10 +101,21 @@ class Post(object):
         # encode('utf-8').splitlines()
         return ' '.join(sentences) + '\n'
 
+    def token_operation(self, token):
+        # and not str_helper.hasNumbers(token) and not str_helper.hasPunctuation(token) and 
+        if re.search(r'\d+[k$]+[/(hr|hour)]*', token):
+            return '#/h'
+        if re.search(r'\d', token):
+            return ''
+        if str_helper.hasPunctuation(token):
+            return ''
+        return stem.stemming(token)
+
     def sentence_operation(self, sentence):
         sentence = remove_tags(sentence)
         sentence = remove_url(sentence)
         sentence = re.sub(r'[\t\n\r]', ' ', sentence)
+        sentence = sentence.encode('ascii', 'ignore')
         # sentence = ' '.join(sentence.encode('utf-8').splitlines())
         return sentence
 
