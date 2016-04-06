@@ -34,7 +34,12 @@ class TestDataLoaderMethods(unittest.TestCase):
         out_word = stem.stemming(in_word)
         assert in_word == out_word
         print in_word, ' : ', out_word
-        
+    
+    def test_custom_word(self):
+        in_word = 'source incall'
+        out_word = stem.stemming(in_word)
+        print in_word, ' : ', out_word
+
     def tearDown(self):
         pass
 

@@ -28,14 +28,17 @@ from wedc.domain.service.keyword_extraction.base import *
 
 class TestDataLoaderMethods(unittest.TestCase):
     def setUp(self):
-        # load data
         pass
-        # filename = 'san-francisco-maria.json'
-        # path = os.path.join(TEST_DATA_DIR, filename)
-        # posts = load_by_path(path)
 
-        # input_file = open(input_, 'w')
-        # input_file.writelines(posts)
+    def test_setup_input(self):
+        # load data
+        filename = 'san-francisco-maria-2.json'
+        path = os.path.join(TEST_DATA_DIR, filename)
+        posts = load_by_path(path)
+
+        input_file = open(input_, 'w')
+        input_file.writelines(posts)
+
 
     # """ set up model
     def test_setup_model(self):
@@ -133,23 +136,18 @@ class TestDataLoaderMethods(unittest.TestCase):
 
 if __name__ == '__main__':
     # unittest.main()
-    
-    def run_model_test():
-        suite = unittest.TestSuite()
-        suite.addTest(TestDataLoaderMethods("test_setup_model"))
-        runner = unittest.TextTestRunner()
-        runner.run(suite)
 
-    def run_other_test():
+    def run_main_test():
         suite = unittest.TestSuite()
-        # suite.addTest(TestDataLoaderMethods("test_setup_model"))
+        # suite.addTest(TestDataLoaderMethods("test_setup_input"))
+        suite.addTest(TestDataLoaderMethods("test_setup_model"))
         # suite.addTest(TestDataLoaderMethods("test_load_bin"))
         # suite.addTest(TestDataLoaderMethods("test_all_similarity"))
-        suite.addTest(TestDataLoaderMethods("test_word_similiarity"))
+        # suite.addTest(TestDataLoaderMethods("test_word_similiarity"))
         runner = unittest.TextTestRunner()
         runner.run(suite)
 
-    run_other_test()
+    run_main_test()
 
 
 

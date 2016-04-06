@@ -26,6 +26,7 @@ def post_parser(path):
     hits = raw['hits']['hits']
     posts = []
     # test = 0    # test
+    # print len(hits)
     # post_id = 0
     for hit in hits:
         try:
@@ -52,9 +53,9 @@ def post_parser(path):
             if post:
                 posts.append(post.body) # + '\n'
                 # post_id+=1 # str(post_id) + ' ' + 
-            break   # test one doc this time
+            # break   # test one doc this time
             # test += 1
-            # if test == 50:
+            # if test == 1000:
             #     break
 
         except Exception as e: 
