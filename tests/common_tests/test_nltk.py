@@ -16,9 +16,23 @@ class TestDataLoaderMethods(unittest.TestCase):
     def setUp(self):
         pass
 
-    def test_stemming(self):
+
+    #############################################
+    #   Test Stemming
+    #############################################
+
+    def test_stemming_be(self):
         in_word = 'was'
         out_word = stem.stemming(in_word)
+        assert out_word == 'be'
+        print in_word, ' : ', out_word
+
+    def test_stemming_dns(self):
+        """ Test Stemming for words contain digits and string
+        """
+        in_word = '401k'
+        out_word = stem.stemming(in_word)
+        assert in_word == out_word
         print in_word, ' : ', out_word
         
     def tearDown(self):
