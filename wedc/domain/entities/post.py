@@ -1,15 +1,44 @@
 
+import re
+import string
+
 from nltk.tokenize import sent_tokenize
 from wedc.domain.core.common import str_helper
 from nltk.tokenize import word_tokenize
 from wedc.domain.vendor.nltk import stopword
 from wedc.domain.vendor.nltk import stem
+from wedc.domain.core.http import domain
 
-import re
-import string
-TAG_RE = re.compile(r'<[^>]+>')
+
+
 def remove_tags(text):
-    return TAG_RE.sub('', text)
+    tag_re = re.compile(r'<[^>]+>')
+    return tag_re.sub('', text)
+
+def remove_url(text):
+    domain_ext_list = domain.get_domain_ext_list()
+    text = text.lower()
+    text = re.sub(r'\w+:\/{2}[\d\w-]+(\.[\d\w-]+)*(?:(?:\/[^\s/]*))*', '', text)
+    text = re.sub(r'^[a-z0-9\-\.]+\.('+'|'.join(domain_ext_list)+')$', '', text)
+    return text
+
+def has_url(text):
+    domain_ext_list = domain.get_domain_ext_list()
+    text = text.lower()
+    if re.search(r'\w+:\/{2}[\d\w-]+(\.[\d\w-]+)*(?:(?:\/[^\s/]*))*', text):
+        return True
+    if re.search(r'[a-z0-9\-\.]+\.('+'|'.join(domain_ext_list)+')', text):
+        return True
+    return False
+
+def valid_digit(text):
+    """ judge if the token is valid with digit
+
+ 
+    """
+    if re.search(r'^/d*$', text):
+        return False
+    return True
 
 
 class Post(object):
@@ -34,32 +63,24 @@ class Post(object):
         sentences = []
         for content in contents:
             sentences.extend([self.sentence_operation(sentence) for sentence in sent_tokenize(content)])
+        # print sentences
+        sentences = ' '.join(sentences)
+
 
         stop = stopword.get_stopwords()
-        tokens = {}
+        tokens = []
+        for token in word_tokenize(sentences):
+            if token not in stop and not str_helper.hasPunctuation(token) and not has_url(token):
+                # and not str_helper.hasNumbers(token) 
+                token = token.encode('ascii', 'ignore')
+                token = stem.stemming(token)
+                token = str(token)
+                tokens.append(token)
 
-        sentences = ' '.join(sentences)
-        tokens = [str(stem.stemming(token.encode('ascii', 'ignore'))) for token in word_tokenize(sentences) if token not in stop and not str_helper.hasNumbers(token) and not str_helper.hasPunctuation(token)]
-        # tokens = word_tokenize(sentences)
+        # tokens = [str(stem.stemming(token.encode('ascii', 'ignore'))) for token in word_tokenize(sentences) if token not in stop and not str_helper.hasNumbers(token) and not str_helper.hasPunctuation(token)]
+
         ans = ' '.join(tokens).lower()
-        # ans = ans.encode('ascii', 'ignore')
-
-        # for sentence in sentences:
-        #     for word in word_tokenize(sentence.lower()):
-        #         if word not in stop and not str_helper.hasNumbers(word) and not str_helper.hasPunctuation(word):
-        #             word = stem.stemming(word)
-        #             tokens.setdefault(word, 0)
-        #             tokens[word] += 1
-
-        # wp = pos_tag(tokens.keys())
-        # words = [row[0] for row in wp]
-
-        # if not str_helper.hasHTMLTag(sentence)
-        # encode('utf-8').splitlines()
-        
-        # ans = ' '.join(tokens.keys())
-        # ans = ans.encode('ascii', 'ignore')
-        return ans
+        return ans.strip()
 
 
     def parse_body_sentence(self, body):
@@ -79,6 +100,7 @@ class Post(object):
 
     def sentence_operation(self, sentence):
         sentence = remove_tags(sentence)
+        sentence = remove_url(sentence)
         sentence = re.sub(r'[\t\n\r]', ' ', sentence)
         # sentence = ' '.join(sentence.encode('utf-8').splitlines())
         return sentence

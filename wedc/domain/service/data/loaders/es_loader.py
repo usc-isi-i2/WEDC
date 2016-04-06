@@ -50,15 +50,15 @@ def post_parser(path):
 
             post = Post(post_url, post_title, post_body)
             if post:
-                posts.append(post.body + '\n')
+                posts.append(post.body) # + '\n'
                 # post_id+=1 # str(post_id) + ' ' + 
-            # break   # test one doc this time
+            break   # test one doc this time
             # test += 1
             # if test == 50:
             #     break
 
         except Exception as e: 
             print "ERROR: " + str(e)
-            print hit
+            # print hit
             # print 'hasBodyPart' in source
     return posts
