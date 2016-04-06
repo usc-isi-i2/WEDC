@@ -28,7 +28,7 @@ class TestDataLoaderMethods(unittest.TestCase):
         raw = json.load(pn_file)
         pn_file.close()
 
-        target_post_id = 1207
+        target_post_id = 63
         hits = raw['hits']['hits']
         post_body = hits[target_post_id]['_source']['hasBodyPart']['text']
         print 'post before process\n', post_body.encode('ascii', 'ignore'), '\n\n'

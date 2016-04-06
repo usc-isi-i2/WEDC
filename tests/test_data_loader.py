@@ -30,7 +30,7 @@ class TestDataLoaderMethods(unittest.TestCase):
             #     print post
             #     break
 
-    def test_json_data(self):
+    def test_json_data_extraction(self):
         import json
         pn_file = open(self.path, 'rU')
         raw = json.load(pn_file)
@@ -41,6 +41,28 @@ class TestDataLoaderMethods(unittest.TestCase):
         post = hits[post_id]['_source']['hasBodyPart']['text']
         print post
 
+    def test_json_data_contain(self):
+        import json
+        pn_file = open(self.path, 'rU')
+        raw = json.load(pn_file)
+        pn_file.close()
+
+        target = '401k'
+        hits = raw['hits']['hits']
+        post_id = 0
+        for hit in hits:
+            post_id += 1
+            source = hit['_source']
+            if 'hasBodyPart' not in source:
+                continue
+
+            text =  source['hasBodyPart']['text']
+            if target in text:
+                print 'post line number', post_id
+                print text
+                break  
+
+
     def tearDown(self):
         pass
 
@@ -48,7 +70,7 @@ if __name__ == '__main__':
     # unittest.main()
     def run_main_test():
         suite = unittest.TestSuite()
-        suite.addTest(TestDataLoaderMethods("test_json_data"))
+        suite.addTest(TestDataLoaderMethods("test_json_data_contain"))
         runner = unittest.TextTestRunner()
         runner.run(suite)
 

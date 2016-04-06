@@ -32,10 +32,10 @@ def post_parser(path):
         try:
             source = hit[ES_POST_SOURCE]
             post_url, post_title, post_body = None, None, None
-            if ES_POST_SOURCE not in hit:
-                # this hit contains nothing
-                posts.append('\n')
-                continue
+            # if ES_POST_SOURCE not in hit:
+            #     # this hit contains nothing
+            #     posts.append('\n')
+            #     continue
 
             # if ES_POST_URL not in source:
             #     continue
