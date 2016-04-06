@@ -100,7 +100,7 @@ class TestDataLoaderMethods(unittest.TestCase):
         assert len(py_response[0]) == 2
     """
 
-    def test_similarity(self):
+    def test_all_similarity(self):
         start_time = time.time()
         model = word2vec.load(output_bin)
         num_of_words, num_of_features = model.vectors.shape
@@ -113,13 +113,20 @@ class TestDataLoaderMethods(unittest.TestCase):
         # Number of words: 6051
         # Time cost: 4.86683392525 seconds
     
-    def test_word(self):
+    def test_word_similiarity(self):
+        target_word = 'massag'
         model = word2vec.load(output_bin)
-        num_of_words, num_of_features = model.vectors.shape
+        indexes, metrics = model.cosine(target_word)
 
-        indexes, metrics = model.cosine('massag')
-        print model.vocab[indexes]    # similar words
-        pass
+        similar_words = [str(_) for _ in list(model.vocab[indexes])]    # similar words
+        
+        # print 'similar words\n', similar_words
+        # print 'similarity matrix\n', metrics
+
+        # word:similarity pair
+        pairs = [(similar_words[i], metrics[i]) for i in range(len(similar_words))]
+        print 'word:similarity pairs\n', pairs
+
         
         
         
@@ -139,8 +146,8 @@ if __name__ == '__main__':
         suite = unittest.TestSuite()
         # suite.addTest(TestDataLoaderMethods("test_setup_model"))
         # suite.addTest(TestDataLoaderMethods("test_load_bin"))
-        # suite.addTest(TestDataLoaderMethods("test_similarity"))
-        suite.addTest(TestDataLoaderMethods("test_word"))
+        # suite.addTest(TestDataLoaderMethods("test_all_similarity"))
+        suite.addTest(TestDataLoaderMethods("test_word_similiarity"))
         runner = unittest.TextTestRunner()
         runner.run(suite)
 
