@@ -1,0 +1,24 @@
+Seed Words
+----------
+employee
+manager
+OSHA
+license
+business
+technician
+certified
+degree
+salary
+retail
+401k
+insurance
+
+
+
+Similarity for word
+-----------
+word: "employee"
+similar words: [u'assist' u'personnel' u'success' u'acqusit' u'uni' u'annual' u'eap' u'continu' u'parnassus' u'optumhealth']
+
+word: "retail"
+similar words: [u'sale' u'store' u'disney' u'fragranc' u'cashier' u'metropc' u'merchandis' u'tangibl' u'ecolab' u'skillsappli']

@@ -8,6 +8,7 @@ http://nbviewer.jupyter.org/github/danielfrg/word2vec/blob/master/examples/word2
 
 
 import sys
+import time
 import os
 import unittest
 import word2vec
@@ -28,19 +29,20 @@ from wedc.domain.service.keyword_extraction.base import *
 class TestDataLoaderMethods(unittest.TestCase):
     def setUp(self):
         # load data
-        filename = 'san-francisco-maria.json'
-        path = os.path.join(TEST_DATA_DIR, filename)
-        posts = load_by_path(path)
+        pass
+        # filename = 'san-francisco-maria.json'
+        # path = os.path.join(TEST_DATA_DIR, filename)
+        # posts = load_by_path(path)
 
-        input_file = open(input_, 'w')
-        input_file.writelines(posts)
+        # input_file = open(input_, 'w')
+        # input_file.writelines(posts)
 
     # """ set up model
     def test_setup_model(self):
         # word2vec.word2phrase(input_, output_phrases, verbose=True)
         
         # word2vec.word2vec(input_, output_bin, size=300, binary=1, verbose=False)
-        word2vec.word2vec(input_, output_bin, binary=1, cbow=0, size=300, window=10, negative=5, hs=0, threads=12, iter_=20, min_count=5, verbose=False)
+        word2vec.word2vec(input_, output_bin, binary=1, cbow=0, size=100, window=10, negative=5, hs=0, threads=12, iter_=5, min_count=5, verbose=False)
 
         # word2vec.word2vec(input_, output_txt, size=10, binary=0, verbose=False)
         # word2vec.word2vec(input_, output_txt, binary=0, cbow=0, size=300, window=10, negative=5, hs=0, threads=12, iter_=20, min_count=5, verbose=False)
@@ -59,6 +61,7 @@ class TestDataLoaderMethods(unittest.TestCase):
         vectors = model.vectors
         # print vectors
         print model.vocab
+        print model.vectors.shape
 
         assert vectors.shape[0] == vocab.shape[0]
         # assert vectors.shape[0] > 3000
@@ -98,9 +101,25 @@ class TestDataLoaderMethods(unittest.TestCase):
     """
 
     def test_similarity(self):
+        start_time = time.time()
         model = word2vec.load(output_bin)
-        indexes, metrics = model.cosine('my')
-        print model.vocab[indexes]
+        num_of_words, num_of_features = model.vectors.shape
+        for i in range(num_of_words):
+            word = model.vocab[i]
+            indexes, metrics = model.cosine(word)
+            # print model.vocab[indexes]    # similar words
+        print 'Number of words:', num_of_words
+        print 'Time cost:', (time.time() - start_time), 'seconds'
+        # Number of words: 6051
+        # Time cost: 4.86683392525 seconds
+    
+    def test_word(self):
+        model = word2vec.load(output_bin)
+        num_of_words, num_of_features = model.vectors.shape
+
+        indexes, metrics = model.cosine('massag')
+        print model.vocab[indexes]    # similar words
+        pass
         
         
         
@@ -120,7 +139,8 @@ if __name__ == '__main__':
         suite = unittest.TestSuite()
         # suite.addTest(TestDataLoaderMethods("test_setup_model"))
         # suite.addTest(TestDataLoaderMethods("test_load_bin"))
-        suite.addTest(TestDataLoaderMethods("test_similarity"))
+        # suite.addTest(TestDataLoaderMethods("test_similarity"))
+        suite.addTest(TestDataLoaderMethods("test_word"))
         runner = unittest.TextTestRunner()
         runner.run(suite)
 
