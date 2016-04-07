@@ -14,6 +14,30 @@ def load(path):
     # posts = [_.body for _ in posts]
     return posts
     # print posts
+    
+
+def load_post(path, post_id, post_object=True):
+    if not path:
+        return None
+    pn_file = open(path, 'rU')
+    raw = json.load(pn_file)
+    pn_file.close()
+
+    hits = raw['hits']['hits']
+    if post_id >= len(hits):
+        return None    
+
+    source = hits[post_id]['_source']
+    if 'hasBodyPart' not in source:
+        return
+    text =  source['hasBodyPart']['text']
+    # print 'original text:\n\n', text, '\n\n
+    
+    if post_object:
+        return Post('', '', text)
+    else:
+        return text
+
 
 def post_parser(path):
     if not path:

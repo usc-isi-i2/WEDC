@@ -7,7 +7,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 TEST_DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
 
 from wedc.domain.service.data.base import *
-
+from wedc.domain.service.data.loaders import es_loader
 
 class TestDataLoaderMethods(unittest.TestCase):
     def setUp(self):
@@ -62,6 +62,13 @@ class TestDataLoaderMethods(unittest.TestCase):
                 print text
                 break  
 
+    def test_load_post(self):
+        text = es_loader.load_post(self.path, 0, post_object=False)
+        print text
+
+        post = es_loader.load_post(self.path, 0, post_object=True)
+        print post.body
+
 
     def tearDown(self):
         pass
@@ -70,7 +77,8 @@ if __name__ == '__main__':
     # unittest.main()
     def run_main_test():
         suite = unittest.TestSuite()
-        suite.addTest(TestDataLoaderMethods("test_json_data_contain"))
+        # suite.addTest(TestDataLoaderMethods("test_json_data_contain"))
+        suite.addTest(TestDataLoaderMethods("test_load_post"))
         runner = unittest.TextTestRunner()
         runner.run(suite)
 

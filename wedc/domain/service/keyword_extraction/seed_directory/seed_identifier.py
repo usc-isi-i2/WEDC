@@ -22,7 +22,6 @@ def identify_post(post):
     max_value = max(judge_dict.values())
     ans = [cate for (cate, count) in judge_dict.items() if count == max_value]
 
-    print ans
     return ans
     
 
