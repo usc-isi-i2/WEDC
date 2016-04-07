@@ -114,7 +114,7 @@ class Post(object):
     def sentence_operation(self, sentence):
         sentence = remove_tags(sentence)
         sentence = remove_url(sentence)
-        sentence = re.sub(r'[\t\n\r]', ' ', sentence)
+        sentence = re.sub(r'[\t\n\r\\]', ' ', sentence)
         sentence = sentence.encode('ascii', 'ignore')
         # sentence = ' '.join(sentence.encode('utf-8').splitlines())
         return sentence
