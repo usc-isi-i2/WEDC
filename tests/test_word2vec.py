@@ -120,9 +120,9 @@ class TestDataLoaderMethods(unittest.TestCase):
         # Time cost: 4.86683392525 seconds
     
     def test_word_similiarity(self):
-        target_word = stem.stemming('401k')
+        target_word = stem.stemming('job')  # "#/h"
         model = word2vec.load(output_bin)
-        indexes, metrics = model.cosine(target_word)
+        indexes, metrics = model.cosine(target_word, n=10)
 
         similar_words = [str(_) for _ in list(model.vocab[indexes])]    # similar words
         
