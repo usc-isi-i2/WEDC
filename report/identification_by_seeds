@@ -1,0 +1,227 @@
+posts used for this report (post_id shown below):
+[18746 17738 12961 11521  7036 10839 16684 16693 11183 18553]
+
+
+#######################################################
+# POST ID: 18746
+#######################################################
+
+original post content:
+---------------------------------------------------------
+AVAILABLE FOR OUTCALLS IN SAN FRANCISCO AND OAKLAND. <br>
+<br>
+XANDER SPADE HERE. MILD, WILD, AND EVERYTHING IN BETWEEN. PACKIN HEAT AND EXPERIENCED- GREAT WITH FIRST TIMERS.<br>
+<br>
+$150 first hour $100 each additional.<br>
+<br>
+CALL OR TEXT 415-559-7575 TO GET THIS PARTY STARTED<br>
+IF THIS IS FOR A LATER DATE, PLEASE EMAIL
+
+
+post content after preprocessing:
+---------------------------------------------------------
+avail outcal san francisco oakland xander spade mild wild everyth packin heat  great first timer  first hour  addit call text  get parti start later date pleas email
+
+---------------------------------------------------------
+predict result: ['escort']
+
+
+
+
+#######################################################
+# POST ID: 17738
+#######################################################
+
+original post content:
+---------------------------------------------------------
+b>Let me bring out your inner beast</b> and tame you with my feminine skills and bodyworker's wiles. When was the last time you felt that heat rising and your heart beating ever so fast? It sounds so wonderful but it's not so easy to accomplish. I found the secret. <br></br>
+This slender and buxom exotic kitten wants to make you purrrr
+<i>Skilled body worker and CMT</i>, I'll ease you after a workout, or just make your troubles disappear after a busy day.</br>
+
+<br></br>Please Email
+
+<br></br><b>Darling Gabrielle, CMT</b
+
+
+post content after preprocessing:
+---------------------------------------------------------
+b let bring inner beast tame feminin skill bodywork  wile last time felt heat rise heart beat ever fast sound wonder  easi accomplish found secret slender buxom exot kitten want make purrrr skill bodi worker cmt  eas workout make troubl disappear busi day pleas email darl gabriell cmt 
+
+---------------------------------------------------------
+predict result: ['escort']
+
+
+
+
+#######################################################
+# POST ID: 12961
+#######################################################
+
+original post content:
+---------------------------------------------------------
+ColossaL BoOtY! 48"IncHeS BeAutiFul EbOnyNicE smilE,BuBblY PersNoAlity,  - 22
+
+
+post content after preprocessing:
+---------------------------------------------------------
+coloss booti   inch beauti ebonynic smile bubbl persnoal 
+
+---------------------------------------------------------
+predict result: ['massage', 'escort']
+
+
+
+
+#######################################################
+# POST ID: 11521
+#######################################################
+
+original post content:
+---------------------------------------------------------
+Young & Sexy ~ln & Out Call Specials ~SF~ 247~ Call Now~ - 21
+
+
+post content after preprocessing:
+---------------------------------------------------------
+young sexi  call special   call  
+
+---------------------------------------------------------
+predict result: ['escort']
+
+
+
+
+#######################################################
+# POST ID: 7036
+#######################################################
+
+original post content:
+---------------------------------------------------------
+Job Description SalesJobRecruiter.com is staffing for part-time and full-time Sales Specialists. We are searching for a person desiring a position in a customer service and sales environment. Individuals will help the company grow and learn sales and social marketing. Training opportunities are available to individuals that sign up. Don&#x27;t wait! Sign up now! Job Duties Coordinate activities Inform and assist customers Meet all monthly sales goals Plan special promotions Total prices and process payments About SalesJobRecruiter.com SalesJobRecruiter.com is a sales staffing and recruitment industry leader. We offer job applicants the opportunity to work for our clients in either full-time or temporary positions. We pride ourselves on our strong commitment to client satisfaction and our focus on helping our employees find their next job. Don&#x27;t Wait! Fill out a Profile Now! Reference:(SJR7813Z)
+
+					<p>Source: <a rel="nofollow" target="_blank" href="http://www.juju.com/jad/00000000fbchgt?partnerid=af0e5911314cbc501beebaca7889739d&amp;exported=True&amp;channel=staticfile&amp;hosted_timestamp=0042a345f27ac5dc620266873a5791a804672d0020074682a76188a77f5c4b79">http://www.juju.com/jad/00000000fbchgt?partnerid=af0e5911314cbc501beebaca7889739d&amp;exported=True&amp;channel=staticfile&amp;hosted_timestamp=0042a345f27ac5dc620266873a5791a804672d0020074682a76188a77f5c4b79</a></p>
+
+
+post content after preprocessing:
+---------------------------------------------------------
+job descript staf   sale specialist search person desir posit custom servic sale environ individu help compani grow learn sale social market train opportun avail individu sign  wait sign job duti coordin activ inform assist custom meet month sale goal plan special promot total price process payment sale staf recruit industri leader offer job applic opportun work client either  temporari posit pride strong commit client satisfact focus help employe find next job  wait fill profil refer  sourc
+
+---------------------------------------------------------
+predict result: ['escort', 'job_ads']
+
+
+
+
+#######################################################
+# POST ID: 10839
+#######################################################
+
+original post content:
+---------------------------------------------------------
+b>I am looking for a babysitter for our client who is in Palo Alto, CA 94301. We need someone who can work on Wed, Aug 12th 9:15 am - 3:30 pm. We are an on demand childcare/nanny agency. Are you available for a phone interview?<br>
+<br>
+Please let me know,<br>
+<br>
+You can find out details about our company here:<br>
+<br>
+<a rel="nofollow" target="_blank" href="http://www.chippersitter.com">www.chippersitter.com</a><br>
+<br>
+Thanks much,<br>
+Shara</b></b
+
+
+post content after preprocessing:
+---------------------------------------------------------
+b look babysitt client palo alto ca  need someon work wed aug    pm demand  agenc avail phone interview pleas let know find detail compani thank much shara 
+
+---------------------------------------------------------
+predict result: ['escort']
+
+
+
+
+#######################################################
+# POST ID: 16684
+#######################################################
+
+original post content:
+---------------------------------------------------------
+Hey boys,<br />
+<br />
+I'm a California Blonde hottie with a body, so Come get a taste of Sunshine... Available 24/7 this week only... Don't hesitate, come play!<br />
+<br />
+AlliSoN<br />
+<br />
+REViEWED!!!<br /><br />
+ID: 160509<br /><br />
+(NEW NUMBER, SAME GiRL:))<br />
+<br />
+925-852-4032
+
+
+post content after preprocessing:
+---------------------------------------------------------
+hey boy  california blond hotti bodi come get tast sunshin  avail  week   hesit come play allison review id  new number girl 
+
+---------------------------------------------------------
+predict result: ['escort']
+
+
+
+
+#######################################################
+# POST ID: 16693
+#######################################################
+
+original post content:
+---------------------------------------------------------
+Hey Fellas Visiting the Bay Area outcalls call me Angel Monroe Never rushed always on time Fetishes Domination Strap Play open minded give me a call 4157161935 I LOVE ALL MEN <BR />Never rushed <BR />Overnights<BR />Dinner dates <BR />All around kind of fun <BR />			</div>
+
+
+post content after preprocessing:
+---------------------------------------------------------
+hey fella visit bay area outcal call angel monro never rush alway time fetish domin strap play open mind give call  love men never rush overnight dinner date around kind fun
+
+---------------------------------------------------------
+predict result: ['escort']
+
+
+
+
+#######################################################
+# POST ID: 11183
+#######################################################
+
+original post content:
+---------------------------------------------------------
+textin/talkin n maybe hangout w4m - 25
+
+
+post content after preprocessing:
+---------------------------------------------------------
+ n mayb hangout  
+
+---------------------------------------------------------
+predict result: ['escort']
+
+
+
+
+#######################################################
+# POST ID: 18553
+#######################################################
+
+original post content:
+---------------------------------------------------------
+(`'.(.')....(`'.(.') ArE YoU LoOkInG FoR An UnFoRgEtTaBlE ExPeRiEnCe? LoOk No FuRtHeR! I'm 100% ReAl,Looking for a quality good time with a quality fun lady? YOU found me! I'm a very SeNsUaL lady who will make YOU my 1 priority, I want YOU to have a good time! I genuinely love spending time with respectful gentlemen and will make our time together an unforgettable experience... <BR /><BR />CALL BECKY BLOWZ - 919 889//3067 <BR />NO BLOCKED CALLZ OR PRIVATE NUMBERZ <BR />Thank You			</div>
+
+
+post content after preprocessing:
+---------------------------------------------------------
+   look unforgett experi look   real look qualiti good time qualiti fun ladi found  sensual ladi make  prioriti want good time genuin love spend time respect gentlemen make time togeth unforgett experi  call becki blowz   block callz privat numberz thank
+
+---------------------------------------------------------
+predict result: ['escort']
+
+
+

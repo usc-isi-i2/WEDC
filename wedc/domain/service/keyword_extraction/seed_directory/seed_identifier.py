@@ -6,6 +6,10 @@ from wedc.domain.vendor.nltk import stem
 # CATEGORIES = ['escort', 'job_ads', 'massage']
 
 def identify_post(post):
+    if not post.body:
+        return []
+
+
     judge_dict = {}
     # for cate in CATEGORIES:
     #     judge_dict.setdefault(cate, 0)

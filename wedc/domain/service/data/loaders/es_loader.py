@@ -16,27 +16,36 @@ def load(path):
     # print posts
     
 
-def load_post(path, post_id, post_object=True):
+def load_post(path, post_id):
     if not path:
         return None
     pn_file = open(path, 'rU')
     raw = json.load(pn_file)
     pn_file.close()
-
+    
     hits = raw['hits']['hits']
-    if post_id >= len(hits):
+    size = len(hits)
+
+    if post_id >= size:
         return None    
 
     source = hits[post_id]['_source']
     if 'hasBodyPart' not in source:
-        return
-    text =  source['hasBodyPart']['text']
+        return None
+    text = source['hasBodyPart']['text']
+    post = Post('', '', text)
+
+    contents = []
+    if isinstance(text, basestring):
+        contents.append(text)
+    else:
+        contents = text
+    text = ' '.join(contents)
+
+    
     # print 'original text:\n\n', text, '\n\n
     
-    if post_object:
-        return Post('', '', text)
-    else:
-        return text
+    return text, post
 
 
 def post_parser(path):

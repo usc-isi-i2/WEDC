@@ -63,11 +63,16 @@ class TestDataLoaderMethods(unittest.TestCase):
                 break  
 
     def test_load_post(self):
-        text = es_loader.load_post(self.path, 0, post_object=False)
-        print text
-
-        post = es_loader.load_post(self.path, 0, post_object=True)
-        print post.body
+        # departed solution
+        # text = es_loader.load_post(self.path, 0, post_object=False)
+        # print text
+        # post = es_loader.load_post(self.path, 0, post_object=True)
+        # print post.body
+        
+        post_id = 0
+        text, post = es_loader.load_post(self.path, post_id)
+        print 'original post content:\n', text, '\n\n'
+        print 'post content after preprocessing:\n', post.body, '\n\n'
 
 
     def tearDown(self):
