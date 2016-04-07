@@ -5,9 +5,11 @@ import os
 import word2vec
 
 from wedc.domain.vendor.nltk import stem
+from wedc.domain.service.keyword_extraction.word2vec import base
 
 
-def get_similar_words(model_path, target_word, n=10):
+
+def get_similar_words(target_word, n=10):
     """ get similar words
     
     return n similar words for specific target word, already sorted
@@ -19,8 +21,9 @@ def get_similar_words(model_path, target_word, n=10):
     Keyword Arguments:
         n {number} -- number of similar words (default: {10})
     """
+    # print base.word2vec_model.vectors.shape
     target_word = stem.stemming(target_word)
-    model = word2vec.load(model_path)
+    model = base.word2vec_model #word2vec.load(model_path)
     similar_words = []
     try:
         indexes, metrics = model.cosine(target_word, n=n)

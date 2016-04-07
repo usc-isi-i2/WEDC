@@ -7,6 +7,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 
 TEST_DATA_DIR = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'data')
 
 from wedc.domain.service.keyword_extraction.word2vec import similarity
+from wedc.domain.service.keyword_extraction.word2vec import base
 
 output_bin = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'vectors.bin'))
 
@@ -17,7 +18,9 @@ class TestDataLoaderMethods(unittest.TestCase):
 
     def test_get_similar_words(self):
         word = 'incall'
-        print similarity.get_similar_words(output_bin, word, n=10)
+        base.load_word2vec_model(output_bin)
+        # print base.word2vec_model.vectors.shape
+        print similarity.get_similar_words(word, n=10)
 
     def tearDown(self):
         pass

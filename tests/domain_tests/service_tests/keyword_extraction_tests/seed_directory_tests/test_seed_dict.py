@@ -8,7 +8,7 @@ TEST_DATA_DIR = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 
 
 from wedc.domain.service.keyword_extraction.seed_directory import seed_dict
 
-output_bin = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'vectors.bin'))
+# output_bin = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'vectors.bin'))
 
 class TestDataLoaderMethods(unittest.TestCase):
     def setUp(self):
@@ -16,7 +16,7 @@ class TestDataLoaderMethods(unittest.TestCase):
 
     def test_build_seed_dict(self):
         start_time = time.time()
-        seed_dict.build_seed_dict(output_bin)
+        # print seed_dict.build_seed_dict()
         print 'Time cost:', (time.time() - start_time), 'seconds'
 
 
