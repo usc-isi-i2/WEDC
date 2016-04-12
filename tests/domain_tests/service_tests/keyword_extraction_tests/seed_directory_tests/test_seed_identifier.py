@@ -65,7 +65,8 @@ class TestDataLoaderMethods(unittest.TestCase):
 
                 ans = seed_identifier.identify_post(post)
                 # print 'predict result: ', ans
-                f.write('predict result: ')
+                f.write('\npredict result: ')
+                f.write('\n---------------------------------------------------------\n')
                 f.write(str(ans))
                 f.write('\n\n\n\n')
 

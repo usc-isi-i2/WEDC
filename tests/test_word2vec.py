@@ -20,6 +20,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 TEST_DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
 
 input_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'text'))
+input_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'memex_raw'))
 output_phrases = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'text-phrases.txt'))
 output_clusters = os.path.expanduser(os.path.join(TEST_DATA_DIR,'text-clusters.txt'))
 output_bin = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'vectors.bin'))
@@ -35,12 +36,14 @@ class TestDataLoaderMethods(unittest.TestCase):
 
     def test_setup_input(self):
         # load data
-        filename = 'san-francisco-maria-2.json'
-        path = os.path.join(TEST_DATA_DIR, filename)
-        posts = load_by_path(path)
+        # filename = 'san-francisco-maria-2.json'
+        # path = os.path.join(TEST_DATA_DIR, filename)
+        # posts = load_by_path(path)
 
-        input_file = open(input_, 'w')
-        input_file.writelines(posts)
+        # input_file = open(input_, 'w')
+        # input_file.writelines(posts)
+        pass
+
 
 
     # """ set up model
@@ -122,16 +125,21 @@ class TestDataLoaderMethods(unittest.TestCase):
     def test_word_similiarity(self):
         target_word = stem.stemming('job')  # "#/h"
         model = word2vec.load(output_bin)
-        indexes, metrics = model.cosine(target_word, n=10)
 
-        similar_words = [str(_) for _ in list(model.vocab[indexes])]    # similar words
-        
-        # print 'similar words\n', similar_words
-        # print 'similarity matrix\n', metrics
+        try:
+            indexes, metrics = model.cosine(target_word, n=10)
 
-        # word:similarity pair
-        pairs = [(similar_words[i], metrics[i]) for i in range(len(similar_words))]
-        print 'word:similarity pairs\n', pairs
+            similar_words = [str(_) for _ in list(model.vocab[indexes])]    # similar words
+            
+            # print 'similar words\n', similar_words
+            # print 'similarity matrix\n', metrics
+
+            # word:similarity pair
+            pairs = [(similar_words[i], metrics[i]) for i in range(len(similar_words))]
+            print 'word:similarity pairs\n', pairs
+
+        except Exception:
+            print 'NO FOUND'
 
         
     def tearDown(self):
