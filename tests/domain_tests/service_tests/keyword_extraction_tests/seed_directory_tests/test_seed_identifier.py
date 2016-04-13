@@ -9,7 +9,7 @@ REPORT_DIR = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', '..
 
 from wedc.domain.service.data.base import *
 from wedc.domain.service.keyword_extraction.word2vec import base
-from wedc.domain.service.keyword_extraction.seed_directory import seed_identifier
+from wedc.domain.service.keyword_extraction.seeds import seed_identifier
 from wedc.domain.entities.post import Post
 from wedc.domain.service.data.loaders import es_loader
 

@@ -20,7 +20,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 TEST_DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
 
 input_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'text'))
-input_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'memex_raw'))
+# input_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'memex_raw'))
 output_phrases = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'text-phrases.txt'))
 output_clusters = os.path.expanduser(os.path.join(TEST_DATA_DIR,'text-clusters.txt'))
 output_bin = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'vectors.bin'))
@@ -36,13 +36,12 @@ class TestDataLoaderMethods(unittest.TestCase):
 
     def test_setup_input(self):
         # load data
-        # filename = 'san-francisco-maria-2.json'
-        # path = os.path.join(TEST_DATA_DIR, filename)
-        # posts = load_by_path(path)
+        filename = 'san-francisco-maria-2.json'
+        path = os.path.join(TEST_DATA_DIR, filename)
+        posts = load_by_path(path)
 
-        # input_file = open(input_, 'w')
-        # input_file.writelines(posts)
-        pass
+        input_file = open(input_, 'w')
+        input_file.writelines(posts)
 
 
 
@@ -51,7 +50,7 @@ class TestDataLoaderMethods(unittest.TestCase):
         # word2vec.word2phrase(input_, output_phrases, verbose=True)
         
         # word2vec.word2vec(input_, output_bin, size=300, binary=1, verbose=False)
-        word2vec.word2vec(input_, output_bin, binary=1, cbow=0, size=100, window=10, negative=5, hs=0, threads=12, iter_=5, min_count=5, verbose=False)
+        word2vec.word2vec(input_, output_bin, binary=1, cbow=0, size=300, window=10, negative=5, hs=0, threads=12, iter_=5, min_count=5, verbose=False)
 
         # word2vec.word2vec(input_, output_txt, size=10, binary=0, verbose=False)
         # word2vec.word2vec(input_, output_txt, binary=0, cbow=0, size=300, window=10, negative=5, hs=0, threads=12, iter_=20, min_count=5, verbose=False)
@@ -123,7 +122,7 @@ class TestDataLoaderMethods(unittest.TestCase):
         # Time cost: 4.86683392525 seconds
     
     def test_word_similiarity(self):
-        target_word = stem.stemming('job')  # "#/h"
+        target_word = stem.stemming('escort')  # "#/h"
         model = word2vec.load(output_bin)
 
         try:

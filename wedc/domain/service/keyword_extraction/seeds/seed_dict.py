@@ -1,7 +1,7 @@
 import os
 
 from wedc.domain.conf.storage import __res_dir__
-from wedc.domain.service.keyword_extraction.seed_directory import seed_word
+from wedc.domain.service.keyword_extraction.seeds import seed_word
 from wedc.domain.service.keyword_extraction.word2vec import similarity
 
 def build_seed_dict():

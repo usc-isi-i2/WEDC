@@ -30,7 +30,7 @@ def get_similar_words(target_word, n=10):
         similar_words = [str(_) for _ in list(model.vocab[indexes])]    # similar words
         return similar_words
     except Exception as e: 
-        return similar_words
+        return "NO FOUND"
     
     # print 'similar words\n', similar_words
     # print 'similarity matrix\n', metrics

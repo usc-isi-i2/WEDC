@@ -1,5 +1,5 @@
 # import operator
-from wedc.domain.service.keyword_extraction.seed_directory import seed_dict
+from wedc.domain.service.keyword_extraction.seeds import seed_dict
 from wedc.domain.vendor.nltk import stem
 
 

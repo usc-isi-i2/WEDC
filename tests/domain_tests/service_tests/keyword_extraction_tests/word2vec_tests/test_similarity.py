@@ -11,7 +11,6 @@ from wedc.domain.service.keyword_extraction.word2vec import base
 
 output_bin = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'vectors.bin'))
 
-
 class TestDataLoaderMethods(unittest.TestCase):
     def setUp(self):
         pass
