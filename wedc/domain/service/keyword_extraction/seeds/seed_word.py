@@ -40,6 +40,41 @@ def load_all_seed_words():
                     seeds.append(line.strip())
     return seeds
 
+
+
+def load_seed_similar_words(level=1):
+    from wedc.domain.service.keyword_extraction.word2vec import similarity
+    from wedc.domain.vendor.nltk import stem
+    seed_words = [stem.stemming(_) for _ in load_all_seed_words()]
+
+    ans = {}
+    [ans.setdefault(_, 1) for _ in seed_words]
+
+    current_level_seed_words = list(seed_words)
+    for _ in range(level):
+        next_level_seed_words = {}
+        for seed_word in current_level_seed_words:
+            similar_words_dict = similarity.get_similar_words_with_similarity(seed_word)
+            if not similar_words_dict:
+                # print seed_word
+                continue
+            for (similar_word, sw_similarity) in similar_words_dict.items():
+                ans.setdefault(similar_word, 0)
+                ans[similar_word] = max(ans[similar_word], sw_similarity)
+
+
+                next_level_seed_words.setdefault(similar_word, 0)
+                next_level_seed_words[similar_word] += 1
+        current_level_seed_words = next_level_seed_words.keys()
+    # ans = ans.keys()
+    # ans.sort()
+    return ans
+
+
+
+
+""" Departed
+
 def load_seed_similar_words(level=1):
     from wedc.domain.service.keyword_extraction.word2vec import similarity
     from wedc.domain.vendor.nltk import stem
@@ -64,6 +99,7 @@ def load_seed_similar_words(level=1):
     ans.sort()
     return ans
 
+"""
 
 
 

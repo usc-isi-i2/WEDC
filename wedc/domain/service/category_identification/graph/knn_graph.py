@@ -24,7 +24,7 @@ def build_graph(input, output, n_neighbors=5, algorithm='ball_tree'):
     input_fh = open(input, 'rb')
     output_fh = open(output, 'wb')
 
-    lines = input_fh.readlines()#[:10]
+    lines = input_fh.readlines()[:1000]
     size = len(lines)
     lines = ';'.join(lines)
     X = np.array(np.mat(lines))
@@ -38,8 +38,8 @@ def build_graph(input, output, n_neighbors=5, algorithm='ball_tree'):
 
 
     for post_id in range(0, size):    
-        post_indices = indices[post_id][1:]
-        post_k_distances = distances[post_id][1:]
+        post_indices = indices[post_id]
+        post_k_distances = distances[post_id]
         
 
         # change to start from 1 for lab propagation library input format
@@ -47,7 +47,9 @@ def build_graph(input, output, n_neighbors=5, algorithm='ball_tree'):
 
         post_neighbors = []
         for idx in range(n_neighbors):
-            post_neighbors.append([post_indices[idx]+1, post_k_distances[idx]])
+            if post_id == post_indices[idx]:
+                continue
+            post_neighbors.append([post_indices[idx]+1, 1-post_k_distances[idx]])
         graph_item.append(post_neighbors)
 
         output_fh.write(str(graph_item)+'\n')

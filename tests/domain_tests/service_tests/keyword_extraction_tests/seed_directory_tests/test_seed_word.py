@@ -23,7 +23,7 @@ class TestDataLoaderMethods(unittest.TestCase):
         print seed_word.load_seed_words()
 
     def test_load_seed_similar_words(self):
-        print seed_word.load_seed_similar_words(level=2)
+        print seed_word.load_seed_similar_words(level=1)
 
     def tearDown(self):
         pass

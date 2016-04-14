@@ -10,8 +10,6 @@ seeds_size = len(seeds)
 
 def post2sv(input, output):
     
-
-
     output = open(output, 'wb')
 
     with open(input, 'rb') as f:

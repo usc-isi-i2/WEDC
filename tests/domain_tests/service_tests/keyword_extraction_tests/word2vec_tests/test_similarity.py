@@ -21,13 +21,20 @@ class TestDataLoaderMethods(unittest.TestCase):
         # print base.word2vec_model.vectors.shape
         print similarity.get_similar_words(word, n=10)
 
+    def test_get_similar_words_with_similarity(self):
+        word = 'incall'
+        base.load_word2vec_model(output_bin)
+        # print base.word2vec_model.vectors.shape
+        print similarity.get_similar_words_with_similarity(word, n=10)
+
     def tearDown(self):
         pass
 
 if __name__ == '__main__':
     def run_main_test():
         suite = unittest.TestSuite()
-        suite.addTest(TestDataLoaderMethods("test_get_similar_words"))
+        # suite.addTest(TestDataLoaderMethods("test_get_similar_words"))
+        suite.addTest(TestDataLoaderMethods("test_get_similar_words_with_similarity"))
         runner = unittest.TextTestRunner()
         runner.run(suite)
 
