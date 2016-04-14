@@ -47,7 +47,7 @@ class TestDataLoaderMethods(unittest.TestCase):
         raw = json.load(pn_file)
         pn_file.close()
 
-        target = '401k'
+        target = 'massage'
         hits = raw['hits']['hits']
         post_id = 0
         for hit in hits:
@@ -59,8 +59,8 @@ class TestDataLoaderMethods(unittest.TestCase):
             text =  source['hasBodyPart']['text']
             if target in text:
                 print 'post line number', post_id
-                print text
-                break  
+                # print text
+                # break  
 
     def test_load_post(self):
         # departed solution
@@ -69,9 +69,14 @@ class TestDataLoaderMethods(unittest.TestCase):
         # post = es_loader.load_post(self.path, 0, post_object=True)
         # print post.body
         
-        post_id = 0
+        post_id = 8253
+
+
+        post_id = post_id - 1 # only for test graph annotation
+        # {'job_ads': 1, 'massage': 2, 'escort': 3,}
+        
         text, post = es_loader.load_post(self.path, post_id)
-        print 'original post content:\n', text, '\n\n'
+        print 'original post content:\n', text.encode('ascii', 'ignore'), '\n\n'
         print 'post content after preprocessing:\n', post.body, '\n\n'
 
 

@@ -24,7 +24,7 @@ def build_graph(input, output, n_neighbors=5, algorithm='ball_tree'):
     input_fh = open(input, 'rb')
     output_fh = open(output, 'wb')
 
-    lines = input_fh.readlines()[:10]
+    lines = input_fh.readlines()#[:10]
     size = len(lines)
     lines = ';'.join(lines)
     X = np.array(np.mat(lines))
@@ -50,7 +50,7 @@ def build_graph(input, output, n_neighbors=5, algorithm='ball_tree'):
             post_neighbors.append([post_indices[idx]+1, post_k_distances[idx]])
         graph_item.append(post_neighbors)
 
-        output_fh.write(str(graph_item))
+        output_fh.write(str(graph_item)+'\n')
 
 
 
