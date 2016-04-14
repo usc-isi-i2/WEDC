@@ -14,7 +14,6 @@ def post2sv(input, output):
 
     output = open(output, 'wb')
 
-    doc_id = 0
     with open(input, 'rb') as f:
         for line in f:
             vector = ['0'] * seeds_size
@@ -24,9 +23,7 @@ def post2sv(input, output):
                     vector[i] = '1'
 
             # print vector
-            output.write(str(doc_id) + '\t' + ' '.join(vector) + '\n')
-            
-        doc_id += 1
+            output.write(' '.join(vector) + '\n')
 
 
     output.close()
