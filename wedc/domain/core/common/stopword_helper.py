@@ -9,7 +9,7 @@ def get_stopword_from_file(file_path):
         lines = f.readlines()
         for line in lines:
 
-            names_list.append(line.strip())
+            names_list.append(line.strip().lower())
     return names_list
 
 def get_male_names():
@@ -22,8 +22,8 @@ def get_female_names():
 
 def get_names():
     result = []
-    result.expend(get_male_names())
-    result.expend(get_female_names())
+    result.extend(get_male_names())
+    result.extend(get_female_names())
 
     return result
 

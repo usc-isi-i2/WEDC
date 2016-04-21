@@ -93,7 +93,7 @@ def post_parser(path):
             # break   # test one doc this time
             # test += 1
             # if test == 2000:
-            #     break
+            # break
 
         except Exception as e: 
             print "ERROR: " + str(e)
