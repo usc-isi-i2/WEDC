@@ -77,6 +77,7 @@ class Post(object):
         #         tokens.append(token)
 
         tokens = [self.token_operation(token) for token in word_tokenize(sentences) if token not in stop and not has_url(token)]
+        tokens = [_ for _ in tokens if _]
 
         # tokens = [str(stem.stemming(token.encode('ascii', 'ignore'))) for token in word_tokenize(sentences) if token not in stop and not str_helper.hasNumbers(token) and not str_helper.hasPunctuation(token)]
 
@@ -106,10 +107,10 @@ class Post(object):
         if re.search(r'\d+[k$]+[/(hr|hour)]*', token):
             return '#/h'
         if re.search(r'\d', token):
-            return ''
+            return None
         if str_helper.hasPunctuation(token):
-            return ''
-        return stem.stemming(token)
+            return None
+        return stem.stemming(token).strip()
 
     def sentence_operation(self, sentence):
         sentence = remove_tags(sentence)
