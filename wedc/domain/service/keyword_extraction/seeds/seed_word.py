@@ -42,6 +42,8 @@ def load_all_seed_words():
 
 
 
+
+
 def load_seed_similar_words(level=1):
     from wedc.domain.service.keyword_extraction.word2vec import similarity
     from wedc.domain.vendor.nltk import stem
@@ -68,12 +70,84 @@ def load_seed_similar_words(level=1):
         current_level_seed_words = next_level_seed_words.keys()
     # ans = ans.keys()
     # ans.sort()
+   
     return ans
+
+
+def cache_seed_similar_words(model, level=1, path=None):
+    from wedc.domain.service.keyword_extraction.word2vec import similarity
+    from wedc.domain.vendor.nltk import stem
+    seed_words = [str(stem.stemming(_)) for _ in load_all_seed_words()]
+    
+    num_words, num_vectors = model.vectors.shape
+
+    with open(path, 'w') as f:
+        for seed_word in seed_words:
+            # similar_words_dict = similarity.get_similar_words_with_similarity(model, seed_word)
+            # if not similar_words_dict:
+            #     continue
+            
+            try:
+                indexes, metrics = model.cosine(seed_word, n=num_words)
+            except Exception as e:
+                print seed_word
+                continue
+            similar_words_from_model = [str(_) for _ in list(model.vocab[indexes])]    # similar words
+
+            similar_words = {}
+            cur_sws = [seed_word]
+            for _ in range(level):
+                next_sws = {}
+                for w in cur_sws:
+                    tmp = similarity.get_similar_words(model, w)
+                    [similar_words.setdefault(_, 0) for _ in tmp]
+                    # [similar_words.setdefault[_]+=1 for _ in tmp]
+                    [next_sws.setdefault(_, 0) for _ in tmp]
+                cur_sws = next_sws.keys()
+            
+            sw_words, sw_similarity = [], []
+
+            # print similar_words.keys()
+
+            for sw in similar_words.keys():
+                if sw == seed_word:
+                    continue 
+                idx = similar_words_from_model.index(sw)
+                sw_words.append(sw)
+                sw_similarity.append(str(metrics[idx]))
+
+            f.write(seed_word + '\t')
+            f.write(' '.join(sw_words) + '\t')
+            f.write(' '.join(sw_similarity) + '\n')
+            
+
+
+
+
+
+
+
+
+
+    
 
 def adjust_weight(seeds_dict, other_model_path):
     import word2vec
     other_word2vec_model = word2vec.load(other_model_path)
-    pass
+    
+    # print seeds_dict
+
+    # for (k, v) in seeds_dict.items():
+    #     pass
+    # load_seed_similar_words_with_model(word2vec_model, level=2)
+
+
+
+
+
+
+
+    
 
 
 

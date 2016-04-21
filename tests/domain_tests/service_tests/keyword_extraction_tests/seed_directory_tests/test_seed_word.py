@@ -26,16 +26,29 @@ class TestDataLoaderMethods(unittest.TestCase):
         print seed_word.load_seed_words()
 
     def test_load_seed_similar_words(self):
-        print seed_word.load_seed_similar_words(level=2)
+        original_seed_similar_words = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'original_seed_similar_words'))
+        seed_word.load_seed_similar_words(level=2)
 
     def test_adjust_weight(self):
-        import word2vec
-        import time
-        other_word2vec_model = word2vec.load(other_model_path)
+        
+        # import word2vec
+        # import time
+        # start_time = time.time()
+        # load google_news_model_bin costs 169.9s
+        # other_word2vec_model = word2vec.load(google_news_model_bin)
+        
+        # print base.word2vec_model
+        # seed_dict = seed_word.load_seed_similar_words(level=2)  # cost 0.87s
+        # print 'time cost:', time.time() - start_time
+
+        seed_dict = seed_word.load_seed_similar_words(level=2)
+        print seed_word.adjust_weight(seed_dict, google_news_model_bin)
 
 
-        # seed_dict = seed_word.load_seed_similar_words(level=2)
-        # print seed_word.adjust_weight(seed_dict, google_news_model_bin)
+    def test_cache_seed_similar_words(self):
+        original_seed_similar_words = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'original_seed_similar_words'))
+
+        seed_word.cache_seed_similar_words(base.word2vec_model, level=2, path=original_seed_similar_words)
 
     def tearDown(self):
         pass
@@ -45,7 +58,9 @@ if __name__ == '__main__':
         suite = unittest.TestSuite()
         # suite.addTest(TestDataLoaderMethods("test_load_seed_words"))
         # suite.addTest(TestDataLoaderMethods("test_load_seed_similar_words"))
-        suite.addTest(TestDataLoaderMethods("test_adjust_weight"))
+        # suite.addTest(TestDataLoaderMethods("test_adjust_weight"))
+        suite.addTest(TestDataLoaderMethods("test_cache_seed_similar_words"))
+        
         runner = unittest.TextTestRunner()
         runner.run(suite)
 

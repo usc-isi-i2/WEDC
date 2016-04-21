@@ -78,10 +78,10 @@ class Post(object):
         #         tokens.append(token)
 
         names = stopword_helper.get_names()
-        tokens = [self.token_operation(token) for token in word_tokenize(sentences) if token not in stop and not has_url(token) and not re.search(r'\d', token) and not str_helper.hasPunctuation(token) and not len(token) == 1]
+        tokens = [self.token_operation(token) for token in word_tokenize(sentences) if token not in stop and not has_url(token)]
 
 
-        tokens = [_ for _ in tokens if _ not in names]
+        tokens = [_ for _ in tokens if _ and _ not in names]
 
         # tokens = [str(stem.stemming(token.encode('ascii', 'ignore'))) for token in word_tokenize(sentences) if token not in stop and not str_helper.hasNumbers(token) and not str_helper.hasPunctuation(token)]
 
@@ -110,12 +110,12 @@ class Post(object):
         # and not str_helper.hasNumbers(token) and not str_helper.hasPunctuation(token) and 
         if re.search(r'\d+[k$]+[/(hr|hour)]*', token):
             return '#/h'
-        # if re.search(r'\d', token):
-        #     return None
-        # if str_helper.hasPunctuation(token):
-        #     return None
-        # if len(token) == 1:
-        #     return None
+        if re.search(r'\d', token):
+            return None
+        if str_helper.hasPunctuation(token):
+            return None
+        if len(token) == 1:
+            return None
         return stem.stemming(token).strip()
 
     def sentence_operation(self, sentence):

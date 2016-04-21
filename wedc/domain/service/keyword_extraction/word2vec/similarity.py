@@ -42,7 +42,16 @@ def get_similar_words(target_word, n=10):
     
     return similar_words
 
-
+def get_similar_words(word2vec_model, target_word, n=10):
+    target_word = stem.stemming(target_word)
+    similar_words = []
+    try:
+        indexes, metrics = word2vec_model.cosine(target_word, n=n)
+        similar_words = [str(_) for _ in list(word2vec_model.vocab[indexes])]    # similar words
+        return similar_words
+    except Exception as e: 
+        pass
+    return similar_words
 
 def get_similar_words_with_similarity(target_word, n=10):
     target_word = stem.stemming(target_word)
@@ -60,5 +69,20 @@ def get_similar_words_with_similarity(target_word, n=10):
         pass
     return similar_words
     
+def get_similar_words_with_similarity_and_model(word2vec_model, target_word, n=10):
+    target_word = stem.stemming(target_word)
+
+    similar_words = []
+    try:
+        indexes, metrics = word2vec_model.cosine(target_word, n=n)
+        similar_words = [str(_) for _ in list(word2vec_model.vocab[indexes])]    # similar words
+        # pairs = [(similar_words[i], metrics[i]) for i in range(len(similar_words))]
+        pairs = {similar_words[i]: metrics[i] for i in range(len(similar_words))}
+
+        return pairs
+    except Exception as e: 
+        # print "NO FOUND"
+        pass
+    return similar_words
 
 
