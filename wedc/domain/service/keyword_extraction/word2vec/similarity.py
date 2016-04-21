@@ -56,9 +56,9 @@ def get_similar_words_with_similarity(target_word, n=10):
 
         return pairs
     except Exception as e: 
-        print "NO FOUND"
-        return None
-    
+        # print "NO FOUND"
+        pass
+    return similar_words
     
 
 

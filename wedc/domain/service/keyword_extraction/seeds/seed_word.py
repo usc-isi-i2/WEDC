@@ -70,6 +70,10 @@ def load_seed_similar_words(level=1):
     # ans.sort()
     return ans
 
+def adjust_weight(seeds_dict, other_model_path):
+    import word2vec
+    other_word2vec_model = word2vec.load(other_model_path)
+    pass
 
 
 

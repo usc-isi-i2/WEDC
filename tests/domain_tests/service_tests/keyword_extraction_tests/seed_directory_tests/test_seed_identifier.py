@@ -70,7 +70,50 @@ class TestDataLoaderMethods(unittest.TestCase):
                 f.write(str(ans))
                 f.write('\n\n\n\n')
 
+    def test_generate_label(self):
+        from wedc.domain.service.keyword_extraction.seeds import seed_word
+        from wedc.domain.service.keyword_extraction.seeds import seed_dict
+        from wedc.domain.vendor.nltk import stem
 
+        category = ['others','job_ads', 'massage', 'escort']
+
+        label_from_seeds_filename = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'label_from_seeds'))
+        # posts = es_loader.load(posts_file)
+        posts = []
+        dataset = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'text'))
+        with open(dataset, 'r') as pf:
+            for line in pf:
+                posts.append(line.strip())
+
+        seeds = seed_word.load_seed_similar_words(level=2)
+        # print seeds
+        sdict = seed_dict.build_sd_with_similar_seeds(level=2)
+
+        with open(label_from_seeds_filename, 'w') as f:
+            for post in posts:
+                if not post:
+                    continue
+                judge_dict = {}
+                for (word, cates) in sdict.items():
+                    if stem.stemming(word) in post.split(' ') and word != ' ':
+                        for cate in cates:
+                            judge_dict.setdefault(cate, 0)
+                            judge_dict[cate] += 1
+                            
+                if not len(judge_dict.values()):
+                    f.write('0\n')
+                    continue
+                max_value = max(judge_dict.values())
+                ans = [cate for (cate, count) in judge_dict.items() if count == max_value]
+                
+                if len(ans) == 1:
+                    for i in range(1, 4):
+                        if ans[0] == category[i]:
+                            f.write(str(i)+'\n')
+                else:
+                    f.write('0\n')
+                # break
+                
 
     def tearDown(self):
         pass
@@ -79,7 +122,8 @@ if __name__ == '__main__':
     def run_main_test():
         suite = unittest.TestSuite()
         # suite.addTest(TestDataLoaderMethods("test_identify_post"))
-        suite.addTest(TestDataLoaderMethods("test_identify_posts"))
+        # suite.addTest(TestDataLoaderMethods("test_identify_posts"))
+        suite.addTest(TestDataLoaderMethods("test_generate_label"))
         runner = unittest.TextTestRunner()
         runner.run(suite)
 
