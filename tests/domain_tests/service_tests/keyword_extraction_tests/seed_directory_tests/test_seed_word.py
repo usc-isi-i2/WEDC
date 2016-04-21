@@ -29,8 +29,13 @@ class TestDataLoaderMethods(unittest.TestCase):
         print seed_word.load_seed_similar_words(level=2)
 
     def test_adjust_weight(self):
-        seed_dict = seed_word.load_seed_similar_words(level=2)
-        print seed_word.adjust_weight(seed_dict, google_news_model_bin)
+        import word2vec
+        import time
+        other_word2vec_model = word2vec.load(other_model_path)
+
+
+        # seed_dict = seed_word.load_seed_similar_words(level=2)
+        # print seed_word.adjust_weight(seed_dict, google_news_model_bin)
 
     def tearDown(self):
         pass

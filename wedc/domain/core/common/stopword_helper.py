@@ -1,7 +1,5 @@
-
 import os
 from wedc.domain.conf.storage import __res_dir__
-
 
 def get_stopword_from_file(file_path):
     names_list = []

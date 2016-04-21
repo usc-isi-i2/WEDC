@@ -26,9 +26,6 @@ from wedc.domain.service.keyword_extraction.seeds import post2sv
 
 
 
-
-
-
 class TestDataLoaderMethods(unittest.TestCase):
     def setUp(self):
         pass
@@ -36,10 +33,6 @@ class TestDataLoaderMethods(unittest.TestCase):
     def test_post2sv(self):
         post2sv.post2sv(input_, output_)
 
-
-
-
-        
     def tearDown(self):
         pass
 
