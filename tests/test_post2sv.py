@@ -28,10 +28,17 @@ from wedc.domain.service.keyword_extraction.seeds import post2sv
 
 class TestDataLoaderMethods(unittest.TestCase):
     def setUp(self):
-        pass
+        original_seed_similar_words = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'original_seed_similar_words'))
+        google_new_seed_similar_words = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'google_new_seed_similar_words'))
+
+        self.seeds = seed_word.generate_weighted_seed_dict(original_seed_similar_words, google_new_seed_similar_words)
+
 
     def test_post2sv(self):
         post2sv.post2sv(input_, output_)
+
+    def test_post2sv_weighted(self):
+        post2sv.post2sv_weighted(input_, output_, self.seeds)
 
     def tearDown(self):
         pass
@@ -41,7 +48,8 @@ if __name__ == '__main__':
 
     def run_main_test():
         suite = unittest.TestSuite()
-        suite.addTest(TestDataLoaderMethods("test_post2sv"))
+        # suite.addTest(TestDataLoaderMethods("test_post2sv"))
+        suite.addTest(TestDataLoaderMethods("test_post2sv_weighted"))
         
         runner = unittest.TextTestRunner()
         runner.run(suite)

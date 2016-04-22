@@ -51,16 +51,16 @@ def build_sd_with_similar_seeds(level=1):
 
 
 
-    for (cate, words) in seeds.items():
-        for word in words:
-            similar_words = similarity.get_similar_words(word)
-            # print similar_words
-            for w in [word] + similar_words:
-                seed_dict.setdefault(w, [])
-                if cate not in seed_dict[w]:
-                    seed_dict[w].append(cate)
+    # for (cate, words) in seeds.items():
+    #     for word in words:
+    #         similar_words = similarity.get_similar_words(word)
+    #         # print similar_words
+    #         for w in [word] + similar_words:
+    #             seed_dict.setdefault(w, [])
+    #             if cate not in seed_dict[w]:
+    #                 seed_dict[w].append(cate)
 
-    return seed_dict
+    # return seed_dict
 
 
 

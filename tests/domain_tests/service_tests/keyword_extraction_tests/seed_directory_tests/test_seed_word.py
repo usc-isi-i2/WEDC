@@ -60,6 +60,10 @@ class TestDataLoaderMethods(unittest.TestCase):
         seed_word.cache_seed_similar_words(other_word2vec_model, seed_words, level=2, path=google_new_seed_similar_words)
 
 
+    def test_generate_weighted_seed_dict(self):
+        original_seed_similar_words = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'original_seed_similar_words'))
+        google_new_seed_similar_words = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'google_new_seed_similar_words'))
+        seed_word.generate_weighted_seed_dict(original_seed_similar_words, google_new_seed_similar_words)
 
 
 
@@ -72,7 +76,7 @@ if __name__ == '__main__':
         # suite.addTest(TestDataLoaderMethods("test_load_seed_words"))
         # suite.addTest(TestDataLoaderMethods("test_load_seed_similar_words"))
         # suite.addTest(TestDataLoaderMethods("test_cache_seed_similar_words"))
-        suite.addTest(TestDataLoaderMethods("test_adjust_weight"))
+        suite.addTest(TestDataLoaderMethods("test_generate_weighted_seed_dict"))
 
         
         runner = unittest.TextTestRunner()

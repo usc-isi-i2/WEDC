@@ -124,7 +124,46 @@ def cache_seed_similar_words(model, seed_words=None, level=1, path=None):
             
     
 
+def generate_weighted_seed_dict(ssw_cache_path, other_ssw_cache_path=None):
 
+    seed_dict = {}
+    with open(ssw_cache_path, 'r') as f:
+        for line in f:
+            line = line.split('\t')
+            seed_word = line[0]
+            similar_words = line[1].split()
+            similarity = line[2].split()
+            
+            seed_dict.setdefault(seed_word, '1')
+
+            for i in range(len(similar_words)):
+                swk = similar_words[i]
+                swv = similarity[i]
+
+                seed_dict.setdefault(swk, 0)
+                seed_dict[swk] = max(float(seed_dict[swk]), swv)
+
+    if not other_ssw_cache_path:
+        return seed_dict
+
+    # weight with dect from other word2vec mdoel results
+
+    sd_words = seed_dict.keys()
+
+    with open(ssw_cache_path, 'r') as f:
+        for line in f:
+            line = line.split('\t')
+            seed_word = line[0]
+            similar_words = line[1].split()
+            similarity = line[2].split()
+
+            for i in range(len(similar_words)):
+                swk = similar_words[i]
+                swv = similarity[i]
+
+                if swk in sd_words:
+                    seed_dict[swk] = (float(seed_dict[swk]) + float(swv)) / 2.0
+    return seed_dict
 
 
 
