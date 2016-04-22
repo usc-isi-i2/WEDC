@@ -46,9 +46,19 @@ class TestDataLoaderMethods(unittest.TestCase):
 
 
     def test_cache_seed_similar_words(self):
-        original_seed_similar_words = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'original_seed_similar_words'))
 
-        seed_word.cache_seed_similar_words(base.word2vec_model, level=2, path=original_seed_similar_words)
+
+        # original_seed_similar_words = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'original_seed_similar_words'))
+        # seed_word.cache_seed_similar_words(base.word2vec_model, level=2, path=original_seed_similar_words)
+
+        import word2vec
+        google_new_seed_similar_words = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'google_new_seed_similar_words'))
+        other_word2vec_model = word2vec.load(google_news_model_bin)
+        seed_word.cache_seed_similar_words(other_word2vec_model, level=2, path=google_new_seed_similar_words)
+
+
+
+
 
     def tearDown(self):
         pass

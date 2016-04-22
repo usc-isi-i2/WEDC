@@ -92,7 +92,7 @@ def cache_seed_similar_words(model, level=1, path=None):
             except Exception as e:
                 print seed_word
                 continue
-            similar_words_from_model = [str(_) for _ in list(model.vocab[indexes])]    # similar words
+            similar_words_from_model = [str(_.encode('ascii', 'ignore')) for _ in list(model.vocab[indexes])]    # similar words
 
             similar_words = {}
             cur_sws = [seed_word]

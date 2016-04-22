@@ -1,0 +1,87 @@
+dataset with 100 manually labelled samples
+80 for traing
+20 for testing
+
+=== Label ===
+0: others
+1: job_ads
+2: massage
+3: escort
+
+=== Note ===
+only 1 out of 100 belongs to massage.
+there are duplicated samples inside the dataset.
+
+
++--------------------------------------------------------+
+|                   Classifier Report                    +
++--------------------------------------------------------+
+Classifier: decision_tree
+             precision    recall  f1-score   support
+
+          1       1.00      0.71      0.83         7
+          3       0.87      1.00      0.93        13
+
+avg / total       0.91      0.90      0.90        20
+
+accuracy: 0.9
+
+
+
+train random_forest classifier
++--------------------------------------------------------+
+|                   Classifier Report                    +
++--------------------------------------------------------+
+Classifier: random_forest
+             precision    recall  f1-score   support
+
+          1       1.00      0.86      0.92         7
+          3       0.93      1.00      0.96        13
+
+avg / total       0.95      0.95      0.95        20
+
+accuracy: 0.95
+
+
+
+train ada_boost classifier
++--------------------------------------------------------+
+|                   Classifier Report                    +
++--------------------------------------------------------+
+Classifier: ada_boost
+             precision    recall  f1-score   support
+
+          1       1.00      0.71      0.83         7
+          3       0.87      1.00      0.93        13
+
+avg / total       0.91      0.90      0.90        20
+
+accuracy: 0.9
+
+
+
+train gaussian_nb classifier
++--------------------------------------------------------+
+|                   Classifier Report                    +
++--------------------------------------------------------+
+Classifier: gaussian_nb
+/Users/ZwEin/.pyenv/versions/2.7.11/lib/python2.7/site-packages/sklearn/metrics/classification.py:1119: UndefinedMetricWarning: Recall and F-score are ill-defined and being set to 0.0 in labels with no true samples.
+  'recall', 'true', average, warn_for)
+             precision    recall  f1-score   support
+
+          1       0.78      1.00      0.88         7
+          2       0.00      0.00      0.00         0
+          3       1.00      0.77      0.87        13
+
+avg / total       0.92      0.85      0.87        20
+
+accuracy: 0.85
+
+
+
+.
+----------------------------------------------------------------------
+Ran 1 test in 0.980s
+
+OK
+[Finished in 1.5s]
