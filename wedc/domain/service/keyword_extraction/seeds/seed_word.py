@@ -74,10 +74,12 @@ def load_seed_similar_words(level=1):
     return ans
 
 
-def cache_seed_similar_words(model, level=1, path=None):
+def cache_seed_similar_words(model, seed_words=None, level=1, path=None):
     from wedc.domain.service.keyword_extraction.word2vec import similarity
     from wedc.domain.vendor.nltk import stem
-    seed_words = [str(stem.stemming(_)) for _ in load_all_seed_words()]
+
+    if not seed_words:
+        seed_words = [str(stem.stemming(_)) for _ in load_all_seed_words()]
     
     num_words, num_vectors = model.vectors.shape
 
@@ -120,26 +122,9 @@ def cache_seed_similar_words(model, level=1, path=None):
             f.write(' '.join(sw_words) + '\t')
             f.write(' '.join(sw_similarity) + '\n')
             
-
-
-
-
-
-
-
-
-
     
 
-def adjust_weight(seeds_dict, other_model_path):
-    import word2vec
-    other_word2vec_model = word2vec.load(other_model_path)
-    
-    # print seeds_dict
 
-    # for (k, v) in seeds_dict.items():
-    #     pass
-    # load_seed_similar_words_with_model(word2vec_model, level=2)
 
 
 

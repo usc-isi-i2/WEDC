@@ -34,21 +34,31 @@ class TestDataLoaderMethods(unittest.TestCase):
         out_word = stem.stemming(in_word)
         # assert in_word == out_word
         print in_word, ' : ', out_word
-    
-    def test_custom_word(self):
+
+    def test_sentence(self):
         in_word = 'source incall physicians phoneno'
         out_word = stem.stemming(in_word)
+        print in_word, ' : ', out_word
+
+    def test_custom_word(self):
+        in_word = 'certified'
+        out_word = stem.stemming(in_word)
+        # assert in_word == out_word
         print in_word, ' : ', out_word
 
     def tearDown(self):
         pass
 
 if __name__ == '__main__':
-    unittest.main()
+    # unittest.main()
     
-    # def run_main_test():
-    #     pass
-    # run_main_test()
+    def run_main_test():
+        suite = unittest.TestSuite()
+        suite.addTest(TestDataLoaderMethods("test_custom_word"))
+
+        runner = unittest.TextTestRunner()
+        runner.run(suite)
+    run_main_test()
 
 
 

@@ -1,5 +1,6 @@
 
 from nltk import stem
+# import Stemmer
 import re
 
 def stemming(word):
@@ -14,4 +15,6 @@ def stemming(word):
     if re.search(r'\d+[k$]+[/(hr|hour)]*', word):
         return '#/h'
 
+    # stemmer = Stemmer.Stemmer('english')
+    # return stemmer.stemWord(word)
     return stem.snowball.SnowballStemmer("english", ignore_stopwords=False).stem(word)
