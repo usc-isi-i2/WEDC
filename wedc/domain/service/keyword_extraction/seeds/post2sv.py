@@ -47,14 +47,22 @@ def post2seed(input, output, seeds):
     seeds_size = len(seed_words)
     seed_words.sort()
 
+
+
     output = open(output, 'wb')
+    output.write('\n====================\n')
+    output.write(str(seed_words))
+    output.write('\n====================\n')
+
     with open(input, 'rb') as f:
+        idx = 1
         for line in f:
             tmp = []
             for i in range(seeds_size):
                 if seed_words[i] in line:
-                    tmp.append(seed_words[i])
-            output.write(','.join(tmp) + '\n')
+                    tmp.append(str((seed_words[i], str(1.0 * float(seeds[seed_words[i]])))))
+            output.write('post:'+ str(idx) + '    ' +','.join(tmp) + '\n')
+            idx += 1
     output.close()
 
 

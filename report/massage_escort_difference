@@ -1,0 +1,68 @@
+
+
+===========================================================================
+Example of massage post
+===========================================================================
+Post ID: 99
+
+# original post content:
+.Responsibilities: Greet all members &#x26; guests with a smile and wish them well as they exit the club. Check in all members and guests in accordance with company procedures. Facilitate any messages on club software at member check-in. Answer phones in courteous, helpful, professional manner. Communicate special events to members and guests. Maintain an atmosphere which makes members feel welcome. Facilitate all member requests or forward to a manager. Maintain professional disposition at all times. Understand and follow all policies, procedures and standards. Sell juice bar &#x26; retail products (if sold at the front desk). Schedule member services: massage, court sports, rockwall, etc. Assist in fit desk, retail, juice bar, childcare, etc. desks/areas as needed. Facilitate payment of member services in accordance with company procedures. Know club facility, services, and schedules. Maintain a clean and organized work area. Assist in all projects as delegated by club management. Above position may report to the Assistant Manager or Assistant General Manager where applicable. Follow all policies and procedures in Employee Handbook. Above description may be subject to change or alteration at any time. Qualifications: Fluent in English Proficient reading and writing skills Good communication skills Strong customer service skills (Sports Management, Finance, Admin, Sports Marketing, Events, Promotions)
+
+                    <p>Source: <a rel="nofollow" target="_blank" href="http://www.juju.com/jad/00000000ft1mkn?partnerid=af0e5911314cbc501beebaca7889739d&amp;exported=True&amp;channel=staticfile&amp;hosted_timestamp=0042a345f27ac5dcd975852617a67a1d3abd960dd71927e4cb1ca9798407eb16">http://www.juju.com/jad/00000000ft1mkn?partnerid=af0e5911314cbc501beebaca7889739d&amp;exported=True&amp;channel=staticfile&amp;hosted_timestamp=0042a345f27ac5dcd975852617a67a1d3abd960dd71927e4cb1ca9798407eb16</a></p> 
+
+
+# post content after preprocessing:
+respons greet member guest smile wish well exit club check member guest accord compani procedur facilit messag club softwar member answer phone courteous help profession manner communic special event member guest maintain atmospher make member feel welcom facilit member request forward manag maintain profession disposit time understand follow polici procedur standard sell juic bar retail product sold front desk schedul member servic massag court sport rockwal etc assist fit desk retail juic bar childcar etc need facilit payment member servic accord compani procedur know club facil servic schedul maintain clean organ work area assist project deleg club manag posit report assist manag assist general manag applic follow polici procedur employe handbook descript subject chang alter time qualif fluent english profici read write skill good communic skill strong custom servic skill sport manag financ admin sport market event promot sourc 
+
+
+# weighted seed words:
+post:99    ('atm', '0.509532547005'),('desk', '0.353324411536'),('ec', '0.649776123028'),('el', '0.400260017053'),('ell', '0.417852973939'),('employ', '0.316414751681'),('employe', '1.0'),('ess', '0.249830222374'),('exi', '0.54614620654'),('flu', '0.400359800854'),('ip', '0.44029897264'),('ite', '0.667953342887'),('kno', '0.338415481556'),('leg', '1.0'),('lic', '0.48165951689'),('manag', '1.0'),('mas', '0.574671370505'),('mess', '0.452312452967'),('muni', '0.341279697204'),('nda', '0.661384452483'),('nt', '0.399865286976'),('ol', '0.617157787241'),('on', '0.412819314388'),('or', '0.457029808352'),('pe', '0.386627811715'),('pecial', '0.390463171577'),('pt', '0.511521679708'),('ral', '0.586068907684'),('retail', '1.0'),('rv', '0.503906830751'),('st', '0.492712023017'),('ta', '0.311224751049'),('tai', '0.669485027807'),('tail', '0.510261095982'),('un', '0.422738380863')
+
+
+# top 4 similar posts
+[99, 2, [[88, 0.56830634028509708], [89, 0.56830634028509708], [74, 0.54656839017186476], [79, 0.54583696070283461]]]
+
+post id     actual category     predict category
+88          1                   1
+89          1                   1
+74          3                   1
+79          3                   2
+
+===========================================================================
+Example of escort post but annotated as massage by our solution
+===========================================================================
+Post ID: 79
+
+# original post content:
+Hey gentlemen my name is maria. Extremly georgou with the perfect cokebottle shape. Im here for a shortwhile from miami. 135Lbs 5' 5" tall yes my toush is rare and a puee elegant masterpiece. Im an upscale girl who is ready to cater to u! Call me I love to please.<br />
+614-805-2776<br />
+I cater to upscale professional gentlemen<br /> 
+
+
+# post content after preprocessing:
+.hey gentlemen name extrem georgou perfect cokebottl shape im shortwhil miami tall yes toush rare puee eleg masterpiec im upscal girl readi cater call pleas cater upscal profession gentlemen 
+
+
+# weighted seed words:
+post:79    ('call', '1.0'),('cokebottl', '0.574768648215'),('ec', '0.649776123028'),('el', '0.400260017053'),('ess', '0.249830222374'),('ext', '0.487404690449'),('leg', '1.0'),('mas', '0.574671370505'),('nam', '0.313670312248'),('nt', '0.399865286976'),('on', '0.412819314388'),('or', '0.457029808352'),('pe', '0.386627811715'),('pie', '0.534077479619'),('st', '0.492712023017'),('ste', '0.48122870725'),('ta', '0.311224751049')
+
+
+# top 4 similar posts
+[79, 0, [[41, 0.56323418638515987], [38, 0.56323418638515987], [73, 0.54872254363480533], [72, 0.54872254363480533]]]
+
+post id     actual category     predict category
+41          3                   1
+38          3                   3
+73          3                   3
+72          3                   1
+
+
+===========================================================================
+Reason Analysis
+===========================================================================
+1. post 79 is the top fourth neighbor of post 99 (massage), and thus will be annotated as the category that post 99 belongs to
+2. not all feature words are usefull, e.g. "on" in feature words is definitely not the stop word, because all stopwords has been removed after post token extraction process. There are some reasons we get "on" here. a) the stemming method we used would make word difficult to understand, i.e. "employee" -> "employe" b) some address information, like "CA", would be treat as "ca" which didn't removed from the extraction of seed word yet. 
+
+
+
+

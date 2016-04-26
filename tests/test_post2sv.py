@@ -42,7 +42,7 @@ class TestDataLoaderMethods(unittest.TestCase):
 
     def test_post2seeds(self):
         output_post_seeds = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'post_vec_seeds.txt'))
-        post2sv.post2sv_weighted(input_, output_post_seeds, self.seeds)
+        post2sv.post2seed(input_, output_post_seeds, self.seeds)
 
     def tearDown(self):
         pass
