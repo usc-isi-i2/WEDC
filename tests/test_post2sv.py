@@ -40,6 +40,10 @@ class TestDataLoaderMethods(unittest.TestCase):
     def test_post2sv_weighted(self):
         post2sv.post2sv_weighted(input_, output_, self.seeds)
 
+    def test_post2seeds(self):
+        output_post_seeds = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'post_vec_seeds.txt'))
+        post2sv.post2sv_weighted(input_, output_post_seeds, self.seeds)
+
     def tearDown(self):
         pass
 
@@ -49,7 +53,8 @@ if __name__ == '__main__':
     def run_main_test():
         suite = unittest.TestSuite()
         # suite.addTest(TestDataLoaderMethods("test_post2sv"))
-        suite.addTest(TestDataLoaderMethods("test_post2sv_weighted"))
+        # suite.addTest(TestDataLoaderMethods("test_post2sv_weighted"))
+        suite.addTest(TestDataLoaderMethods("test_post2seeds"))
         
         runner = unittest.TextTestRunner()
         runner.run(suite)

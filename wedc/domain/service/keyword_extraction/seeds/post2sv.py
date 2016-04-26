@@ -42,4 +42,20 @@ def post2sv_weighted(input, output, seeds):
     return seed_words
 
 
+def post2seed(input, output, seeds):
+    seed_words = seeds.keys()
+    seeds_size = len(seed_words)
+    seed_words.sort()
+
+    output = open(output, 'wb')
+    with open(input, 'rb') as f:
+        for line in f:
+            tmp = []
+            for i in range(seeds_size):
+                if seed_words[i] in line:
+                    tmp.append(seed_words[i])
+            output.write(','.join(tmp) + '\n')
+    output.close()
+
+
 
