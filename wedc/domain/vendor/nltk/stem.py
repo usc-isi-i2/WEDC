@@ -1,6 +1,7 @@
 
 from nltk import stem
 # import Stemmer
+from nltk.stem.wordnet import WordNetLemmatizer
 import re
 
 def stemming(word):
@@ -15,6 +16,13 @@ def stemming(word):
     if re.search(r'\d+[k$]+[/(hr|hour)]*', word):
         return '#/h'
 
+
+    # return snowball.stem(word)
+
     # stemmer = Stemmer.Stemmer('english')
     # return stemmer.stemWord(word)
-    return stem.snowball.SnowballStemmer("english", ignore_stopwords=False).stem(word)
+    # return stem.snowball.SnowballStemmer("english", ignore_stopwords=False).stem(word)
+    
+    lmtzr = WordNetLemmatizer()
+    return lmtzr.lemmatize(word) 
+    
