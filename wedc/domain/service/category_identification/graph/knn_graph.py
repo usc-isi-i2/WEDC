@@ -18,8 +18,8 @@ import numpy as np
 # print indices
 
 
-def build_graph(input, output, n_neighbors=5, algorithm='ball_tree'):
-
+def build_graph(input, output, n_neighbors=10, algorithm='ball_tree'):
+    n_neighbors += 1
     
     input_fh = open(input, 'rb')
     output_fh = open(output, 'wb')
@@ -30,7 +30,7 @@ def build_graph(input, output, n_neighbors=5, algorithm='ball_tree'):
     X = np.array(np.mat(lines))
 
 
-    nbrs = NearestNeighbors(n_neighbors=n_neighbors+1, algorithm=algorithm).fit(X)
+    nbrs = NearestNeighbors(n_neighbors=n_neighbors, algorithm=algorithm).fit(X)
     # Because the query set matches the training set, the nearest neighbor of each point is the point itself, at a distance of zero.
     distances, indices = nbrs.kneighbors(X)
 
