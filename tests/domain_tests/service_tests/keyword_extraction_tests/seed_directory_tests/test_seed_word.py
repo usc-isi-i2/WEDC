@@ -23,13 +23,15 @@ class TestDataLoaderMethods(unittest.TestCase):
         print seed_word.get_seed_files()
 
     def test_load_seed_words(self):
-        print seed_word.load_seed_words()
+        print seed_word.load_all_seed_words()
+        # print seed_word.load_seed_words()
 
     def test_load_seed_similar_words(self):
         original_seed_similar_words = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'original_seed_similar_words'))
         seed_word.load_seed_similar_words(level=2)
 
     def test_adjust_weight(self):
+        # departed
         
         # import word2vec
         # import time
@@ -45,11 +47,11 @@ class TestDataLoaderMethods(unittest.TestCase):
         print seed_word.adjust_weight(seed_dict, google_news_model_bin)
 
 
-    def test_cache_seed_similar_words(self):
-
-
-        # original_seed_similar_words = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'original_seed_similar_words'))
-        # seed_word.cache_seed_similar_words(base.word2vec_model, level=2, path=original_seed_similar_words)
+    def test_cache_seed_similar_words_original(self):
+        original_seed_similar_words = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'original_seed_similar_words'))
+        seed_word.cache_seed_similar_words(base.word2vec_model, level=2, path=original_seed_similar_words)
+    
+    def test_cache_seed_similar_words_gn(self):
 
         import word2vec
 
@@ -63,7 +65,7 @@ class TestDataLoaderMethods(unittest.TestCase):
     def test_generate_weighted_seed_dict(self):
         original_seed_similar_words = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'original_seed_similar_words'))
         google_new_seed_similar_words = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'google_new_seed_similar_words'))
-        seed_word.generate_weighted_seed_dict(original_seed_similar_words, google_new_seed_similar_words)
+        print seed_word.generate_weighted_seed_dict(original_seed_similar_words, google_new_seed_similar_words)
 
 
 
@@ -75,7 +77,8 @@ if __name__ == '__main__':
         suite = unittest.TestSuite()
         # suite.addTest(TestDataLoaderMethods("test_load_seed_words"))
         # suite.addTest(TestDataLoaderMethods("test_load_seed_similar_words"))
-        # suite.addTest(TestDataLoaderMethods("test_cache_seed_similar_words"))
+        # suite.addTest(TestDataLoaderMethods("test_cache_seed_similar_words_original"))
+        # suite.addTest(TestDataLoaderMethods("test_cache_seed_similar_words_gn"))
         suite.addTest(TestDataLoaderMethods("test_generate_weighted_seed_dict"))
 
         

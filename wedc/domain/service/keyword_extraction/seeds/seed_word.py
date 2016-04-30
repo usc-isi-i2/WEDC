@@ -26,7 +26,7 @@ def load_seed_words():
             with open(path) as f:
                 lines = f.readlines()
                 for line in lines:
-                    seeds[cate].append(line.strip())
+                    seeds[cate].append(line.strip().lower())
     return seeds
 
 def load_all_seed_words():
@@ -37,7 +37,7 @@ def load_all_seed_words():
             with open(path) as f:
                 lines = f.readlines()
                 for line in lines:
-                    seeds.append(line.strip())
+                    seeds.append(line.strip().lower())
     return seeds
 
 
@@ -85,6 +85,7 @@ def cache_seed_similar_words(model, seed_words=None, level=1, path=None):
 
     with open(path, 'w') as f:
         for seed_word in seed_words:
+
             # similar_words_dict = similarity.get_similar_words_with_similarity(model, seed_word)
             # if not similar_words_dict:
             #     continue
@@ -92,8 +93,10 @@ def cache_seed_similar_words(model, seed_words=None, level=1, path=None):
             try:
                 indexes, metrics = model.cosine(seed_word, n=num_words)
             except Exception as e:
-                print seed_word
+                f.write(seed_word)
+                # print seed_word
                 continue
+
             similar_words_from_model = [str(_.encode('ascii', 'ignore')) for _ in list(model.vocab[indexes])]    # similar words
 
             similar_words = {}
@@ -130,6 +133,9 @@ def generate_weighted_seed_dict(ssw_cache_path, other_ssw_cache_path=None):
     with open(ssw_cache_path, 'r') as f:
         for line in f:
             line = line.split('\t')
+            if len(line) != 3:
+                seed_dict.setdefault(line[0], '1')
+
             seed_word = line[0]
             similar_words = line[1].split()
             similarity = line[2].split()

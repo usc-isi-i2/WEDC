@@ -122,7 +122,7 @@ class TestDataLoaderMethods(unittest.TestCase):
         # Time cost: 4.86683392525 seconds
     
     def test_word_similiarity(self):
-        target_word = stem.stemming('massage')  # "#/h"
+        target_word = stem.stemming('#/h')  # "#/h"
         model = word2vec.load(output_bin)
 
         try:
@@ -148,11 +148,11 @@ if __name__ == '__main__':
 
     def run_main_test():
         suite = unittest.TestSuite()
-        suite.addTest(TestDataLoaderMethods("test_setup_input"))
+        # suite.addTest(TestDataLoaderMethods("test_setup_input"))
         # suite.addTest(TestDataLoaderMethods("test_setup_model"))
         # suite.addTest(TestDataLoaderMethods("test_load_bin"))
         # suite.addTest(TestDataLoaderMethods("test_all_similarity"))
-        # suite.addTest(TestDataLoaderMethods("test_word_similiarity"))
+        suite.addTest(TestDataLoaderMethods("test_word_similiarity"))
         runner = unittest.TextTestRunner()
         runner.run(suite)
 

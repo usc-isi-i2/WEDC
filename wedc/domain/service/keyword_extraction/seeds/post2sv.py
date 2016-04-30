@@ -30,13 +30,25 @@ def post2sv_weighted(input, output, seeds):
 
     output = open(output, 'wb')
     with open(input, 'rb') as f:
-        for line in f:
-            vector = ['0'] * seeds_size
 
+        total = 100
+        counter = 0
+        for line in f:
+            if total < 0:
+                break
+            flag = False
+
+            vector = ['0'] * seeds_size
             for i in range(seeds_size):
                 if seed_words[i] in line:
                     vector[i] = str(1.0 * float(seeds[seed_words[i]]))
             output.write(' '.join(vector) + '\n')
+            # print line
+            # print seed_words
+            # break
+            if flag:
+                counter += 1
+            total -=1
     output.close()
 
     return seed_words
@@ -56,13 +68,20 @@ def post2seed(input, output, seeds):
 
     with open(input, 'rb') as f:
         idx = 1
+        
         for line in f:
+            
+
             tmp = []
             for i in range(seeds_size):
-                if seed_words[i] in line:
+                if seed_words[i] in line.split(' '):
+                    flag = True
                     tmp.append(str((seed_words[i], str(1.0 * float(seeds[seed_words[i]])))))
             output.write('post:'+ str(idx) + '    ' +','.join(tmp) + '\n')
             idx += 1
+
+            
+
     output.close()
 
 

@@ -16,13 +16,15 @@ def stemming(word):
     if re.search(r'\d+[k$]+[/(hr|hour)]*', word):
         return '#/h'
 
+    
+
 
     # return snowball.stem(word)
 
     # stemmer = Stemmer.Stemmer('english')
     # return stemmer.stemWord(word)
-    # return stem.snowball.SnowballStemmer("english", ignore_stopwords=False).stem(word)
+    return stem.snowball.SnowballStemmer("english", ignore_stopwords=False).stem(word)
     
-    lmtzr = WordNetLemmatizer()
-    return lmtzr.lemmatize(word) 
+    # lmtzr = WordNetLemmatizer()
+    # return lmtzr.lemmatize(word) 
     
