@@ -1,6 +1,7 @@
 
 import re
 import string
+from sets import Set
 
 from nltk.tokenize import sent_tokenize
 from wedc.domain.core.common import str_helper
@@ -12,6 +13,10 @@ from wedc.domain.core.common import stopword_helper
 
 domain_ext_list = domain.get_domain_ext_list()
 stop = stopword.get_stopwords()
+names = stopword_helper.get_person_names()
+country, country_abbr = stopword_helper.get_country_names()
+stop_set = Set(names) | Set(country) | Set(country_abbr)
+stop_set = [stem.stemming(_).strip() for _ in stop_set]
 
 def remove_tags(text):
     tag_re = re.compile(r'<[^>]+>')
@@ -79,11 +84,6 @@ class Post(object):
 
         
         tokens = [self.token_operation(token) for token in word_tokenize(sentences) if token not in stop and not has_url(token)]
-
-        from sets import Set
-        names = stopword_helper.get_names()
-        country, country_abbr = stopword_helper.get_countries()
-        stop_set = Set(names) | Set(country) | Set(country_abbr)
         tokens = [_ for _ in tokens if _ and _ not in stop_set]
 
         # tokens = [str(stem.stemming(token.encode('ascii', 'ignore'))) for token in word_tokenize(sentences) if token not in stop and not str_helper.hasNumbers(token) and not str_helper.hasPunctuation(token)]

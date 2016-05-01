@@ -19,7 +19,7 @@ class TestDataLoaderMethods(unittest.TestCase):
         pass
 
     def test_get_stopwords(self):
-        a, b = stopword_helper.get_countries()
+        a, b = stopword_helper.get_country_names()
         print a
 
         

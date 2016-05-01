@@ -6,7 +6,6 @@ def get_stopword_from_file(file_path):
     with open(file_path) as f:
         lines = f.readlines()
         for line in lines:
-
             names_list.append(line.strip().lower())
     return names_list
 
@@ -18,14 +17,14 @@ def get_female_names():
     path = os.path.join(__res_dir__, 'stop_words', 'female.txt')
     return get_stopword_from_file(path)
 
-def get_names():
+def get_person_names():
     result = []
     result.extend(get_male_names())
     result.extend(get_female_names())
     return result
 
 
-def get_countries():
+def get_country_names():
     path = os.path.join(__res_dir__, 'stop_words', 'country.txt')
     country_list = []
     country_abbr_list = []
@@ -36,5 +35,11 @@ def get_countries():
             country_list.append(country)
             country_abbr_list.append(abbr)
     return country_list, country_abbr_list
+
+
+def get_nationality_names():
+    path = os.path.join(__res_dir__, 'stop_words', 'nationality.txt')
+    return get_stopword_from_file(path)
+
 
 
