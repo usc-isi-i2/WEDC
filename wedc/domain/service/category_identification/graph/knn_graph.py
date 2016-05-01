@@ -26,8 +26,7 @@ def build_graph(input, output, n_neighbors=10, algorithm='ball_tree'):
 
     lines = input_fh.readlines()[:100]
     size = len(lines)
-    lines = ';'.join(lines)
-    X = np.array(np.mat(lines))
+    X = np.array(np.mat(';'.join(lines)))
 
 
     nbrs = NearestNeighbors(n_neighbors=n_neighbors, algorithm=algorithm).fit(X)
@@ -43,7 +42,10 @@ def build_graph(input, output, n_neighbors=10, algorithm='ball_tree'):
         
 
         # change to start from 1 for lab propagation library input format
-        graph_item = [post_id+1, 0]
+        if max([float(_) for _ in lines[post_id].split(' ')]) == 0:
+            graph_item = [post_id+1, 4]
+        else:
+            graph_item = [post_id+1, 0]
 
         post_neighbors = []
         for idx in range(n_neighbors):

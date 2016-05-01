@@ -11,7 +11,7 @@ import unittest
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 TEST_DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
 
-input_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'text'))
+input_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'text_no_dup'))
 output_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'post_vec.txt'))
 output_bin = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'vectors.bin'))
 

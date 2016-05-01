@@ -77,9 +77,9 @@ if __name__ == '__main__':
         suite = unittest.TestSuite()
         # suite.addTest(TestDataLoaderMethods("test_load_seed_words"))
         # suite.addTest(TestDataLoaderMethods("test_load_seed_similar_words"))
-        # suite.addTest(TestDataLoaderMethods("test_cache_seed_similar_words_original"))
+        suite.addTest(TestDataLoaderMethods("test_cache_seed_similar_words_original"))
         # suite.addTest(TestDataLoaderMethods("test_cache_seed_similar_words_gn"))
-        suite.addTest(TestDataLoaderMethods("test_generate_weighted_seed_dict"))
+        # suite.addTest(TestDataLoaderMethods("test_generate_weighted_seed_dict"))
 
         
         runner = unittest.TextTestRunner()

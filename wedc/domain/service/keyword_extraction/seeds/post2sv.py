@@ -30,12 +30,7 @@ def post2sv_weighted(input, output, seeds):
 
     output = open(output, 'wb')
     with open(input, 'rb') as f:
-
-        total = 100
-        counter = 0
         for line in f:
-            if total < 0:
-                break
             flag = False
 
             vector = ['0'] * seeds_size
@@ -46,9 +41,6 @@ def post2sv_weighted(input, output, seeds):
             # print line
             # print seed_words
             # break
-            if flag:
-                counter += 1
-            total -=1
     output.close()
 
     return seed_words

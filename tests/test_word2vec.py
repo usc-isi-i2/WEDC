@@ -19,7 +19,7 @@ import word2vec
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 TEST_DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
 
-input_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'text'))
+input_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'text_no_dup'))
 # input_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'memex_raw'))
 output_phrases = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'text-phrases.txt'))
 output_clusters = os.path.expanduser(os.path.join(TEST_DATA_DIR,'text-clusters.txt'))
@@ -122,7 +122,7 @@ class TestDataLoaderMethods(unittest.TestCase):
         # Time cost: 4.86683392525 seconds
     
     def test_word_similiarity(self):
-        target_word = stem.stemming('#/h')  # "#/h"
+        target_word = stem.stemming('escort')  # "#/h"
         model = word2vec.load(output_bin)
 
         try:

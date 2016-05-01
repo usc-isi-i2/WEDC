@@ -11,6 +11,8 @@ import word2vec
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 TEST_DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
 
+from wedc.domain.service.data.base import *
+from wedc.domain.service.keyword_extraction.base import *
 from wedc.domain.service.keyword_extraction.seeds import seed_word
 from wedc.domain.service.keyword_extraction.word2vec import similarity
 
@@ -18,7 +20,7 @@ from wedc.domain.vendor.nltk import stem
 from wedc.domain.service.keyword_extraction.seeds import post2sv
 
 raw_data = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'san-francisco-maria-2.json'))
-input_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'text'))
+input_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'text_no_dup'))
 output_phrases = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'text-phrases.txt'))
 output_clusters = os.path.expanduser(os.path.join(TEST_DATA_DIR,'text-clusters.txt'))
 output_bin = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'vectors.bin'))
@@ -72,7 +74,7 @@ if __name__ == '__main__':
         # suite.addTest(TestDataLoaderMethods("test_setup_model"))
         # suite.addTest(TestDataLoaderMethods("test_cache_seed_similar_words_original"))
         # suite.addTest(TestDataLoaderMethods("test_cache_seed_similar_words_gn"))
-        suite.addTest(TestDataLoaderMethods("test_post2sv_weighted"))
+        # suite.addTest(TestDataLoaderMethods("test_post2sv_weighted"))
         # suite.addTest(TestDataLoaderMethods("test_build_knn_graph"))
 
 
