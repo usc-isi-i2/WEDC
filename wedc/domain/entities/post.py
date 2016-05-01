@@ -77,11 +77,14 @@ class Post(object):
         #         token = str(token)
         #         tokens.append(token)
 
-        names = stopword_helper.get_names()
+        
         tokens = [self.token_operation(token) for token in word_tokenize(sentences) if token not in stop and not has_url(token)]
 
-
-        tokens = [_ for _ in tokens if _ and _ not in names]
+        from sets import Set
+        names = stopword_helper.get_names()
+        country, country_abbr = stopword_helper.get_countries()
+        stop_set = Set(names) | Set(country) | Set(country_abbr)
+        tokens = [_ for _ in tokens if _ and _ not in stop_set]
 
         # tokens = [str(stem.stemming(token.encode('ascii', 'ignore'))) for token in word_tokenize(sentences) if token not in stop and not str_helper.hasNumbers(token) and not str_helper.hasPunctuation(token)]
 

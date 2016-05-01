@@ -22,7 +22,19 @@ def get_names():
     result = []
     result.extend(get_male_names())
     result.extend(get_female_names())
-
     return result
+
+
+def get_countries():
+    path = os.path.join(__res_dir__, 'stop_words', 'country.txt')
+    country_list = []
+    country_abbr_list = []
+    with open(path) as f:
+        lines = f.readlines()
+        for line in lines:
+            abbr, country = line.strip().lower().split('|')
+            country_list.append(country)
+            country_abbr_list.append(abbr)
+    return country_list, country_abbr_list
 
 

@@ -19,10 +19,8 @@ class TestDataLoaderMethods(unittest.TestCase):
         pass
 
     def test_get_stopwords(self):
-        ans = stopword_helper.get_names()
-        for w in ans:
-            if w == 'maria':
-                print w
+        a, b = stopword_helper.get_countries()
+        print a
 
         
     def tearDown(self):
