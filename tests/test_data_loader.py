@@ -36,7 +36,7 @@ class TestDataLoaderMethods(unittest.TestCase):
         raw = json.load(pn_file)
         pn_file.close()
 
-        post_id = 12
+        post_id = 7975
         hits = raw['hits']['hits']
         post = hits[post_id]['_source']['hasBodyPart']['text']
         print post
@@ -69,7 +69,7 @@ class TestDataLoaderMethods(unittest.TestCase):
         # post = es_loader.load_post(self.path, 0, post_object=True)
         # print post.body
         
-        post_id = 15801
+        post_id = 4444
 
         post_id = post_id - 1 # only for test graph annotation
         # {'job_ads': 1, 'massage': 2, 'escort': 3,}

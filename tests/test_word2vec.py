@@ -19,7 +19,8 @@ import word2vec
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 TEST_DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
 
-input_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'text_no_dup'))
+input_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'text'))
+input_no_dup = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'text_no_dup'))
 # input_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'memex_raw'))
 output_phrases = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'text-phrases.txt'))
 output_clusters = os.path.expanduser(os.path.join(TEST_DATA_DIR,'text-clusters.txt'))
@@ -50,7 +51,7 @@ class TestDataLoaderMethods(unittest.TestCase):
         # word2vec.word2phrase(input_, output_phrases, verbose=True)
         
         # word2vec.word2vec(input_, output_bin, size=300, binary=1, verbose=False)
-        word2vec.word2vec(input_, output_bin, binary=1, cbow=0, size=300, window=10, negative=5, hs=0, threads=12, iter_=5, min_count=5, verbose=False)
+        word2vec.word2vec(input_no_dup, output_bin, binary=1, cbow=0, size=300, window=10, negative=5, hs=0, threads=12, iter_=5, min_count=5, verbose=False)
 
         # word2vec.word2vec(input_, output_txt, size=10, binary=0, verbose=False)
         # word2vec.word2vec(input_, output_txt, binary=0, cbow=0, size=300, window=10, negative=5, hs=0, threads=12, iter_=20, min_count=5, verbose=False)
@@ -148,11 +149,11 @@ if __name__ == '__main__':
 
     def run_main_test():
         suite = unittest.TestSuite()
-        suite.addTest(TestDataLoaderMethods("test_setup_input"))    # 468.220s
+        # suite.addTest(TestDataLoaderMethods("test_setup_input"))    # 468.220s
         # suite.addTest(TestDataLoaderMethods("test_setup_model"))
         # suite.addTest(TestDataLoaderMethods("test_load_bin"))
         # suite.addTest(TestDataLoaderMethods("test_all_similarity"))
-        # suite.addTest(TestDataLoaderMethods("test_word_similiarity"))
+        suite.addTest(TestDataLoaderMethods("test_word_similiarity"))
         runner = unittest.TextTestRunner()
         runner.run(suite)
 

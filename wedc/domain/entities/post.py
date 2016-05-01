@@ -15,7 +15,8 @@ domain_ext_list = domain.get_domain_ext_list()
 stop = stopword.get_stopwords()
 names = stopword_helper.get_person_names()
 country, country_abbr = stopword_helper.get_country_names()
-stop_set = Set(names) | Set(country) | Set(country_abbr)
+nationality = stopword_helper.get_nationality_names()
+stop_set = Set(names) | Set(country) | Set(country_abbr) | Set(nationality)
 stop_set = [stem.stemming(_).strip() for _ in stop_set]
 
 def remove_tags(text):

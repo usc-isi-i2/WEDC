@@ -135,11 +135,14 @@ def generate_weighted_seed_dict(ssw_cache_path, other_ssw_cache_path=None):
             line = line.split('\t')
             if len(line) != 3:
                 seed_dict.setdefault(line[0], '1')
-
-            seed_word = line[0]
-            similar_words = line[1].split()
-            similarity = line[2].split()
-            
+                continue
+            try:
+                seed_word = line[0]
+                similar_words = line[1].split()
+                similarity = line[2].split()
+            except Exception as e:
+                print line
+        
             seed_dict.setdefault(seed_word, '1')
 
             for i in range(len(similar_words)):
@@ -159,6 +162,9 @@ def generate_weighted_seed_dict(ssw_cache_path, other_ssw_cache_path=None):
     with open(ssw_cache_path, 'r') as f:
         for line in f:
             line = line.split('\t')
+            if len(line) != 3:
+                seed_dict.setdefault(line[0], '1')
+                continue
             seed_word = line[0]
             similar_words = line[1].split()
             similarity = line[2].split()
