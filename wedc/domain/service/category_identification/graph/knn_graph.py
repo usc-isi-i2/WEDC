@@ -18,7 +18,7 @@ import numpy as np
 # print indices
 
 
-def build_graph(input, output, n_neighbors=10, algorithm='ball_tree'):
+def build_graph(input, output, n_neighbors=50, algorithm='ball_tree'):
     n_neighbors += 1
     
     input_fh = open(input, 'rb')
