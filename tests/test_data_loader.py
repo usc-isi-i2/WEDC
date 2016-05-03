@@ -69,7 +69,7 @@ class TestDataLoaderMethods(unittest.TestCase):
         # post = es_loader.load_post(self.path, 0, post_object=True)
         # print post.body
         
-        post_id = 100
+        post_id = 17
 
         post_id = post_id - 1 # only for test graph annotation
         # {'job_ads': 1, 'massage': 2, 'escort': 3,}

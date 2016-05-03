@@ -43,7 +43,7 @@ def build_graph(input, output, n_neighbors=50, algorithm='ball_tree'):
 
         # change to start from 1 for lab propagation library input format
         if max([float(_) for _ in lines[post_id].split(' ')]) == 0:
-            graph_item = [post_id+1, 4]
+            graph_item = [post_id+1, 1]
         else:
             graph_item = [post_id+1, 0]
 

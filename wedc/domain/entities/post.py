@@ -89,7 +89,7 @@ class Post(object):
 
         # tokens = [str(stem.stemming(token.encode('ascii', 'ignore'))) for token in word_tokenize(sentences) if token not in stop and not str_helper.hasNumbers(token) and not str_helper.hasPunctuation(token)]
 
-        ans = ' '.join(tokens)
+        ans = ' '.join(list(set(tokens)))
         # ans = str(stem.stemming(ans))
         # print ans
         return str(ans)

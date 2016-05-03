@@ -32,6 +32,7 @@ class TestDataLoaderMethods(unittest.TestCase):
         google_new_seed_similar_words = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'google_new_seed_similar_words'))
 
         self.seeds = seed_word.generate_weighted_seed_dict(original_seed_similar_words, google_new_seed_similar_words)
+        print self.seeds
 
 
     def test_post2sv(self):
@@ -44,6 +45,10 @@ class TestDataLoaderMethods(unittest.TestCase):
         output_post_seeds = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'post_vec_seeds.txt'))
         post2sv.post2seed(input_, output_post_seeds, self.seeds)
 
+    def test_process(self):
+        pass
+
+
     def tearDown(self):
         pass
 
@@ -53,8 +58,9 @@ if __name__ == '__main__':
     def run_main_test():
         suite = unittest.TestSuite()
         # suite.addTest(TestDataLoaderMethods("test_post2sv"))
-        suite.addTest(TestDataLoaderMethods("test_post2sv_weighted"))
+        # suite.addTest(TestDataLoaderMethods("test_post2sv_weighted"))
         # suite.addTest(TestDataLoaderMethods("test_post2seeds"))
+        suite.addTest(TestDataLoaderMethods("test_process"))
         
         runner = unittest.TextTestRunner()
         runner.run(suite)

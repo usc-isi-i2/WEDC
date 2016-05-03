@@ -1,0 +1,84 @@
+Report
+
+1: others 2: massage 3: escort 4: job_ads
+
++----------------------------------------
+| Problems and Solution
++----------------------------------------
+1) post doesn’t contain any seed words
+
+post id: 30 36 37 74 251 252 291 314 321 374 375 377 423
+total invalid: 24981/50000
+
+example:
+sexi addict alway readi fun sweet clean independ discreet nice bodi sparkl person total packag even beauti person look forward meet real
+
+words in post       seeds
+sexy                bombshellsexi naughtysexi sexi sexii
+readi               princessreadi readili
+sweet               youngsweet
+clean               cleanup
+bodi                fullbodi
+person              bellperson
+beauti              beautiful skinbeauti
+look                naturallook
+real                realest realpic realupsc
+
+note: post contains a lot of abbreviated words, such as RealPics
+
+solution: 
+update the implementation for post2vec
+if the word in post matches substring of the seed, then we treat they are match
+
+2) many duplicate samples
+
+solution: use hashlib, by which reduce sample size from 500000 to 20043
+
+3) seed words contain nick name (unsolved)
+
+post extraction contain person's nick name, like "lili" or "yoyo".
+The form changes, and useful dict is required to remove them
+
+4) seed words contain meaningless word (unsolved)
+
+test data source contain lots of meaningless words, and these words would be selected as similar words of seed word.
+
+e.g. a) selected as features for post
+our program extracts word "availableyou", which is the from the sentence of original source: "Please note: fresh clean towels, in a fresh and clean setting is always availableyou will leave feeling refreshed and rejuvenated. <br />"
+
+e.g. b) post id 23849
+
+our program extracts word "thesuccessfulcandidateisanentrepreneurialexecutivewhoisabletodemonstrateasolidtrackrecordofsuccessofprofitablygrowingamarketdrivenintern"
+
+original post content: not selected as feature word, but meaningless
+Company Description:<br>NW Recruiters is the premier resource for executive jobs and management talent in the nation. Among recruiting firms, our knowledgeable recruiters consistently deliver the executive jobs and search results that clients and candidates seek. We are committed to identifying fantastic career opportunities in a wide variety of industries and functional specialties.<br>Job Description:<br>NWRecruitersisseekingaVicePresidentofManufacturing.Thisrolewillberesponsibleforleadingcompany&#x27;sexpansionintheirinternationalmarkets.Itisimperativethispersonleverageskeyinnovationsandtechnologyfortheglobalmarkettobuildthebrandsandexpandsalesanddistributionintargetedinternationalmarkets.Thispersonwillworkcrossfunctionallywithalldepartmentsatcorporateoffice,includingFinance,HumanResources,Marketing,Engineering,SupplyChain,andLogistics.ReportingtothePresident,theVicePresidentwillberesponsibleforallofthecompany&#x27;sInternationalorganization,operationsandcustomerrelationships.<br>Thesuccessfulcandidateisanentrepreneurialexecutivewhoisabletodemonstrateasolidtrackrecordofsuccessofprofitablygrowingamarketdriveninternational(durable)consumergoodsbusiness.<br>PrincipalAccountabilities:<br>Fullprofitandlossresponsibilityforthecompany&#x27;sInternationalbusiness.<br>DriveandmanagethevisionandbusinessstrategyforInternationalbusinesswitha5yearbusinessplantoaggressivelygrowsalesovercurrentrevenue.IncludesthecontinuedimplementationofInternationalexpansionplan.<br>Managetheinvestmentbudgetforinternationalexpansionwithagoalofbreakevenin5years.<br>Leadthecompany&amp;#x27;sInternationalorganizationwhichincludestheircorporateandcountry/regionalteams,andtheirAsianSupplyChainManagement,Engineering,R and D,andAssemblyoperations.<br>Commercialresponsibilitiesforalloftheinternationalmarketsincluding6subsidiaries/branchofficesinkeyemergingmarketssuchasChina,Brazil,India,MiddleEast,AsiaPacificandMexico,andresponsibilityforexportbusinessintheCaribbean,CentralandSouthAmerica.<br>OperationsresponsibilityforChinaASCM(AsianSupplyChainManagement)whichincludesNewProductEngineeringforUSandInternationalandmanagementofallofAsiansuppliers.<br>HireanddevelopInternationalleadershipstaffandoverallresponsibilityformentoring,training,coachingandotherdevelopmentactivitiesneededtoachieveahighperformanceorganization.<br>EnsurealignmentofCorporateFunctionstosupportInternationalexpansiongoals.<br>Furtherdevelopa"GlobalMindset"withintheorganization.<br>Solidifyconfidenceoforganizationforcompany&#x27;slong:termcommitmenttointernationalexpansion.<br>Position/CandidateRequirements:<br>Education<br>ABachelordegreeinEconomics,Marketingorrelateddiscipline,andaMBAoradvancedegree.<br>ExperienceandSkills<br>Atleast15yearsinternationalleadershipexperienceinarelatedenvironment,withaminimumof5yearsinaseniormanagementcapacitywithP and Lresponsibilities.PriorleadershipexperienceinMarketing,OperationsandSalesDevelopmentwithinkeyinternationalmarkets.Industryexperienceispreferred:i.e.;Specification,Plumbing,BuildingProductsHardware,Kitchen and Bath,andSanitaryWare.<br>Experienceinbusinessmanagement,includingP and Lmanagement,strategicplanningandimplementation,aswellasstaffmanagement.<br>Demonstratedsuccessingrowinginternationalbusinesses,includingdemonstratedexperiencelaunchinganddistributingproductsintonewconsumermarketswithmeasurablesuccess,adeepunderstandingofthecustomerandexperienceworkingwithsuppliers,partnersanddistributionchannelsineachmarket.<br>Demonstratedleadershipability,includingstrongintellectual,strategic,andanalyticalabilityandtheabilitytoworkcross:functionallywithacollabo
+
+                    <p>Source: <a rel="nofollow" target="_blank" href="http://www.tiptopjob.com/jobs/40947254_job.asp?source=backpage">http://www.tiptopjob.com/jobs/40947254_job.asp?source=backpage</a></p>.
+
+
+
+5) isolated node in knn graph
+
+some nodes cannot be annotated by our program if they are far away from seed words, and there are no any nodes that similar to seed words could arrive
+
+solution: adjust number of nearest neigobors for knn graph.
+
+
++----------------------------------------
+| Result
++----------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
