@@ -18,6 +18,7 @@ country, country_abbr = stopword_helper.get_country_names()
 nationality = stopword_helper.get_nationality_names()
 stop_set = Set(names) | Set(country) | Set(country_abbr) | Set(nationality)
 stop_set = [stem.stemming(_).strip() for _ in stop_set]
+trantab = string.maketrans(string.punctuation,' '*(len(string.punctuation)))
 
 def remove_tags(text):
     tag_re = re.compile(r'<[^>]+>')
@@ -85,7 +86,7 @@ class Post(object):
 
         
         tokens = [self.token_operation(token) for token in word_tokenize(sentences) if token not in stop and not has_url(token)]
-        tokens = [_ for _ in tokens if _ and _ not in stop_set]
+        tokens = [_ for _ in tokens if _ and _ != ' ' and _ not in stop_set]
 
         # tokens = [str(stem.stemming(token.encode('ascii', 'ignore'))) for token in word_tokenize(sentences) if token not in stop and not str_helper.hasNumbers(token) and not str_helper.hasPunctuation(token)]
 
@@ -114,12 +115,17 @@ class Post(object):
         # and not str_helper.hasNumbers(token) and not str_helper.hasPunctuation(token) and 
         if re.search(r'\d+[k$]+[/(hr|hour)]*', token):
             return '#/h'
+
         if re.search(r'\d', token):
             return None
-        if str_helper.hasPunctuation(token):
-            return None
+
+        # if str_helper.hasPunctuation(token):
+        #     table = string.maketrans("","")
+        #     return token.translate(table, string.punctuation)
+        
         if len(token) == 1:
             return None
+
         return stem.stemming(token).strip()
 
     def sentence_operation(self, sentence):
@@ -127,8 +133,10 @@ class Post(object):
         sentence = remove_url(sentence)
         sentence = re.sub(r'([\t\n\r]|\\+)', ' ', sentence)
         sentence = sentence.encode('ascii', 'ignore')
+        sentence = sentence.translate(trantab)
+
         # sentence = ' '.join(sentence.encode('utf-8').splitlines())
-        return sentence
+        return ' '.join(sentence.split())   # Substitute multiple whitespace with single whitespace
 
 
 
