@@ -64,11 +64,162 @@ some nodes cannot be annotated by our program if they are far away from seed wor
 solution: adjust number of nearest neigobors for knn graph.
 
 
+6) punctuation problem
+
+e.g. a) additional punctuations
+original post content:
+Shes an ANGEL**Beautiful* Natural* GINGER - 22 
+
+post content after preprocessing:
+shes 
+
+note: replace `*` to ` ` first is not the best solution, since there are other posts the contain information like "A*N*G*E*L"
+
+e.g. b) missing '''
+
+I'm -> Im, in original post
+
+
+7) post contain few information
+
+e.g. a) post id 44472
+
+original post content:
+Lola Baby - 21. 
+
+post content after preprocessing:
+babi 
+
+e.g. b) post id 10802
+
+original post content:
+Call now<br>
+Tiffany<br>
+<br>
+415 846 733six 
+
+post content after preprocessing:
+call 
+
+
++----------------------------------------
+| Distinguish massage and escort
++----------------------------------------
+
+massage samples:
+1. 
+Maria Lopez,<br>
+ Exotic Brazilian beauty,party girl, wold of fun, looking for a hot babe to spend some time with? well look no further Let me fulfill your fantasy,I will not disappoint,pics 100% accurate<br>
+<br>
+Incall/outcall<br>
+24/7 service <br>
+Same day Appointments<br>
+<b></b><b></b><br>
+<br>
+510-697-0391 PayPal excepted. 
+
+2.
+I am a very lovely, sensual, mature woman who enjoys helping you relax and unwind. I am warm, friendly, down to earth, and just downright fun!<br />
+<br />
+My private studio has easy parking, a million dollar view of the ocean and an amazing balcony for you to relax on. Hot showers, clean towels are available.<br />
+<br />
+Join me for an adventure at the beach!<br />
+<br />
+<br />
+Kris<br />
+<br />
+831-345-7641<br />
+<br />
+Monday ~ Saturday 10-10 
+
+similar escort samples(similar to massage):
+1. Petite Nuru Body to Body Slide Available Today!646 543 1146 - 25 
+2. FBSM + NURU = True oneonone CONNECTION YOU begin to SINK OUTCALL only - 30 
+
+
 +----------------------------------------
 | Result
 +----------------------------------------
 
+20028 samples
 
+previously annotated:
+515 smaples for others(1)
+14 samples for massage(2)
+27 samples for escort(3)
+12 samples for job_ads(4)
+
+#############################
+# Example One
+#############################
+
+# first step
+
+label propagation algorithm returns 1880 annoated samples for massage
+
+# second step
+mannually annotate typical error result to correct one
+
+e.g. post id 65
+it actually belongs to job_ads, but annotated as massage by LP algorithm.
+
+modify these error results and retrain LP algorithm.
+
+# third step
+
+label propagation algorithm returns 1815 annoated samples for massage
+
+post id 65 can be correctly annotated as job_ads, and its neighbors, post id 66 and 5547, also can be annotated as job_ads
+
+#############################
+# Example Two
+#############################
+
+Post id 249
+
+original post content:
+If you're looking to escape from the grind of daily life and enter a world where your fantasies become a reality, then I'm your perfect companion!?<br>
+<br>
+<br>
+Providing the ultimate ?5 Star Companionship?<br>
+<br>
+<br>
+CLEAN Showers available?<br>
+<br>
+Personal Hygiene Is a must for me<br>
+<br>
+ RESPECTABLE GENTLEMEN ONLY <br>
+<br>
+?call or textme 
+MARIA(503) 457-6643 
+
+post content after preprocessing:
+fantasi textm respect perfect gentlemen ultim companionship avail call realiti life companion hygien world becom must look provid grind shower person clean enter escap daili 
+
+
+It's a post similar to massage, but belongs to escort actually 
+
+
+249 is the neighbors of post 3938, 4104, 4179...
+By adjusting the result of post 249's related posts, post 249 can be correctly annotated as escort
+
+
+
++----------------------------------------
+| Conclusion and Next Step
++----------------------------------------
+Our solution relies on outlier&pre-annotated samples for label propagation algorithm
+
+if we have few outlier&pre-annotated samples:
+LB algorithm get lots of unknown result(algorithm cannot predict which category a post should belongs to)
+cannot handle escort and massage posts
+
+
+To get outlier&pre-annotated samples, we need:
+1. continue run LA algorithm
+2. manually annotate correct label for error results
+3. collect ambiguous samples with manually annotated correct labels, and use then to conduct next try
+4. converged when result looks good 
 
 
 
