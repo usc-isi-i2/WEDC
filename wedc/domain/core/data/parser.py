@@ -30,13 +30,12 @@ class DataParser():
         return stop_set
 
     def parse(self, text):
-        text = self.text_preprocessing(text)
+        text = self.text_preprocessing(text) 
+        tokens = [self.token_preprocessing(token) for token in word_tokenize(text)]
+
         
-        sentences = [sentence for sentence in sent_tokenize(text)]
-        # sentences = [nltk.word_tokenize(sent) for sent in sentences]
-
-
-        print sentences
+        print text
+    
         # self.sentence_operation(sentence)
         # sentences = self.sentence_operation(' '.join(sentences).lower())
 
@@ -44,12 +43,11 @@ class DataParser():
         # tokens = [_ for _ in tokens if _ and _ != ' ' and _ not in stop_set]
         # ans = ' '.join(list(set(tokens)))
         # return str(ans)
-        # 
 
     def text_preprocessing(self, text):
 
         text = text.encode('ascii', 'ignore')
-
+        text = unescape(text)
         # remove tags
         text = re.sub(r'<[^>]+>', ' ', text)
 
@@ -60,15 +58,59 @@ class DataParser():
         # remove space
         text = re.sub(r'([\t\n\r]|\\+)', ' ', text)
 
+        # remove space
+        text = re.sub(r'[' + string.punctuation +']+', ' ', text)
+
         # text = text.translate(trantab)
         return ' '.join(text.split())  
-    
+
+    def token_preprocessing(self, token):
+        # 
+        if re.search(r'(\d+[k$]+[/(hr|hour)]*|401[\w\d]*)', token):
+            return '401k'
+        if re.search(r'\d', token):
+            return None
+        # if len(token) == 1:
+        #     return None
+        
 
 
+        token = stem.stemming(token).strip()
+        if token in self.stopset:
+            return None
+
+        return 
+
+
+def unescape(text):
+    import re, htmlentitydefs
+    def fixup(m):
+        text = m.group(0)
+        if text[:2] == "&#":
+            # character reference
+            try:
+                if text[:3] == "&#x":
+                    return unichr(int(text[3:-1], 16))
+                else:
+                    return unichr(int(text[2:-1]))
+            except ValueError:
+                pass
+        else:
+            # named entity
+            try:
+                text = unichr(htmlentitydefs.name2codepoint[text[1:-1]])
+            except KeyError:
+                pass
+        return text # leave as is
+    return re.sub("&#?\w+;", fixup, text)
 
 """
 # for more domain ext
 # domain_ext_list = domain.get_domain_ext_list()
 # text = re.sub(r'^[a-z0-9\-\.]+\.('+'|'.join(domain_ext_list)+')$', '', text)
+
+# for sentence processing
+# sentences = [sentence for sentence in sent_tokenize(text)]
+# sentences = [nltk.word_tokenize(sent) for sent in sentences]
 
 """
