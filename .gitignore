@@ -1,4 +1,5 @@
 tests/data/*
+res/*
 *.jar
 *.pyc
 *.ml
@@ -9,5 +10,3 @@ tests/data/*
 *.pkl
 test.*
 *.txt
-
-
