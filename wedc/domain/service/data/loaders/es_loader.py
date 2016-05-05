@@ -40,11 +40,7 @@ def load_post(path, post_id):
         contents.append(text)
     else:
         contents = text
-    text = ' '.join(contents)
-
-    
-    # print 'original text:\n\n', text, '\n\n
-    
+    text = ' '.join(contents)    
     return text, post
 
 

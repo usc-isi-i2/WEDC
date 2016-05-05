@@ -23,12 +23,6 @@ class TestDataLoaderMethods(unittest.TestCase):
         # print posts
         # Total posts:  49974
         # Time cost: 133.985596895 seconds
-        
-        # for post in posts:
-        #     self.assertFalse(type(post) is list)
-            # if type(post) is list:
-            #     print post
-            #     break
 
     def test_json_data_extraction(self):
         import json
@@ -63,21 +57,12 @@ class TestDataLoaderMethods(unittest.TestCase):
                 # break  
 
     def test_load_post(self):
-        # departed solution
-        # text = es_loader.load_post(self.path, 0, post_object=False)
-        # print text
-        # post = es_loader.load_post(self.path, 0, post_object=True)
-        # print post.body
-        
-        post_id = 8687
-
+        post_id = 62
         post_id = post_id - 1 # only for test graph annotation
-        # {'job_ads': 1, 'massage': 2, 'escort': 3,}
         
         text, post = es_loader.load_post(self.path, post_id)
-        print 'original post content:\n', text.encode('ascii', 'ignore'), '\n\n'
-        print 'post content after preprocessing:\n', post.body, '\n\n'
-
+        # print 'original post content:\n', text.encode('ascii', 'ignore'), '\n\n'
+        # print 'post content after preprocessing:\n', post.body, '\n\n'
 
     def tearDown(self):
         pass
