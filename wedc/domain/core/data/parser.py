@@ -3,6 +3,7 @@ import string
 from sets import Set
 
 import nltk
+import enchant
 from nltk.tokenize import sent_tokenize
 from nltk.tokenize import word_tokenize
 from wedc.domain.core.common import str_helper
@@ -19,6 +20,7 @@ trantab = string.maketrans(string.punctuation,' '*(len(string.punctuation)))
 class DataParser():
     def __init__(self):
         self.stopset = self.load_stopset()
+        self.enchant_dict = enchant.Dict("en_US")
 
     def load_stopset(self):
         stops = stopword.get_stopwords()
@@ -47,7 +49,13 @@ class DataParser():
     def text_preprocessing(self, text):
 
         text = text.encode('ascii', 'ignore')
+
+        # convert html code
         text = unescape(text)
+
+        # camelcase to space
+        text = re.sub("([a-z])([A-Z])","\g<1> \g<2>", text)
+
         # remove tags
         text = re.sub(r'<[^>]+>', ' ', text)
 
@@ -58,28 +66,30 @@ class DataParser():
         # remove space
         text = re.sub(r'([\t\n\r]|\\+)', ' ', text)
 
-        # remove space
+        # remove ' as well as followings
+        text = re.sub(r"'\w+", '', text)
+
+        # remove punctuation
         text = re.sub(r'[' + string.punctuation +']+', ' ', text)
 
         # text = text.translate(trantab)
         return ' '.join(text.split())  
 
     def token_preprocessing(self, token):
-        # 
         if re.search(r'(\d+[k$]+[/(hr|hour)]*|401[\w\d]*)', token):
             return '401k'
-        if re.search(r'\d', token):
+        if re.search(r'\d', token): # only contain digits
             return None
-        # if len(token) == 1:
-        #     return None
+        if len(token) == 1: # only contain one character
+            return None
+        if len(token) > 15 and not self.enchant_dict.check(token):
+            return None
         
-
-
         token = stem.stemming(token).strip()
         if token in self.stopset:
             return None
 
-        return 
+        return token
 
 
 def unescape(text):
