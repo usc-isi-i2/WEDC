@@ -54,7 +54,7 @@ def post_parser(path):
     pn_file.close()
     hits = raw['hits']['hits']
     posts = []
-    # test = 0    # test
+    test = 0    # test
     # print len(hits)
     # post_id = 0
     for hit in hits:
@@ -80,16 +80,22 @@ def post_parser(path):
             post_title = source[ES_POST_TITLE][ES_POST_TEXT]
             post_body = source[ES_POST_BODY][ES_POST_TEXT]
 
-            post = Post(post_url, post_title, post_body)
+            try:
+                post = Post(post_url, post_title, post_body)
+            except Exception as e:
+                print post_body
+                print e
+                print post.body
+
             if post:
                 posts.append(post.body + '\n') # + '\n'
             else:
                 posts.append('\n')
                 # post_id+=1 # str(post_id) + ' ' + 
             # break   # test one doc this time
-            # test += 1
-            # if test == 2000:
-            # break
+            test += 1
+            if test == 94:
+                break
 
         except Exception as e: 
             print "ERROR: " + str(e)

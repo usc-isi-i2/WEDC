@@ -13,8 +13,6 @@ from wedc.domain.core.http import domain
 from wedc.domain.core.common import stopword_helper
 
 
-
-
 trantab = string.maketrans(string.punctuation,' '*(len(string.punctuation)))
 
 class DataParser():
@@ -28,14 +26,15 @@ class DataParser():
         # country, country_abbr = stopword_helper.get_country_names()
         nationality = stopword_helper.get_nationality_names()
         stop_set = Set(stops) | Set(names) | Set(nationality) # | Set(country) # | Set(country_abbr) 
-        stop_set = [str(stem.stemming(_).strip()) for _ in stop_set]
+        # stop_set = [str(stem.stemming(_).strip()) for _ in stop_set]
         return stop_set
 
     def parse(self, text):
         text = self.text_preprocessing(text) 
         tokens = [self.token_preprocessing(token) for token in word_tokenize(text)]
-        tokens = [_ for _ in tokens if _] 
-        print ' '.join(set(tokens))
+        tokens = [_ for _ in tokens if _]
+
+        return str(' '.join(set(tokens)))
         
         # print tokens
     
@@ -49,10 +48,13 @@ class DataParser():
 
     def text_preprocessing(self, text):
 
-        text = text.encode('ascii', 'ignore')
-
         # convert html code
         text = unescape(text)
+
+        try:
+            text = text.encode('ascii', 'ignore')
+        except Exception as e:
+            print text
 
         # camelcase to space
         text = re.sub("([a-z])([A-Z])","\g<1> \g<2>", text)
@@ -85,9 +87,10 @@ class DataParser():
             return None
         if len(token) > 15 and not self.enchant_dict.check(token):
             return None
-        
-        token = stem.stemming(token).strip()
         if token in self.stopset:
+            return None
+        token = stem.stemming(token).strip()
+        if token in self.stopset:   # double check for unexpected text form, like 'marias'
             return None
 
         return token

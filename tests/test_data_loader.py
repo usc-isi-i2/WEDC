@@ -9,10 +9,25 @@ TEST_DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
 from wedc.domain.service.data.base import *
 from wedc.domain.service.data.loaders import es_loader
 
+data_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'san-francisco-maria-2.json'))
+text_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'text'))
+
+
 class TestDataLoaderMethods(unittest.TestCase):
     def setUp(self):
         filename = 'san-francisco-maria-2.json'
         self.path = os.path.join(TEST_DATA_DIR, filename)
+
+    def test_load_text(self):
+        posts = load_by_path(data_)
+        # input_file = open(text_, 'w')
+
+        # input_file.writelines(posts)
+        # for post in posts:
+        #     try:
+        #         input_file.write(post)
+        #     except Exception as e:
+        #         print post
         
     def test_data_loader(self):
         start_time = time.time()
@@ -57,7 +72,7 @@ class TestDataLoaderMethods(unittest.TestCase):
                 # break  
 
     def test_load_post(self):
-        post_id = 100
+        post_id = 94
         post_id = post_id - 1 # only for test graph annotation
         
         text, post = es_loader.load_post(self.path, post_id)
@@ -72,6 +87,7 @@ if __name__ == '__main__':
     def run_main_test():
         suite = unittest.TestSuite()
         # suite.addTest(TestDataLoaderMethods("test_json_data_contain"))
+        # suite.addTest(TestDataLoaderMethods("test_load_text"))
         suite.addTest(TestDataLoaderMethods("test_load_post"))
         runner = unittest.TextTestRunner()
         runner.run(suite)

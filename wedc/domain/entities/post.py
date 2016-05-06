@@ -66,23 +66,3 @@ class Post(object):
 
         dp = DataParser()
         return dp.parse(' '.join(contents))
-
-        
-    def token_operation(self, token):
-        if re.search(r'\d+[k$]+[/(hr|hour)]*', token):
-            return '#/h'
-        if re.search(r'\d', token):
-            return None
-        if len(token) == 1:
-            return None
-        return stem.stemming(token).strip()
-
-    def sentence_operation(self, sentence):
-        sentence = remove_tags(sentence)
-        sentence = remove_url(sentence)
-        sentence = re.sub(r'([\t\n\r]|\\+)', ' ', sentence)
-        sentence = sentence.encode('ascii', 'ignore')
-        sentence = sentence.translate(trantab)
-
-        # Substitute multiple whitespace with single whitespace
-        return ' '.join(sentence.split())   
