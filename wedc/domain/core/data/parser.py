@@ -85,7 +85,7 @@ class DataParser():
             return 'xo'
         if re.search(r'\d', token): # only contain digits
             return None
-        if len(token) == 1: # only contain one character
+        if len(token) == 1 or re.search(r'^(.)\1*$', token): # only contain one character or repeat character
             return None
         if len(token) > 15 and not self.enchant_dict.check(token):
             return None
