@@ -81,12 +81,16 @@ class DataParser():
     def token_preprocessing(self, token):
         if re.search(r'(\d+[k$]+[/(hr|hour)]*|401[\w\d]*)', token):
             return '401k'
+        if re.search(r'^[xoXO]*((?=xo)|(?=ox))[xoXO]*$', token):
+            return 'xo'
         if re.search(r'\d', token): # only contain digits
             return None
         if len(token) == 1: # only contain one character
             return None
         if len(token) > 15 and not self.enchant_dict.check(token):
             return None
+
+
         if token in self.stopset:
             return None
         token = stem.stemming(token).strip()
