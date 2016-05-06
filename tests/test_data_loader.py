@@ -57,12 +57,12 @@ class TestDataLoaderMethods(unittest.TestCase):
                 # break  
 
     def test_load_post(self):
-        post_id = 62
+        post_id = 100
         post_id = post_id - 1 # only for test graph annotation
         
         text, post = es_loader.load_post(self.path, post_id)
-        # print 'original post content:\n', text.encode('ascii', 'ignore'), '\n\n'
-        # print 'post content after preprocessing:\n', post.body, '\n\n'
+        print 'original post content:\n', text.encode('ascii', 'ignore'), '\n\n'
+        print 'post content after preprocessing:\n', post.body, '\n\n'
 
     def tearDown(self):
         pass

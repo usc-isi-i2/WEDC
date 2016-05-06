@@ -11,7 +11,6 @@ TEST_DATA_DIR = os.path.join(os.path.dirname(__file__), '..', 'data')
 
 from wedc.domain.vendor.nltk import stem
 
-
 class TestDataLoaderMethods(unittest.TestCase):
     def setUp(self):
         pass
@@ -41,7 +40,7 @@ class TestDataLoaderMethods(unittest.TestCase):
         print in_word, ' : ', out_word
 
     def test_custom_word(self):
-        in_word = 'singapore'
+        in_word = 'brought'
         out_word = stem.stemming(in_word)
         # assert in_word == out_word
         print in_word, ' : ', out_word

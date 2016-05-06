@@ -34,9 +34,10 @@ class DataParser():
     def parse(self, text):
         text = self.text_preprocessing(text) 
         tokens = [self.token_preprocessing(token) for token in word_tokenize(text)]
-
+        tokens = [_ for _ in tokens if _] 
+        print ' '.join(set(tokens))
         
-        print text
+        # print tokens
     
         # self.sentence_operation(sentence)
         # sentences = self.sentence_operation(' '.join(sentences).lower())
