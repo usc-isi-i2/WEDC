@@ -13,6 +13,7 @@ word2vec_model_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'word2vec_model
 google_news_word2vec_model_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'GoogleNews-vectors-negative300.bin'))
 original_seed_similar_words_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'original_seed_similar_words'))
 google_news_similar_words_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'google_new_seed_similar_words'))
+weighted_seed_dict_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'weighted_seed_dict'))
 
 class TestDataLoaderMethods(unittest.TestCase):
     def setUp(self):
@@ -36,7 +37,10 @@ class TestDataLoaderMethods(unittest.TestCase):
         seed_word.cache_seed_similar_words(path=google_new_seed_similar_words, model=google_news_word2vec_model, level=2)
 
     def test_generate_weighted_seed_dict(self):
-        print seed_word.generate_weighted_seed_dict(original_seed_similar_words_, google_news_similar_words_)
+        seed_word.generate_weighted_seed_dict(original_seed_similar_words_, other_ssw_cache_path=google_news_similar_words_, output_path=weighted_seed_dict_)
+
+    def test_load_weighted_seed_dict(self):
+        print seed_word.load_weighted_seed_dict(weighted_seed_dict_)
 
     def tearDown(self):
         pass
@@ -51,6 +55,7 @@ if __name__ == '__main__':
         # suite.addTest(TestDataLoaderMethods("test_cache_seed_similar_words_original"))
         # suite.addTest(TestDataLoaderMethods("test_cache_seed_similar_words_gn"))
         # suite.addTest(TestDataLoaderMethods("test_generate_weighted_seed_dict"))
+        suite.addTest(TestDataLoaderMethods("test_load_weighted_seed_dict"))
 
         runner = unittest.TextTestRunner()
         runner.run(suite)

@@ -117,12 +117,12 @@ def cache_seed_similar_words(path, seed_words=None, level=1, model=None):
 #   Seed Dict
 ############################################################ 
 
-def generate_weighted_seed_dict(ssw_cache_path, other_ssw_cache_path=None):
+def generate_weighted_seed_dict(ssw_cache_path, other_ssw_cache_path=None, output_path=None):
 
     seed_dict = {}
     with open(ssw_cache_path, 'r') as f:
         for line in f:
-            line = line.split('\t')
+            line = line.strip().split('\t')
             if len(line) != 3:
                 seed_dict.setdefault(line[0], '1')
                 continue
@@ -142,30 +142,46 @@ def generate_weighted_seed_dict(ssw_cache_path, other_ssw_cache_path=None):
                 seed_dict.setdefault(swk, 0)
                 seed_dict[swk] = max(float(seed_dict[swk]), swv)
 
-    if not other_ssw_cache_path or not os.path.exists(other_ssw_cache_path):
-        return seed_dict
+    if other_ssw_cache_path and os.path.exists(other_ssw_cache_path):
+        # weight with dect from other word2vec mdoel results
+        sd_words = seed_dict.keys()
+        with open(other_ssw_cache_path, 'r') as f:
 
-    # weight with dect from other word2vec mdoel results
+            for line in f:
+                line = line.strip().split('\t')
 
-    sd_words = seed_dict.keys()
+                if len(line) != 3:
+                    seed_dict.setdefault(line[0], '1')
+                    continue
 
-    with open(ssw_cache_path, 'r') as f:
-        for line in f:
-            line = line.split('\t')
-            if len(line) != 3:
-                seed_dict.setdefault(line[0], '1')
-                continue
-            seed_word = line[0]
-            similar_words = line[1].split()
-            similarity = line[2].split()
+                seed_word = line[0]
+                similar_words = line[1].split()
+                similarity = line[2].split()
 
-            for i in range(len(similar_words)):
-                swk = similar_words[i]
-                swv = similarity[i]
+                for i in range(len(similar_words)):
+                    swk = similar_words[i]
+                    swv = similarity[i]
+                    if swk in sd_words:
+                        seed_dict[swk] = (float(seed_dict[swk]) + float(swv)) / 2.0
 
-                if swk in sd_words:
-                    seed_dict[swk] = (float(seed_dict[swk]) + float(swv)) / 2.0
+    if output_path:
+        output_file = open(output_path, 'wb')
+        for (k, v) in seed_dict.items():
+            output_file.write(k + '\t' + v + '\n')
+        output_file.close()
+
     return seed_dict
+
+def load_weighted_seed_dict(path):
+    ans = {}
+    with open(path, 'r') as f:
+        for line in f:
+            line = line.strip().split('\t')
+            
+            ans[line[0]] = line[1]
+    return ans
+
+
         
 
 """ Seed Words that doesn't find its simialrs
