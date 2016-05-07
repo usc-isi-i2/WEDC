@@ -25,6 +25,19 @@ token { post id, format in original content}
     - 5065
     - OnlytOutcalls In San Francisco $100 Outs15Spec. SpEcIaLS all Day - 21 
 
+- purrrr
+    - 9028
+    - This slender and buxom exotic kitten wants to make you purrrr
+
+- dd
+    - 21979
+    - San Bruno Incalls Only SAN BRUNO IN CALLS INLY Big Double Dd's For All You boob Lovers 80 S  - 21 
+
+- lii and ra
+    - 27065
+    - LiiRa I LAST DAY HR OutCall SpeciAls Best oN the Map everythingS ReAl - 21 
+
+
 
 
 

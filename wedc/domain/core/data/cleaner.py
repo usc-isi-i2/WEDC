@@ -87,7 +87,7 @@ def split_token(token):
             splited = []
             for t in tokens:
                 t = clean_token(t)
-                if t:
+                if t and enchant_dict.check(t):
                     splited.append(t)
             if splited:
                 token = ' '.join(splited)
