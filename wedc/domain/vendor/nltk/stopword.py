@@ -3,7 +3,7 @@ import string
 
 
 def get_stopwords():
-    custom_stops = ['us']
+    custom_stops = ['us', 'im']
     stop = stopwords.words('english') + list(string.punctuation) + custom_stops
     return stop
 

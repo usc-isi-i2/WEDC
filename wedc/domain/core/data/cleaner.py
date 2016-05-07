@@ -7,6 +7,7 @@ import enchant
 from wedc.domain.vendor.nltk import stem
 from wedc.domain.core.common import stopword_helper
 from wedc.domain.core.common import str_helper
+from wedc.domain.core.data.seed import seed_word
 
 enchant_dict = enchant.Dict("en_US")
 stopset = stopword_helper.get_stopword_set()
@@ -15,6 +16,8 @@ token_mapping = {
     'hrs': 'hour',
     'luv': 'love'
 }
+
+seed_words = seed_word.load_seed_words()
 
 
 ############################################################
@@ -86,27 +89,41 @@ def clean_text(text):
 ############################################################
 
 def split_token(token):
-    def camel_case(token):        
-        tokens = re.sub("([a-z])([A-Z])","\g<1> \g<2>", token).split()
-        if len(tokens) > 1:
+    def camel_case(word): 
+        if re.search(r'([a-z])([A-Z])', word):
+            tokens = re.sub("([a-z])([A-Z])","\g<1> \g<2>", word).split()
+            return splited_handler(tokens)
+        return None
+
+    def first_cap_case(word):
+        if re.search(r'([A-Z])([A-Z])([a-z])', word):
+            tokens = re.sub("([A-Z])([A-Z])([a-z])","\g<1> \g<2>\g<3>", word).split()
+            return splited_handler(tokens)
+        return None
+
+        
+    def splited_handler(splited_list):
+        word = None
+        if len(splited_list) > 1:
             splited = []
-            for t in tokens:
+            for t in splited_list:
                 t = clean_token(t)
-                if t and enchant_dict.check(t):
+                if t and (enchant_dict.check(t) or t in seed_words):
                     splited.append(t)
             if splited:
-                token = ' '.join(splited)
-            else:
-                return None
-        return token
+                word = ' '.join(splited)
+        return word
 
     if not enchant_dict.check(token.lower()):
+        # print token
+        tmp = first_cap_case(token)
+        if tmp: return tmp
         tmp = camel_case(token)
-        if tmp:
-            return tmp
+        if tmp: return tmp
+        
     return token
 
-def mar2norm(token):
+def mars2norm(token):
     # if re.search(r'^(hrs)$', token.lower()):
     #     return 'hour'
     if token.lower() in token_mapping:
@@ -124,7 +141,7 @@ def clean_token(token):
     if re.search(r'^[xoXO]*((?=xo)|(?=ox))[xoXO]*$', token.lower()):
         return 'xo'
 
-    token = mar2norm(token)
+    token = mars2norm(token)
 
     if re.search(r'\d', token): # only contain digits
         return None
