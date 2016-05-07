@@ -20,7 +20,11 @@ def load_data(input, output, no_dups=False):
     return data
 
 def load_data_by_post_id(path, post_id, no_dups=False):
-    return es_loader.load_post(path, post_id)
+    target_id = post_id
+    if no_dups and mapping:
+        target_id = mapping[post_id]
+    print 'target_id', target_id
+    return es_loader.load_post(path, target_id)
 
 def load_nodups2dups_mapping(path):
     mapping = {}

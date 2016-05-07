@@ -38,8 +38,9 @@ class TestDataLoaderMethods(unittest.TestCase):
         """ test load post by post id
         post id is start from 1
         """
-        post_id = 25760
-        text, post = loader.load_data_by_post_id(self.path, post_id-1)
+        post_id = 68
+        loader.mapping = loader.load_nodups2dups_mapping(text_nodups2dups_mapping_)
+        text, post = loader.load_data_by_post_id(self.path, post_id, no_dups=self.no_dups)
 
         print 'original post content:\n', text.encode('ascii', 'ignore'), '\n\n'
         print 'post content after preprocessing:\n', post.body, '\n\n'
@@ -51,9 +52,9 @@ if __name__ == '__main__':
     # unittest.main()
     def run_main_test():
         suite = unittest.TestSuite()
-        suite.addTest(TestDataLoaderMethods("test_data_loader"))
+        # suite.addTest(TestDataLoaderMethods("test_data_loader"))
         # suite.addTest(TestDataLoaderMethods("test_mapping"))
-        # suite.addTest(TestDataLoaderMethods("test_load_post"))
+        suite.addTest(TestDataLoaderMethods("test_load_post"))
         runner = unittest.TextTestRunner()
         runner.run(suite)
 

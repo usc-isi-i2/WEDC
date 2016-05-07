@@ -62,6 +62,7 @@ def load(path):
     
 
 def load_post(path, post_id):
+    post_id = post_id-1
     if not path:
         return None
     pn_file = open(path, 'rU')
