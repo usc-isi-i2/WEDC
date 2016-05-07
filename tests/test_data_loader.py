@@ -40,7 +40,7 @@ class TestDataLoaderMethods(unittest.TestCase):
 
         post id is start from 1
         """
-        post_id = 27065        
+        post_id = 24605        
         text, post = loader.load_data_by_post_id(self.path, post_id-1)
 
         print 'original post content:\n', text.encode('ascii', 'ignore'), '\n\n'

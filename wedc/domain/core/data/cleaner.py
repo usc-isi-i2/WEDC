@@ -11,6 +11,11 @@ from wedc.domain.core.common import str_helper
 enchant_dict = enchant.Dict("en_US")
 stopset = stopword_helper.get_stopword_set()
 
+token_mapping = {
+    'hrs': 'hour',
+    'luv': 'love'
+}
+
 
 ############################################################
 #   Posts
@@ -99,7 +104,13 @@ def split_token(token):
         tmp = camel_case(token)
         if tmp:
             return tmp
+    return token
 
+def mar2norm(token):
+    # if re.search(r'^(hrs)$', token.lower()):
+    #     return 'hour'
+    if token.lower() in token_mapping:
+        return token_mapping[token.lower()]
     return token
 
 def clean_token(token):
@@ -113,8 +124,7 @@ def clean_token(token):
     if re.search(r'^[xoXO]*((?=xo)|(?=ox))[xoXO]*$', token.lower()):
         return 'xo'
 
-    if re.search(r'^(hrs)$', token.lower()):
-        return 'hour'
+    token = mar2norm(token)
 
     if re.search(r'\d', token): # only contain digits
         return None
