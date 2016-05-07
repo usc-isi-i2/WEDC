@@ -30,11 +30,12 @@ def stemming(word):
 
     # tmp = singularize(word)
 
-    tmp = valid_stemming(snowball.stem(word))
-    if tmp: return tmp
     tmp = valid_stemming(inflection.singularize(word))
     if tmp: return tmp
+    tmp = valid_stemming(snowball.stem(word))
+    if tmp: return tmp
     
+
     return word
     
 def valid_stemming(word):

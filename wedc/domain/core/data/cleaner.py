@@ -1,4 +1,5 @@
-
+import os
+import sys
 import re
 import string
 import enchant
@@ -24,19 +25,32 @@ seed_words = seed_word.load_seed_words()
 #   Posts
 ############################################################
 
-def remove_dups(posts):
+def remove_dups(posts, mapping_path=None):
     import hashlib
     hs = set()
+    size = len(posts)
     no_dups = []
-    for post in posts:
+    new_pid = 0
+    mapping_file = None
+    if mapping_path:
+        mapping_file = open(mapping_path, 'w')
+
+    for pid in xrange(1, size+1):
+        post = posts[pid-1] # pid start from 1
         hashobj = hashlib.sha256()
         hashobj.update(post.strip())
         hash_value = hashobj.hexdigest().lower()
         if hash_value not in hs:
             hs.add(hash_value)
             no_dups.append(post)
+            new_pid += 1
+            if mapping_file:
+                mapping_file.write(str(new_pid)+'\t'+str(pid)+'\n')
+    if mapping_file:
+        mapping_file.close()
     return no_dups
 
+"""
 def remove_dups_from_file(input, output):
     import hashlib
     hs = set()
@@ -49,6 +63,7 @@ def remove_dups_from_file(input, output):
             if hash_value not in hs:
                 hs.add(hash_value)
                 output.write(line)
+"""
 
 ############################################################
 #   Text

@@ -13,34 +13,32 @@ from wedc.domain.core.data import cleaner
 
 data_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'san-francisco-maria-2.json'))
 text_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'text'))
+text_nodups2dups_mapping_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'text_mapping'))
 
 class TestDataLoaderMethods(unittest.TestCase):
     def setUp(self):
         filename = 'san-francisco-maria-2.json'
-        self.path = os.path.join(TEST_DATA_DIR, filename)        
+        self.path = os.path.join(TEST_DATA_DIR, filename)  
+        self.no_dups = True     
         
     def test_data_loader(self):
         start_time = time.time()
-        posts = loader.load_data(data_, no_dups=False)
-        input_file = open(text_, 'w')
-        input_file.writelines(posts)
-
-        posts = cleaner.remove_dups(posts)
-        origin_back_file = open(text_+'_bk', 'w')
-        origin_back_file.writelines(posts)
+        posts = loader.load_data(data_, text_, no_dups=self.no_dups)
 
         print 'Total posts: ', len(posts)
         print 'Time cost:', (time.time() - start_time), 'seconds'
         self.assertIsNotNone(posts)
         # Total posts:  19974
         # Time cost: 261.857595921 seconds
+    
+    def test_mapping(self):
+        print loader.load_nodups2dups_mapping(text_nodups2dups_mapping_)
 
     def test_load_post(self):
         """ test load post by post id
-
         post id is start from 1
         """
-        post_id = 7        
+        post_id = 25760
         text, post = loader.load_data_by_post_id(self.path, post_id-1)
 
         print 'original post content:\n', text.encode('ascii', 'ignore'), '\n\n'
@@ -54,6 +52,7 @@ if __name__ == '__main__':
     def run_main_test():
         suite = unittest.TestSuite()
         suite.addTest(TestDataLoaderMethods("test_data_loader"))
+        # suite.addTest(TestDataLoaderMethods("test_mapping"))
         # suite.addTest(TestDataLoaderMethods("test_load_post"))
         runner = unittest.TextTestRunner()
         runner.run(suite)

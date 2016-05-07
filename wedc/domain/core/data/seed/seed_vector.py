@@ -40,6 +40,7 @@ def post2seed(input, output, seeds):
     with open(input, 'rb') as f:
         idx = 1
         for line in f:
+            line = line.strip()
             tmp = []
             for i in range(seeds_size):
                 if seed_words[i] in line.split(' '):
