@@ -17,6 +17,8 @@ def clean_token(token):
     if not enchant.Dict("en_US").check(token.lower()):
         token = re.sub("([a-z])([A-Z])","\g<1> \g<2>", token)
 
+
+
     return token.lower()
 
 

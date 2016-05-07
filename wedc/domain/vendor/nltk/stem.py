@@ -23,9 +23,12 @@ def stemming(word):
 
     lmtzr = WordNetLemmatizer()
     word = lmtzr.lemmatize(word, 'v') 
-    word = inflection.singularize(word)
 
-    return word
+    tmp = inflection.singularize(word)
+    if len(tmp) > 1 and enchant.Dict("en_US").check(tmp):
+        return tmp
+    else:
+        return word
 
 
     # porter = stem.porter.PorterStemmer()
