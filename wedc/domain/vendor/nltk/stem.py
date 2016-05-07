@@ -11,6 +11,8 @@ import re
 import inflection
 import enchant
 
+enchant_dict = enchant.Dict("en_US")
+
 def stemming(word):
 
     be_words = ['am', 'is', 'are', 'was', 'were', 'been']
@@ -25,7 +27,7 @@ def stemming(word):
     word = lmtzr.lemmatize(word, 'v') 
 
     tmp = inflection.singularize(word)
-    if len(tmp) > 1 and enchant.Dict("en_US").check(tmp):
+    if len(tmp) > 1 and enchant_dict.check(tmp):
         return tmp
     else:
         return word

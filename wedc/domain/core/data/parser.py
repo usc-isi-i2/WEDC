@@ -13,8 +13,6 @@ from wedc.domain.core.http import domain
 from wedc.domain.core.common import stopword_helper
 from wedc.domain.core.data import cleaner
 
-trantab = string.maketrans(string.punctuation,' '*(len(string.punctuation)))
-
 class DataParser():
     def __init__(self):
         self.stopset = self.load_stopset()
@@ -33,30 +31,13 @@ class DataParser():
         text = self.text_preprocessing(text) 
         tokens = [self.token_preprocessing(token) for token in word_tokenize(text)]
         tokens = [_ for _ in tokens if _]
-
         return str(' '.join(set(tokens)))
-        
-        # print tokens
-    
-        # self.sentence_operation(sentence)
-        # sentences = self.sentence_operation(' '.join(sentences).lower())
-
-        # tokens = [self.token_operation(token) for token in word_tokenize(sentences) if token not in stop and not has_url(token)]
-        # tokens = [_ for _ in tokens if _ and _ != ' ' and _ not in stop_set]
-        # ans = ' '.join(list(set(tokens)))
-        # return str(ans)
 
     def text_preprocessing(self, text):
 
         # convert html code
         text = unescape(text)
-
-        try:
-            text = text.encode('ascii', 'ignore')
-        except Exception as e:
-            print text
-
-        
+        text = text.encode('ascii', 'ignore')
 
         # remove tags
         text = re.sub(r'<[^>]+>', ' ', text)
@@ -73,8 +54,8 @@ class DataParser():
 
         # remove punctuation
         text = re.sub(r'[' + string.punctuation +']+', ' ', text)
-
-        # text = text.translate(trantab)
+        # text = text.translate(string.maketrans('', ''), string.punctuation)
+        
         return ' '.join(text.split())  
 
     def token_preprocessing(self, token):

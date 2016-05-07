@@ -6,8 +6,9 @@ import unittest
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 TEST_DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
 
-from wedc.domain.service.data.base import *
-from wedc.domain.service.data.loaders import es_loader
+
+from wedc.domain.core.data import loader
+from wedc.domain.core.data.loaders import es_loader
 
 data_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'san-francisco-maria-2.json'))
 text_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'text'))
@@ -16,28 +17,18 @@ text_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'text'))
 class TestDataLoaderMethods(unittest.TestCase):
     def setUp(self):
         filename = 'san-francisco-maria-2.json'
-        self.path = os.path.join(TEST_DATA_DIR, filename)
-
-    def test_load_text(self):
-        posts = load_by_path(data_)
-        input_file = open(text_, 'w')
-
-        input_file.writelines(posts)
-        # for post in posts:
-        #     try:
-        #         input_file.write(post)
-        #     except Exception as e:
-        #         print post
+        self.path = os.path.join(TEST_DATA_DIR, filename)        
         
     def test_data_loader(self):
         start_time = time.time()
-        posts = load_by_path(self.path)
+        posts = loader.load_data(data_, no_dups=True)
+        input_file = open(text_, 'w')
+        input_file.writelines(posts)
         print 'Total posts: ', len(posts)
         print 'Time cost:', (time.time() - start_time), 'seconds'
         self.assertIsNotNone(posts)
-        # print posts
-        # Total posts:  49974
-        # Time cost: 133.985596895 seconds
+        # Total posts:  100
+        # Time cost: 34.3749220371 seconds
 
     def test_json_data_extraction(self):
         import json
@@ -58,7 +49,7 @@ class TestDataLoaderMethods(unittest.TestCase):
 
         target = 'massage'
         hits = raw['hits']['hits']
-        post_id = 0
+        post_id = 4
         for hit in hits:
             post_id += 1
             source = hit['_source']
@@ -72,10 +63,13 @@ class TestDataLoaderMethods(unittest.TestCase):
                 # break  
 
     def test_load_post(self):
-        post_id = 1002
-        post_id = post_id - 1 # only for test graph annotation
-        
-        text, post = es_loader.load_post(self.path, post_id)
+        """ test load post by post id
+
+        post id is start from 1
+        """
+        post_id = 1002        
+        text, post = loader.load_data_by_post_id(self.path, post_id-1)
+
         print 'original post content:\n', text.encode('ascii', 'ignore'), '\n\n'
         print 'post content after preprocessing:\n', post.body, '\n\n'
 
@@ -87,7 +81,7 @@ if __name__ == '__main__':
     def run_main_test():
         suite = unittest.TestSuite()
         # suite.addTest(TestDataLoaderMethods("test_json_data_contain"))
-        # suite.addTest(TestDataLoaderMethods("test_load_text"))
+        suite.addTest(TestDataLoaderMethods("test_data_loader"))
         suite.addTest(TestDataLoaderMethods("test_load_post"))
         runner = unittest.TextTestRunner()
         runner.run(suite)
