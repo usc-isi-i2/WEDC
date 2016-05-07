@@ -33,7 +33,7 @@ def load_model(model_path):
 
 
 ############################################################
-#   Similar
+#   Similar Words
 ############################################################
 
 def get_similars_by_word(word, n=10):
@@ -44,7 +44,6 @@ def get_similars_by_word(word, n=10):
         return None
 
     target_word = stem.stemming(word)
-    print target_word
     try:
         indexes, metrics = word2vec_model.cosine(target_word, n=n)
         similar_words = [str(_) for _ in list(word2vec_model.vocab[indexes])]    # similar words
@@ -53,11 +52,12 @@ def get_similars_by_word(word, n=10):
         # print 'similarity matrix\n', metrics
 
         # word:similarity pair
-        pairs = [(similar_words[i], metrics[i]) for i in range(len(similar_words))]
+        pairs = {similar_words[i]: metrics[i] for i in range(len(similar_words))}
         # print 'word:similarity pairs\n', pairs
+        
         return pairs
     except Exception:
-        print 'NO FOUND'
+        print 'NO FOUND SIMILAR WORDS: ', target_word
         return None
 
 
