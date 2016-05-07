@@ -28,9 +28,14 @@ def post2seed(input, output, seeds):
     seed_words.sort()
 
     output = open(output, 'wb')
-    output.write('\n====================\n')
+    sep_line_width = 70
+    output.write('\n\n\n' + '#'*sep_line_width +'\n')
+    output.write('#\t\t Features (' + str(len(seed_words)) + ')')
+    output.write('\n' + '#'*sep_line_width +'\n')
     output.write(str(seed_words))
-    output.write('\n====================\n')
+    output.write('\n\n\n' + '#'*sep_line_width +'\n')
+    output.write('#\t\t Post Feature Words')
+    output.write('\n' + '#'*sep_line_width +'\n')
 
     with open(input, 'rb') as f:
         idx = 1
@@ -42,4 +47,5 @@ def post2seed(input, output, seeds):
                     tmp.append(str((seed_words[i], str(1.0 * float(seeds[seed_words[i]])))))
             output.write('post:'+ str(idx) + '    ' +','.join(tmp) + '\n')
             idx += 1
+
     output.close()

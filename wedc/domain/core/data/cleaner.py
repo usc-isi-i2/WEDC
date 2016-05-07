@@ -80,10 +80,8 @@ def clean_text(text):
 #   Token
 ############################################################
 
-def clean_token(token):
-
-    # camelcase to space
-    if not enchant_dict.check(token.lower()):
+def split_token(token):
+    def camel_case(token):        
         tokens = re.sub("([a-z])([A-Z])","\g<1> \g<2>", token).split()
         if len(tokens) > 1:
             splited = []
@@ -94,6 +92,19 @@ def clean_token(token):
                 token = ' '.join(splited)
             else:
                 return None
+        return token
+
+    if not enchant_dict.check(token.lower()):
+        tmp = camel_case(token)
+        if tmp:
+            return tmp
+            
+    return token
+
+def clean_token(token):
+    token = split_token(token)
+    if not token:
+        return None
 
     if re.search(r'(\d+[k$]+[/(hr|hour)]*|401[\w\d]*)', token.lower()):
         return '401k'

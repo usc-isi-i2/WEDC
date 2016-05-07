@@ -29,7 +29,7 @@ class TestDataLoaderMethods(unittest.TestCase):
         seed_word.load_seed_similar_words(level=2)
 
     def test_cache_seed_similar_words_original(self):
-        seed_word.cache_seed_similar_words(path=original_seed_similar_words_, level=1)
+        seed_word.cache_seed_similar_words(path=original_seed_similar_words_, level=2)
     
     def test_cache_seed_similar_words_gn(self):
         google_news_word2vec_model = w2v.load_model(google_news_word2vec_model_)
@@ -54,8 +54,8 @@ if __name__ == '__main__':
         # suite.addTest(TestDataLoaderMethods("test_load_seed_similar_words"))
         # suite.addTest(TestDataLoaderMethods("test_cache_seed_similar_words_original"))
         # suite.addTest(TestDataLoaderMethods("test_cache_seed_similar_words_gn"))
-        # suite.addTest(TestDataLoaderMethods("test_generate_weighted_seed_dict"))
-        suite.addTest(TestDataLoaderMethods("test_load_weighted_seed_dict"))
+        suite.addTest(TestDataLoaderMethods("test_generate_weighted_seed_dict"))
+        # suite.addTest(TestDataLoaderMethods("test_load_weighted_seed_dict"))
 
         runner = unittest.TextTestRunner()
         runner.run(suite)
