@@ -7,11 +7,13 @@ NodeBox::Linguistics: https://www.nodebox.net/code/index.php/Linguistics#verb_co
 
 from nltk import stem
 from nltk.stem.wordnet import WordNetLemmatizer
+from pattern.en import singularize
 import re
 import inflection
 import enchant
 
 enchant_dict = enchant.Dict("en_US")
+snowball = stem.snowball.EnglishStemmer()
 
 def stemming(word):
 
@@ -26,16 +28,24 @@ def stemming(word):
     lmtzr = WordNetLemmatizer()
     word = lmtzr.lemmatize(word, 'v') 
 
-    tmp = inflection.singularize(word)
-    if len(tmp) > 1 and enchant_dict.check(tmp):
-        return tmp
-    else:
+    # tmp = singularize(word)
+
+    tmp = valid_stemming(snowball.stem(word))
+    if tmp: return tmp
+    tmp = valid_stemming(inflection.singularize(word))
+    if tmp: return tmp
+    
+    return word
+    
+def valid_stemming(word):
+    if len(word) > 1 and enchant_dict.check(word):
         return word
+    return None
 
 
     # porter = stem.porter.PorterStemmer()
     # lancaster = stem.lancaster.LancasterStemmer()
-    # snowball = stem.snowball.EnglishStemmer()
+    # 
     # return snowball.stem(word)
     
     

@@ -40,7 +40,7 @@ class TestDataLoaderMethods(unittest.TestCase):
 
         post id is start from 1
         """
-        post_id = 24605        
+        post_id = 7        
         text, post = loader.load_data_by_post_id(self.path, post_id-1)
 
         print 'original post content:\n', text.encode('ascii', 'ignore'), '\n\n'
@@ -53,9 +53,8 @@ if __name__ == '__main__':
     # unittest.main()
     def run_main_test():
         suite = unittest.TestSuite()
-        # suite.addTest(TestDataLoaderMethods("test_json_data_contain"))
-        # suite.addTest(TestDataLoaderMethods("test_data_loader"))
-        suite.addTest(TestDataLoaderMethods("test_load_post"))
+        suite.addTest(TestDataLoaderMethods("test_data_loader"))
+        # suite.addTest(TestDataLoaderMethods("test_load_post"))
         runner = unittest.TextTestRunner()
         runner.run(suite)
 

@@ -21,7 +21,7 @@ def load(path):
     posts = []
     
 
-    for hit in hits: #[:1000]:
+    for hit in hits[:1000]:
         try:
             source = hit[ES_POST_SOURCE]
             post_url, post_title, post_body = None, None, None
