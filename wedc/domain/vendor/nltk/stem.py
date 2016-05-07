@@ -9,6 +9,7 @@ from nltk import stem
 from nltk.stem.wordnet import WordNetLemmatizer
 import re
 import inflection
+import enchant
 
 def stemming(word):
 
@@ -23,7 +24,7 @@ def stemming(word):
     lmtzr = WordNetLemmatizer()
     word = lmtzr.lemmatize(word, 'v') 
     word = inflection.singularize(word)
-    
+
     return word
 
 

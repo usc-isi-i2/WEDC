@@ -33,14 +33,17 @@ def load_post(path, post_id):
     if 'hasBodyPart' not in source:
         return None
     text = source['hasBodyPart']['text']
-    post = Post('', '', text)
 
     contents = []
     if isinstance(text, basestring):
         contents.append(text)
     else:
         contents = text
-    text = ' '.join(contents)    
+    text = ' '.join(contents) 
+
+    post = Post('', '', text)
+
+
     return text, post
 
 
@@ -94,7 +97,7 @@ def post_parser(path):
                 # post_id+=1 # str(post_id) + ' ' + 
             # break   # test one doc this time
             test += 1
-            if test == 94:
+            if test == 1000:
                 break
 
         except Exception as e: 

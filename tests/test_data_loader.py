@@ -20,9 +20,9 @@ class TestDataLoaderMethods(unittest.TestCase):
 
     def test_load_text(self):
         posts = load_by_path(data_)
-        # input_file = open(text_, 'w')
+        input_file = open(text_, 'w')
 
-        # input_file.writelines(posts)
+        input_file.writelines(posts)
         # for post in posts:
         #     try:
         #         input_file.write(post)
@@ -72,7 +72,7 @@ class TestDataLoaderMethods(unittest.TestCase):
                 # break  
 
     def test_load_post(self):
-        post_id = 94
+        post_id = 1002
         post_id = post_id - 1 # only for test graph annotation
         
         text, post = es_loader.load_post(self.path, post_id)

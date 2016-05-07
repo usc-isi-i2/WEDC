@@ -11,7 +11,7 @@ from wedc.domain.vendor.nltk import stopword
 from wedc.domain.vendor.nltk import stem
 from wedc.domain.core.http import domain
 from wedc.domain.core.common import stopword_helper
-
+from wedc.domain.core.data import cleaner
 
 trantab = string.maketrans(string.punctuation,' '*(len(string.punctuation)))
 
@@ -56,15 +56,14 @@ class DataParser():
         except Exception as e:
             print text
 
-        # camelcase to space
-        text = re.sub("([a-z])([A-Z])","\g<1> \g<2>", text)
+        
 
         # remove tags
         text = re.sub(r'<[^>]+>', ' ', text)
 
         # remove url
         text = re.sub(r'\w+:\/{2}[\d\w-]+(\.[\d\w-]+)*(?:(?:\/[^\s/]*))*', '', text)
-        text = re.sub(r'^[a-z0-9\-\.]+\.(com|org|net|me|cn|biz|us)$', '', text.lower())
+        # text = re.sub(r'^[a-z0-9\-\.]+\.(com|org|net|me|cn|biz|us)$', '', text)
 
         # remove space
         text = re.sub(r'([\t\n\r]|\\+)', ' ', text)
@@ -79,18 +78,15 @@ class DataParser():
         return ' '.join(text.split())  
 
     def token_preprocessing(self, token):
-        if re.search(r'(\d+[k$]+[/(hr|hour)]*|401[\w\d]*)', token):
-            return '401k'
-        if re.search(r'^[xoXO]*((?=xo)|(?=ox))[xoXO]*$', token):
-            return 'xo'
+        token = cleaner.clean_token(token)
+
         if re.search(r'\d', token): # only contain digits
             return None
-        if len(token) == 1 or re.search(r'^(.)\1*$', token): # only contain one character or repeat character
+        if len(token) == 1 or re.search(r'^(.)\1*$', token): 
+            # only contain one character or repeat character
             return None
         if len(token) > 15 and not self.enchant_dict.check(token):
             return None
-
-
         if token in self.stopset:
             return None
         token = stem.stemming(token).strip()

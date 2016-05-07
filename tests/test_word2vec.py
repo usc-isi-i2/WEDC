@@ -44,8 +44,6 @@ class TestDataLoaderMethods(unittest.TestCase):
         input_file = open(input_, 'w')
         input_file.writelines(posts)
 
-
-
     # """ set up model
     def test_setup_model(self):
         # word2vec.word2phrase(input_, output_phrases, verbose=True)
