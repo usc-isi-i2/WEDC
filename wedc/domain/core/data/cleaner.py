@@ -86,7 +86,8 @@ def split_token(token):
         if len(tokens) > 1:
             splited = []
             for t in tokens:
-                if clean_token(t):
+                t = clean_token(t)
+                if t:
                     splited.append(t)
             if splited:
                 token = ' '.join(splited)
@@ -98,7 +99,7 @@ def split_token(token):
         tmp = camel_case(token)
         if tmp:
             return tmp
-            
+
     return token
 
 def clean_token(token):

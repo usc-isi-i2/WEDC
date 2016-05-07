@@ -14,14 +14,18 @@ token { post id, format in original content}
 
 
 - incallsoutcalls
-
     - 9084
     - Always Safe / INCALLSOUTCALLS<br>
 
 - outcallsserious
-
     - 21925
     - Discreet & Upscale OUTCALLSSerious calls ONLY 
+
+- onlyt
+    - 5065
+    - OnlytOutcalls In San Francisco $100 Outs15Spec. SpEcIaLS all Day - 21 
+
+
 
 
 
