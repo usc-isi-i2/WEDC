@@ -21,7 +21,7 @@ def load(path):
     posts = []
     
 
-    for hit in hits[:100]:
+    for hit in hits: #[:1000]:
         try:
             source = hit[ES_POST_SOURCE]
             post_url, post_title, post_body = None, None, None
@@ -47,9 +47,8 @@ def load(path):
             try:
                 post = Post(post_url, post_title, post_body)
             except Exception as e:
-                print post_body
                 print e
-                print post.body
+                print post_body
 
             if post:
                 posts.append(post.body + '\n') # + '\n'

@@ -1,6 +1,19 @@
 import os
 from wedc.domain.conf.storage import __res_dir__
 
+from wedc.domain.vendor.nltk import stopword
+
+def get_stopword_set():
+    stops = stopword.get_stopwords()
+    names = get_person_names()
+    # country, country_abbr = stopword_helper.get_country_names()
+    nationality = get_nationality_names()
+    stop_set = set(stops) | set(names) | set(nationality) # | Set(country) # | Set(country_abbr) 
+    # stop_set = [str(stem.stemming(_).strip()) for _ in stop_set]
+    return stop_set
+
+
+
 def get_stopword_from_file(file_path):
     names_list = []
     with open(file_path) as f:

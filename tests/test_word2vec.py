@@ -40,7 +40,6 @@ class TestDataLoaderMethods(unittest.TestCase):
         filename = 'san-francisco-maria-2.json'
         path = os.path.join(TEST_DATA_DIR, filename)
         posts = load_by_path(path)
-
         input_file = open(input_, 'w')
         input_file.writelines(posts)
 

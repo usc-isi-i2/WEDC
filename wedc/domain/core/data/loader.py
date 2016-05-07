@@ -12,16 +12,3 @@ def load_data(path, no_dups=False):
 def load_data_by_post_id(path, post_id):
     return es_loader.load_post(path, post_id)
 
-
-def remove_dup(input, output):
-    hs = Set()
-    output = open(output, 'wb')
-    with open(input, 'rb') as f:
-        for line in f:
-            hashobj = hashlib.sha256()
-            hashobj.update(line.strip())
-            hash_value = hashobj.hexdigest().lower()
-            if hash_value not in hs:
-                hs.add(hash_value)
-                output.write(line)
-
