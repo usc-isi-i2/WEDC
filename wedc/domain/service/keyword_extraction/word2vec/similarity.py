@@ -42,6 +42,8 @@ def get_similar_words(target_word, n=10):
     
     return similar_words
 
+
+
 def get_similar_words(word2vec_model, target_word, n=10):
     target_word = stem.stemming(target_word)
     similar_words = []
@@ -68,6 +70,7 @@ def get_similar_words_with_similarity(target_word, n=10):
         # print "NO FOUND"
         pass
     return similar_words
+    
     
 def get_similar_words_with_similarity_and_model(word2vec_model, target_word, n=10):
     target_word = stem.stemming(target_word)

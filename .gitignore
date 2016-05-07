@@ -1,3 +1,4 @@
+tests_bk/*
 tests/data/*
 res/*
 *.jar

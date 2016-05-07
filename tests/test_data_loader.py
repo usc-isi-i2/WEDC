@@ -32,8 +32,8 @@ class TestDataLoaderMethods(unittest.TestCase):
         print 'Total posts: ', len(posts)
         print 'Time cost:', (time.time() - start_time), 'seconds'
         self.assertIsNotNone(posts)
-        # Total posts:  19970
-        # Time cost: 634.690217018 seconds
+        # Total posts:  19974
+        # Time cost: 261.857595921 seconds
 
     def test_load_post(self):
         """ test load post by post id
