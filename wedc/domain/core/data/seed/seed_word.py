@@ -47,7 +47,7 @@ def load_seed_words_with_category():
 #   Similar Words of Seed Words
 ############################################################
 
-def load_seed_similar_words(level=1):
+def load_seed_similar_words(level=1, n=10):
     seed_words = [stem.stemming(_) for _ in load_seed_words()]
     ans = {}
     [ans.setdefault(_, 1) for _ in seed_words]
@@ -56,7 +56,7 @@ def load_seed_similar_words(level=1):
     for _ in range(level):
         next_level_seed_words = {}
         for seed_word in current_level_seed_words:
-            similar_words_dict = w2v.get_similars_by_word(seed_word)
+            similar_words_dict = w2v.get_similars_by_word(seed_word, n=n)
             if not similar_words_dict:
                 continue
             for (similar_word, sw_similarity) in similar_words_dict.items():
@@ -70,7 +70,7 @@ def load_seed_similar_words(level=1):
     # ans.sort()
     return ans
 
-def cache_seed_similar_words(path, seed_words=None, level=1, model=None):
+def cache_seed_similar_words(path, seed_words=None, level=1, n=10, model=None):
     if not seed_words:
         seed_words = [str(stem.stemming(_)) for _ in load_seed_words()]
 
@@ -95,7 +95,10 @@ def cache_seed_similar_words(path, seed_words=None, level=1, model=None):
             for _ in range(level):
                 next_sws = {}
                 for w in cur_sws:
-                    tmp = w2v.get_similars_by_word(w).keys()
+                    tmp = w2v.get_similars_by_word(w, n=n)
+                    if not tmp:
+                        continue
+                    tmp = tmp.keys()
                     [similar_words.setdefault(_, 0) for _ in tmp]
                     # [similar_words.setdefault[_]+=1 for _ in tmp]
                     [next_sws.setdefault(_, 0) for _ in tmp]

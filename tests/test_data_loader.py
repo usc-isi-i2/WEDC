@@ -38,7 +38,7 @@ class TestDataLoaderMethods(unittest.TestCase):
         """ test load post by post id
         post id is start from 1
         """
-        post_id = 68
+        post_id = 18910
         loader.mapping = loader.load_nodups2dups_mapping(text_nodups2dups_mapping_)
         text, post = loader.load_data_by_post_id(self.path, post_id, no_dups=self.no_dups)
 
@@ -57,7 +57,6 @@ if __name__ == '__main__':
         suite.addTest(TestDataLoaderMethods("test_load_post"))
         runner = unittest.TextTestRunner()
         runner.run(suite)
-
     run_main_test()
 
 

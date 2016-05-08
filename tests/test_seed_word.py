@@ -18,6 +18,8 @@ weighted_seed_dict_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'weighted_s
 class TestDataLoaderMethods(unittest.TestCase):
     def setUp(self):
         w2v.word2vec_model = w2v.load_model(word2vec_model_)
+        self.similar_level = 3
+        self.n = 40
 
     def test_get_seed_files(self):
         print seed_word.get_seed_files()
@@ -26,15 +28,15 @@ class TestDataLoaderMethods(unittest.TestCase):
         print seed_word.load_seed_words()
 
     def test_load_seed_similar_words(self):
-        seed_word.load_seed_similar_words(level=2)
+        seed_word.load_seed_similar_words(level=self.similar_level, n=self.n)
 
     def test_cache_seed_similar_words_original(self):
-        seed_word.cache_seed_similar_words(path=original_seed_similar_words_, level=2)
+        seed_word.cache_seed_similar_words(path=original_seed_similar_words_, level=self.similar_level, n=self.n)
     
     def test_cache_seed_similar_words_gn(self):
         google_news_word2vec_model = w2v.load_model(google_news_word2vec_model_)
         # seed_words = seed_word.load_seed_words()
-        seed_word.cache_seed_similar_words(path=google_new_seed_similar_words, model=google_news_word2vec_model, level=2)
+        seed_word.cache_seed_similar_words(path=google_new_seed_similar_words, model=google_news_word2vec_model, level=self.similar_level, n=self.n)
 
     def test_generate_weighted_seed_dict(self):
         seed_word.generate_weighted_seed_dict(original_seed_similar_words_, other_ssw_cache_path=google_news_similar_words_, output_path=weighted_seed_dict_)

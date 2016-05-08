@@ -41,6 +41,14 @@ token { post id, format in original content}
     - 1222
     - i will brighten your day with my captivating natural beauty & alluringfigure iwht a BIG A%$&#9992;i have smooth silky skin<br/>&#9992;im very outgoing and love spending time with nice gentlemen&#9992; my sessions are unrushed providing maximum pleasure.<br/>&#9992;im always safe, CLEAN fun.&#9992;So what are you waiting for?*70762875-85**.&nbsp;Call <u>707-628-7585</u>. 
 
+- ya ys 
+    - 46465
+    - S e x yS k i l l e d~&~E x t r e m e l yA d d i c t i v e - 21 
+
+- neww
+    - 5807
+    - ExOtIc CuRvY BOMBSHELL NEWW!!! AvAiLaBLe NOW! #1 PICK SeXy & ExOtiC - 21 
+
 
 
 

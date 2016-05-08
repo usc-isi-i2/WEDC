@@ -39,7 +39,7 @@ class TestDataLoaderMethods(unittest.TestCase):
                         verbose=False)
         
     def test_get_similars_by_word(self):
-        print w2v.get_similars_by_word('escort', n=10)
+        print w2v.get_similars_by_word('401k', n=100)
         
     def tearDown(self):
         pass
@@ -49,8 +49,8 @@ if __name__ == '__main__':
     def run_main_test():
         suite = unittest.TestSuite()
 
-        # suite.addTest(TestDataLoaderMethods("test_setup_model"))
-        suite.addTest(TestDataLoaderMethods("test_get_similars_by_word"))
+        suite.addTest(TestDataLoaderMethods("test_setup_model"))
+        # suite.addTest(TestDataLoaderMethods("test_get_similars_by_word"))
 
         runner = unittest.TextTestRunner()
         runner.run(suite)

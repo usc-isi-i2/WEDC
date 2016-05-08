@@ -1,5 +1,4 @@
 
-
 from wedc.domain.core.data.seed import seed_word
 
 
@@ -41,12 +40,12 @@ def post2seed(input, output, seeds):
         idx = 1
         for line in f:
             line = line.strip()
-            tmp = []
-            for i in range(seeds_size):
-                if seed_words[i] in line.split(' '):
-                    flag = True
-                    tmp.append(str((seed_words[i], str(1.0 * float(seeds[seed_words[i]])))))
-            output.write('post:'+ str(idx) + '    ' +','.join(tmp) + '\n')
+            tmp = {}
+            tokens = line.split(' ')
+            for sw in seed_words:
+                if sw in tokens:
+                    tmp.setdefault(str((sw, str(1.0 * float(seeds[sw])))), 0)
+            output.write('post:'+ str(idx) + '    ' +','.join(tmp.keys()) + '\n')
             idx += 1
 
     output.close()

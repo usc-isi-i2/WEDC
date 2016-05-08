@@ -15,7 +15,9 @@ stopset = stopword_helper.get_stopword_set()
 
 token_mapping = {
     'hrs': 'hour',
-    'luv': 'love'
+    'luv': 'love',
+    'lookin': 'look',
+    'californias': 'california'
 }
 
 seed_words = seed_word.load_seed_words()
@@ -37,6 +39,8 @@ def remove_dups(posts, mapping_path=None):
 
     for pid in xrange(1, size+1):
         post = posts[pid-1] # pid start from 1
+        if not post or post.strip() == '':
+            continue
         hashobj = hashlib.sha256()
         hashobj.update(post.strip())
         hash_value = hashobj.hexdigest().lower()
@@ -147,6 +151,7 @@ def mars2norm(token):
 
 def clean_token(token):
     token = split_token(token)
+
     if not token:
         return None
 
@@ -163,7 +168,7 @@ def clean_token(token):
     if len(token) == 1 or re.search(r'^(.)\1*$', token): 
         # only contain one character or repeat character
         return None
-    if len(token) > 15 and not enchant_dict.check(token.lower()):
+    if len(token) > 20 and not enchant_dict.check(token.lower()):
         return None
 
     if token in stopset:
