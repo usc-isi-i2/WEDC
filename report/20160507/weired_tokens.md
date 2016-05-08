@@ -49,6 +49,10 @@ token { post id, format in original content}
     - 5807
     - ExOtIc CuRvY BOMBSHELL NEWW!!! AvAiLaBLe NOW! #1 PICK SeXy & ExOtiC - 21 
 
+- readywaiting
+    - 11048
+    - HAY BOYSCOME PLAY WITHME BELLA AMOREw.,e.,t READYWAITING FOR UI WILL BE IN SAN FRANNICELOCATIONIM 53 110GREEN EYESBROWNHAIR.,,.,HOTMILFCOME SEE ME415.,.,261.,,13.,88. <a href='/more.php?article=142'>Me and my friends are on Adult Finder </a> so you can find us all on there if you want... sweetNsmooth<br /><br /> 
+
 
 
 

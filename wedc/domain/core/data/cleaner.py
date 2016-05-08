@@ -18,7 +18,11 @@ token_mapping = {
     'luv': 'love',
     'lookin': 'look',
     'californias': 'california',
-    'pleasured': 'pleasure'
+    'pleasured': 'pleasure',
+    'neww': 'new',
+    'newly': 'new',
+    'newest': 'new',
+    'renew': 'new'
 }
 
 seed_words = seed_word.load_seed_words()
@@ -165,7 +169,12 @@ def clean_token(token):
     if re.search(r'^[xoXO]*((?=xo)|(?=ox))[xoXO]*$', token.lower()):
         return 'xo'
 
+    if re.search(r'(http|www)', token.lower()):
+        return None
+
     token = mars2norm(token)
+    if not token:
+        return None
 
     if re.search(r'\d', token): # only contain digits
         return None
@@ -180,6 +189,11 @@ def clean_token(token):
     token = stem.stemming(token.lower()).strip()
     if token in stopset:   # double check for unexpected text form, like 'marias'
         return None
+
+    if not enchant_dict.check(token) and re.search(r'([a-zA-Z])\1{2,}', token):
+        tmp = re.sub(r"([a-zA-Z])\1{2,}","\g<1>", token)
+        if enchant_dict.check(tmp):
+            token = tmp
 
     return token.lower()
 
