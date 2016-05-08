@@ -17,7 +17,8 @@ token_mapping = {
     'hrs': 'hour',
     'luv': 'love',
     'lookin': 'look',
-    'californias': 'california'
+    'californias': 'california',
+    'pleasured': 'pleasure'
 }
 
 seed_words = seed_word.load_seed_words()
@@ -157,6 +158,9 @@ def clean_token(token):
 
     if re.search(r'(\d+[k$]+[/(hr|hour)]*|401[\w\d]*)', token.lower()):
         return '401k'
+
+    if re.search(r'girl', token.lower()):
+        return 'girl'
 
     if re.search(r'^[xoXO]*((?=xo)|(?=ox))[xoXO]*$', token.lower()):
         return 'xo'
