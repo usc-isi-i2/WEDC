@@ -170,6 +170,9 @@ def clean_token(token):
     if re.search(r'girl', token.lower()):
         return 'girl'
 
+    if re.search(r'(week|day)', token.lower()):
+        return 'day'
+
     if re.search(r'^[xoXO]*((?=xo)|(?=ox))[xoXO]*$', token.lower()):
         return 'xo'
 
