@@ -22,7 +22,11 @@ token_mapping = {
     'neww': 'new',
     'newly': 'new',
     'newest': 'new',
-    'renew': 'new'
+    'renew': 'new',
+    'sweety': 'sweet',
+    'sweetness': 'sweet',
+    'sweetheart': 'sweet',
+    'sweetie': 'sweet' 
 }
 
 seed_words = seed_word.load_seed_words()

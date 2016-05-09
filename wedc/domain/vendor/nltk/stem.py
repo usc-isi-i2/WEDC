@@ -27,9 +27,9 @@ def stemming(word):
         return '401k'
 
     word = lmtzr.lemmatize(word, 'v')
-    # word = lmtzr.lemmatize(word, 'a')
-    # word = lmtzr.lemmatize(word, 'r')
-    # word = lmtzr.lemmatize(word, 'n')
+    word = lmtzr.lemmatize(word, 'a')
+    word = lmtzr.lemmatize(word, 'r')
+    word = lmtzr.lemmatize(word, 'n')
 
     tmp = valid_stemming(inflection.singularize(word))
     if tmp: return tmp
