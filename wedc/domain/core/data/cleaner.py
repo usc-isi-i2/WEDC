@@ -29,8 +29,13 @@ token_mapping = {
     'sweetie': 'sweet',
     'gon': 'go',
     'wanna': 'want',
+    'incal': 'incall',
     'incalls': 'incall',
-    'outcalls': 'outcall'
+    'incallz': 'incall',
+    'outcal': 'outcall',
+    'outcalls': 'outcall',
+    'incallz': 'outcall',
+    'inn': 'in'
 }
 
 seed_words = seed_word.load_seed_words()
@@ -164,8 +169,12 @@ def mars2norm(token):
     return token
 
 def clean_token(token):
-    token = split_token(token)
+    if not enchant_dict.check(token) and re.search(r'([a-zA-Z])\1{1,}', token.lower()):
+        tmp = re.sub(r"([a-zA-Z])\1{1,}","\g<1>", token.lower())
+        if enchant_dict.check(tmp):
+            token = tmp
 
+    token = split_token(token)
     if not token:
         return None
 
@@ -204,6 +213,7 @@ def clean_token(token):
 
     if token in stopset:
         return None
+    
     token = stem.stemming(token.lower()).strip()
     if token in stopset:   # double check for unexpected text form, like 'marias'
         return None
@@ -220,8 +230,8 @@ def clean_token(token):
     if len(token) > 20 and not enchant_dict.check(token.lower()):
         return None
 
-    if not enchant_dict.check(token) and re.search(r'([a-zA-Z])\1{2,}', token):
-        tmp = re.sub(r"([a-zA-Z])\1{2,}","\g<1>", token)
+    if not enchant_dict.check(token) and re.search(r'([a-zA-Z])\1{1,}', token):
+        tmp = re.sub(r"([a-zA-Z])\1{1,}","\g<1>", token)
         if enchant_dict.check(tmp):
             token = tmp
 
