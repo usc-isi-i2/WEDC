@@ -48,7 +48,8 @@ def load_seed_words_with_category():
 ############################################################
 
 def load_seed_similar_words(level=1, n=10):
-    seed_words = [stem.stemming(_) for _ in load_seed_words()]
+    # seed_words = [stem.stemming(_) for _ in load_seed_words()]
+    seed_words = [_ for _ in load_seed_words()]
     ans = {}
     [ans.setdefault(_, 1) for _ in seed_words]
 
@@ -72,7 +73,8 @@ def load_seed_similar_words(level=1, n=10):
 
 def cache_seed_similar_words(path, seed_words=None, level=1, n=10, model=None):
     if not seed_words:
-        seed_words = [str(stem.stemming(_)) for _ in load_seed_words()]
+        # seed_words = [str(stem.stemming(_)) for _ in load_seed_words()]
+        seed_words = [str(_) for _ in load_seed_words()]
 
     if not model:
         model = w2v.word2vec_model
