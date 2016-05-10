@@ -17,6 +17,7 @@ TEST_DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
 
 post2vec_  = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'post2vec.txt'))
 post2vec_label_  = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'post2vec_label.txt'))
+post2vec_predict_  = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'post2vec_predict.txt'))
 
 from wedc.domain.core.ml.graph import knn
 from wedc.domain.core.ml.helper import label
@@ -24,38 +25,22 @@ from wedc.domain.core.ml.classifier.label_propagation import lp
 
 class TestDataLoaderMethods(unittest.TestCase):
     def setUp(self):
-        pass
+        label_dict = label.load_label_dict()
+        label.generate_label_file(label_dict, post2vec_label_)
 
     def test_generate_label_file(self):
-        # -1: unknown
-        #  1: others
-        #  2: massage
-        #  3: escort
-        #  4: job_ads
- 
-        label_dict = {
-                        1:4,
-                        2:4,
-                        3:4,
-                        4:1,
-                        5:4,
-                        6:4,
-                        7:4,
-                        8:4,
-                        9:3,
-                        10:3
-                    }
+        label_dict = label.load_label_dict()
         label.generate_label_file(label_dict, post2vec_label_)
 
     def test_do_label_propagation(self):
         lp.do_label_propagation(input_data=post2vec_,
                                 input_label=post2vec_label_,
+                                output=post2vec_predict_,
                                 kernel='knn',
-                                gamma=20,
-                                n_neighbors=7, 
+                                n_neighbors=10, 
                                 alpha=1, 
-                                max_iter=30, 
-                                tol=0.001)
+                                max_iter=100, 
+                                tol=0.000001)
 
 
     def test_build_knn_graph(self):

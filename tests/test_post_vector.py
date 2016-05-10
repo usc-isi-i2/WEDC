@@ -35,8 +35,8 @@ if __name__ == '__main__':
 
     def run_main_test():
         suite = unittest.TestSuite()
-        suite.addTest(TestDataLoaderMethods("test_post2sv"))
-        # suite.addTest(TestDataLoaderMethods("test_post2seeds"))
+        # suite.addTest(TestDataLoaderMethods("test_post2sv"))
+        suite.addTest(TestDataLoaderMethods("test_post2seeds"))
         
         runner = unittest.TextTestRunner()
         runner.run(suite)

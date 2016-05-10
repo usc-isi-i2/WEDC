@@ -35,6 +35,7 @@ token_mapping = {
 
 seed_words = seed_word.load_seed_words()
 
+# print seed_words
 
 ############################################################
 #   Posts
@@ -186,13 +187,16 @@ def clean_token(token):
     if re.search(r'(http|www)', token.lower()):
         return None
 
+    if token.lower() in seed_words:
+        return token.lower()
+
     token = mars2norm(token)
     if not token:
         return None
 
     if re.search(r'\d', token): # only contain digits
         return None
-    if len(token) == 1 or re.search(r'^(.)\1*$', token): 
+    if len(token) <= 2 or re.search(r'^(.)\1*$', token): 
         # only contain one character or repeat character
         return None
     if len(token) > 20 and not enchant_dict.check(token.lower()):
@@ -202,6 +206,18 @@ def clean_token(token):
         return None
     token = stem.stemming(token.lower()).strip()
     if token in stopset:   # double check for unexpected text form, like 'marias'
+        return None
+
+    if token.lower() in seed_words:
+        return token.lower()
+
+    # need to optimize
+    if re.search(r'\d', token): # only contain digits
+        return None
+    if len(token) <= 2 or re.search(r'^(.)\1*$', token): 
+        # only contain one character or repeat character
+        return None
+    if len(token) > 20 and not enchant_dict.check(token.lower()):
         return None
 
     if not enchant_dict.check(token) and re.search(r'([a-zA-Z])\1{2,}', token):
