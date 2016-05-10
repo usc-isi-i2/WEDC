@@ -20,6 +20,7 @@ post2vec_label_  = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'post2vec_labe
 
 from wedc.domain.core.ml.graph import knn
 from wedc.domain.core.ml.helper import label
+from wedc.domain.core.ml.classifier.label_propagation import lp
 
 class TestDataLoaderMethods(unittest.TestCase):
     def setUp(self):
@@ -46,6 +47,17 @@ class TestDataLoaderMethods(unittest.TestCase):
                     }
         label.generate_label_file(label_dict, post2vec_label_)
 
+    def test_do_label_propagation(self):
+        lp.do_label_propagation(input_data=post2vec_,
+                                input_label=post2vec_label_,
+                                kernel='knn',
+                                gamma=20,
+                                n_neighbors=7, 
+                                alpha=1, 
+                                max_iter=30, 
+                                tol=0.001)
+
+
     def test_build_knn_graph(self):
         knn.build_graph(post2vec_, graph_)
         
@@ -57,8 +69,8 @@ if __name__ == '__main__':
 
     def run_main_test():
         suite = unittest.TestSuite()
-        suite.addTest(TestDataLoaderMethods("test_generate_label_file"))
-        # suite.addTest(TestDataLoaderMethods("test_build_knn_graph"))
+        # suite.addTest(TestDataLoaderMethods("test_generate_label_file"))
+        suite.addTest(TestDataLoaderMethods("test_do_label_propagation"))
         runner = unittest.TextTestRunner()
         runner.run(suite)
 
