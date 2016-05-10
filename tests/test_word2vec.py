@@ -20,7 +20,7 @@ word2vec_model_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'word2vec_model
 
 from wedc.domain.vendor.word2vec import w2v
 
-class TestDataLoaderMethods(unittest.TestCase):
+class TestWord2VecMethods(unittest.TestCase):
     def setUp(self):
         w2v.word2vec_model = w2v.load_model(word2vec_model_)
 
@@ -39,7 +39,7 @@ class TestDataLoaderMethods(unittest.TestCase):
                         verbose=False)
         
     def test_get_similars_by_word(self):
-        print w2v.get_similars_by_word('401k', n=100)
+        print w2v.get_similars_by_word('young', n=100)
         
     def tearDown(self):
         pass
@@ -49,8 +49,8 @@ if __name__ == '__main__':
     def run_main_test():
         suite = unittest.TestSuite()
 
-        suite.addTest(TestDataLoaderMethods("test_setup_model"))
-        # suite.addTest(TestDataLoaderMethods("test_get_similars_by_word"))
+        # suite.addTest(TestWord2VecMethods("test_setup_model"))
+        suite.addTest(TestWord2VecMethods("test_get_similars_by_word"))
 
         runner = unittest.TextTestRunner()
         runner.run(suite)

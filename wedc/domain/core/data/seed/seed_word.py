@@ -79,7 +79,6 @@ def cache_seed_similar_words(path, seed_words=None, level=1, n=10, model=None):
     if not model:
         model = w2v.word2vec_model
 
-
     num_words, num_vectors = model.vectors.shape
 
     with open(path, 'w') as f:

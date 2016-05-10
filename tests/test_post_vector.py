@@ -17,7 +17,7 @@ from wedc.domain.core.data.seed import seed_vector
 from wedc.domain.core.data.seed import seed_word
 
 
-class TestDataLoaderMethods(unittest.TestCase):
+class TestPostVectorMethods(unittest.TestCase):
     def setUp(self):
         self.seeds = seed_word.load_weighted_seed_dict(weighted_seed_dict_)
 
@@ -35,8 +35,8 @@ if __name__ == '__main__':
 
     def run_main_test():
         suite = unittest.TestSuite()
-        # suite.addTest(TestDataLoaderMethods("test_post2sv"))
-        suite.addTest(TestDataLoaderMethods("test_post2seeds"))
+        # suite.addTest(TestPostVectorMethods("test_post2sv"))
+        suite.addTest(TestPostVectorMethods("test_post2seeds"))
         
         runner = unittest.TextTestRunner()
         runner.run(suite)

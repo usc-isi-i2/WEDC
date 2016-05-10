@@ -23,14 +23,14 @@ from wedc.domain.core.ml.graph import knn
 from wedc.domain.core.ml.helper import label
 from wedc.domain.core.ml.classifier.label_propagation import lp
 
-class TestDataLoaderMethods(unittest.TestCase):
+class TestLabelPropagationMethods(unittest.TestCase):
     def setUp(self):
         label_dict = label.load_label_dict()
         label.generate_label_file(label_dict, post2vec_label_)
 
     def test_generate_label_file(self):
         label_dict = label.load_label_dict()
-        label.generate_label_file(label_dict, post2vec_label_)
+        label.generate_label_file(label_dict, output=post2vec_label_, post2vec_txt_path=post2vec_)
 
     def test_do_label_propagation(self):
         lp.do_label_propagation(input_data=post2vec_,
@@ -45,6 +45,9 @@ class TestDataLoaderMethods(unittest.TestCase):
 
     def test_build_knn_graph(self):
         knn.build_graph(post2vec_, graph_)
+
+    def test_load_unknown_post_index(self):
+        print label.load_unknown_post_index(post2vec_)
         
     def tearDown(self):
         pass
@@ -54,8 +57,9 @@ if __name__ == '__main__':
 
     def run_main_test():
         suite = unittest.TestSuite()
-        # suite.addTest(TestDataLoaderMethods("test_generate_label_file"))
-        suite.addTest(TestDataLoaderMethods("test_do_label_propagation"))
+        suite.addTest(TestLabelPropagationMethods("test_generate_label_file"))
+        # suite.addTest(TestLabelPropagationMethods("test_do_label_propagation"))
+        # suite.addTest(TestLabelPropagationMethods("test_load_unknown_post_index"))
         runner = unittest.TextTestRunner()
         runner.run(suite)
 
