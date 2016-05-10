@@ -11,10 +11,10 @@ def post2sv(input, output, seeds):
     with open(input, 'rb') as f:
         for line in f:
             line = line.strip()
-            flag = False
             vector = ['0'] * seeds_size
+            tokens = line.split(' ')
             for i in range(seeds_size):
-                if seed_words[i] in line:
+                if seed_words[i] in tokens:
                     vector[i] = str(1.0 * float(seeds[seed_words[i]]))
             output.write(' '.join(vector) + '\n')
     output.close()
