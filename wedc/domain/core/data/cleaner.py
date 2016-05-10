@@ -28,7 +28,9 @@ token_mapping = {
     'sweetheart': 'sweet',
     'sweetie': 'sweet',
     'gon': 'go',
-    'wanna': 'want'
+    'wanna': 'want',
+    'incalls': 'incall',
+    'outcalls': 'outcall'
 }
 
 seed_words = seed_word.load_seed_words()
