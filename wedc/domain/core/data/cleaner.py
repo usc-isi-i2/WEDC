@@ -169,6 +169,9 @@ def clean_token(token):
     if not token:
         return None
 
+    if token.lower() in seed_words:
+        return token.lower()
+
     if re.search(r'(\d+[k$]+[/(hr|hour)]*|401[\w\d]*)', token.lower()):
         return '401k'
 
@@ -186,9 +189,6 @@ def clean_token(token):
 
     if re.search(r'(http|www)', token.lower()):
         return None
-
-    if token.lower() in seed_words:
-        return token.lower()
 
     token = mars2norm(token)
     if not token:
