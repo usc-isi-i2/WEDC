@@ -50,6 +50,8 @@ def do_label_propagation(input_data,
             output_fh.write(str(p)+'\n')
         output_fh.close()
 
+    return label_prop_model
+
     
 
 

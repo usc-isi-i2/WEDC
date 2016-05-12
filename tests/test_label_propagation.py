@@ -27,20 +27,25 @@ class TestLabelPropagationMethods(unittest.TestCase):
     def setUp(self):
         label_dict = label.load_label_dict()
         label.generate_label_file(label_dict, post2vec_label_)
+        # label.generate_label_file(label_dict, post2vec_label_, post2vec_txt_path=post2vec_)
 
     def test_generate_label_file(self):
         label_dict = label.load_label_dict()
-        label.generate_label_file(label_dict, output=post2vec_label_, post2vec_txt_path=post2vec_)
+        label.generate_label_file(label_dict, output=post2vec_label_)
+        # label.generate_label_file(label_dict, output=post2vec_label_, post2vec_txt_path=post2vec_)
 
     def test_do_label_propagation(self):
-        lp.do_label_propagation(input_data=post2vec_,
+        label_prop_model = lp.do_label_propagation(input_data=post2vec_,
                                 input_label=post2vec_label_,
                                 output=post2vec_predict_,
                                 kernel='knn',
-                                n_neighbors=10, 
-                                alpha=1, 
+                                n_neighbors=100, 
+                                alpha=1,
                                 max_iter=100, 
                                 tol=0.000001)
+
+        # print label_prop_model.classes_
+        # print len(label_prop_model.label_distributions_)
 
 
     def test_build_knn_graph(self):

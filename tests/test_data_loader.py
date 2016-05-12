@@ -38,7 +38,7 @@ class TestDataLoaderMethods(unittest.TestCase):
         """ test load post by post id
         post id is start from 1
         """
-        post_id = 6670 # 28 # 16274
+        post_id = 1639 # 28 # 16274
         loader.mapping = loader.load_nodups2dups_mapping(text_nodups2dups_mapping_)
         text, post = loader.load_data_by_post_id(self.path, post_id, no_dups=self.no_dups)
 
