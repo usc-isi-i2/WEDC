@@ -142,6 +142,7 @@ def load_label_dict():
 
     return label_dict
 
+
 def load_unknown_post_index(post2vec_txt_path, upper_bound=None):
     input_fh = open(post2vec_txt_path, 'rb')
     ans = []

@@ -2,6 +2,8 @@ import numpy as np
 
 from sklearn import datasets
 from sklearn.semi_supervised import LabelPropagation
+from wedc.domain.core.ml.helper import label
+
 # label_prop_model = LabelPropagation()
 iris = datasets.load_iris()
 # random_unlabeled_points = np.where(np.random.random_integers(0, 1,
@@ -51,6 +53,51 @@ def do_label_propagation(input_data,
         output_fh.close()
 
     return label_prop_model
+
+    
+def evaluate(input_data,
+            train_test_rate=.8,
+            output=None,
+            kernel='knn', 
+            n_neighbors=10, 
+            alpha=1, 
+            max_iter=30, 
+            tol=0.001):
+    from sklearn.cross_validation import train_test_split
+    from sklearn.metrics import classification_report
+    from sklearn.metrics import accuracy_score
+
+    label_dict = label.load_label_dict()
+    label_dict = sorted(label_dict.iteritems(), key=lambda x:x[0])
+    post_id_list = []
+    y = []
+    for (k, v) in label_dict:
+        post_id_list.append(k)
+        y.append(v)
+
+    input_data_fh = open(input_data, 'rb')
+    data_lines = input_data_fh.readlines()
+    data_lines = [data_lines[i] for i in post_id_list]
+    data_lines = [_.strip() for _ in data_lines]
+
+    X = np.array(np.mat(';'.join(data_lines)))
+    input_data_fh.close()
+
+
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.9, random_state=4)
+
+    label_prop_model = LabelPropagation()
+    label_prop_model.fit(X_train, y_train)
+
+    y_predict = label_prop_model.predict(X_test)
+
+    
+    print '+--------------------------------------------------------+'
+    print '|                         Report                         +'
+    print '+--------------------------------------------------------+'
+    print classification_report(y_test, y_predict)
+    print 'accuracy: ' + str(accuracy_score(y_test, y_predict))
+    print '\n\n'
 
     
 

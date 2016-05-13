@@ -15,9 +15,9 @@ import unittest
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 TEST_DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
 
-post2vec_  = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'post2vec.txt'))
-post2vec_label_  = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'post2vec_label.txt'))
-post2vec_predict_  = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'post2vec_predict.txt'))
+post2vec_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'post2vec.txt'))
+post2vec_label_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'post2vec_label.txt'))
+post2vec_predict_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'post2vec_predict.txt'))
 
 from wedc.domain.core.ml.graph import knn
 from wedc.domain.core.ml.helper import label
@@ -39,7 +39,7 @@ class TestLabelPropagationMethods(unittest.TestCase):
                                 input_label=post2vec_label_,
                                 output=post2vec_predict_,
                                 kernel='knn',
-                                n_neighbors=100, 
+                                n_neighbors=10, 
                                 alpha=1,
                                 max_iter=100, 
                                 tol=0.000001)
@@ -53,6 +53,10 @@ class TestLabelPropagationMethods(unittest.TestCase):
 
     def test_load_unknown_post_index(self):
         print label.load_unknown_post_index(post2vec_)
+
+    def test_evaluate(self):
+        lp.evaluate(input_data=post2vec_)
+
         
     def tearDown(self):
         pass
@@ -62,9 +66,10 @@ if __name__ == '__main__':
 
     def run_main_test():
         suite = unittest.TestSuite()
-        suite.addTest(TestLabelPropagationMethods("test_generate_label_file"))
+        # suite.addTest(TestLabelPropagationMethods("test_generate_label_file"))
         # suite.addTest(TestLabelPropagationMethods("test_do_label_propagation"))
         # suite.addTest(TestLabelPropagationMethods("test_load_unknown_post_index"))
+        suite.addTest(TestLabelPropagationMethods("test_evaluate"))
         runner = unittest.TextTestRunner()
         runner.run(suite)
 
