@@ -9,7 +9,7 @@ class LabelledData(dbase):
     id = Column(Integer, primary_key=True)
     content = Column(String(1*1024*1024), nullable=False)
     label = Column(Integer, nullable=False)
-    checksum = Column(String(50), nullable=False)
+    checksum = Column(String(200), nullable=False)
 
     """ use flag to note data
     0: normal data
@@ -20,16 +20,23 @@ class LabelledData(dbase):
 
     @staticmethod
     def calc_checksum(content):
-        return 'test'
+        import hashlib
+        hashobj = hashlib.sha256()
+        hashobj.update(content.strip())
+        hash_value = hashobj.hexdigest().lower()
+        return hash_value
 
     @staticmethod
     def insert(content, label, flag):
+        checksum = LabelledData.calc_checksum(content)
         with session_scope() as session:
-            new_data = LabelledData(content=content, 
-                            label=label,
-                            checksum=LabelledData.calc_checksum(content),
-                            flag=flag)
-            session.add(new_data)
+            # filter dups
+            if not session.query(LabelledData).filter_by(checksum=checksum).all():
+                new_data = LabelledData(content=content, 
+                                label=label,
+                                checksum=checksum,
+                                flag=flag)
+                session.add(new_data)
 
     # def delete()
     @staticmethod
