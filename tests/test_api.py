@@ -15,7 +15,7 @@ class TestPostVectorMethods(unittest.TestCase):
         self.api = WEDC()
 
     def test(self):
-        print self.api.config('SECRET_KEY')
+        
 
     def tearDown(self):
         pass
@@ -26,7 +26,6 @@ if __name__ == '__main__':
     def run_main_test():
         suite = unittest.TestSuite()
         suite.addTest(TestPostVectorMethods("test"))
-        
         runner = unittest.TextTestRunner()
         runner.run(suite)
 

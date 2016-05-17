@@ -1,6 +1,6 @@
+from sqlalchemy import Column, ForeignKey, Integer, String
 
-
-from wedc.infrastructure.database import dbase
+from wedc.infrastructure.database import dbase, session_scope, load_session
 
 
 class LabelledData(dbase):
@@ -17,4 +17,26 @@ class LabelledData(dbase):
     2: need to check manually
     """
     flag = Column(Integer, nullable=False)
+
+    @staticmethod
+    def calc_checksum(content):
+        return 'test'
+
+    @staticmethod
+    def insert(content, label, flag):
+        with session_scope() as session:
+            new_data = LabelledData(content=content, 
+                            label=label,
+                            checksum=LabelledData.calc_checksum(content),
+                            flag=flag)
+            session.add(new_data)
+
+    # def delete()
+    @staticmethod
+    def load_data():
+        session = load_session()
+        return session.query(LabelledData).all()
+
+    
+
 
