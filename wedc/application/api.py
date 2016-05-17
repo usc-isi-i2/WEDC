@@ -2,7 +2,7 @@ import os
 import sys
 
 from wedc.domain.conf import configuration
-from wedc.infrastructure.database import *
+
 
 
 class WEDC():

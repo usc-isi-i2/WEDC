@@ -15,7 +15,7 @@ class TestPostVectorMethods(unittest.TestCase):
         self.api = WEDC()
 
     def test(self):
-        
+        print self.api.config('WEDC_CATEGORIES')
 
     def tearDown(self):
         pass

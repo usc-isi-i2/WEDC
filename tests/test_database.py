@@ -47,8 +47,8 @@ if __name__ == '__main__':
         # suite.addTest(TestDatabaseMethods("test_create_database"))
         # suite.addTest(TestDatabaseMethods("test_drop_database"))
     
-        suite.addTest(TestLabelledDataMethods("test_insert_data"))
-        suite.addTest(TestLabelledDataMethods("test_load_data"))
+        # suite.addTest(TestLabelledDataMethods("test_insert_data"))
+        # suite.addTest(TestLabelledDataMethods("test_load_data"))
         runner = unittest.TextTestRunner()
         runner.run(suite)
 
