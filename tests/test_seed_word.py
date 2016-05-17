@@ -18,8 +18,8 @@ weighted_seed_dict_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'weighted_s
 class TestSeedWordMethods(unittest.TestCase):
     def setUp(self):
         w2v.word2vec_model = w2v.load_model(word2vec_model_)
-        self.similar_level = 3
-        self.n = 60
+        self.similar_level = 2
+        self.n = 10
 
     def test_get_seed_files(self):
         print seed_word.get_seed_files()

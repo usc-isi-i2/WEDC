@@ -6,10 +6,10 @@ from wedc.domain.vendor.nltk import stopword
 def get_stopword_set():
     stops = stopword.get_stopwords()
     names = get_person_names()
-    # country, country_abbr = stopword_helper.get_country_names()
+    country, country_abbr = get_country_names()
     numbers = get_numbers()
     nationality = get_nationality_names()
-    stop_set = set(stops) | set(numbers) | set(names) | set(nationality) | Set(country) | Set(country_abbr)
+    stop_set = set(stops) | set(numbers) | set(names) | set(nationality) | set(country) | set(country_abbr)
     # stop_set = [str(stem.stemming(_).strip()) for _ in stop_set]
     return stop_set
 

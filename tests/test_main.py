@@ -18,12 +18,12 @@ if __name__ == '__main__':
         # suite.addTest(TestDataLoaderMethods("test_data_loader"))
         # suite.addTest(TestWord2VecMethods("test_setup_model"))
         # suite.addTest(TestSeedWordMethods("test_cache_seed_similar_words_original"))
-        # suite.addTest(TestSeedWordMethods("test_generate_weighted_seed_dict"))
+        suite.addTest(TestSeedWordMethods("test_generate_weighted_seed_dict"))
         # suite.addTest(TestPostVectorMethods("test_post2sv"))
         # suite.addTest(TestPostVectorMethods("test_post2seeds")) # for test
 
         # lp
-        suite.addTest(TestLabelPropagationMethods("test_do_label_propagation"))
+        # suite.addTest(TestLabelPropagationMethods("test_do_label_propagation"))
 
 
         runner = unittest.TextTestRunner()

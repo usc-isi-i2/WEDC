@@ -40,7 +40,7 @@ def get_similars_by_word(word, n=10):
     from wedc.domain.vendor.nltk import stem
 
     if not word2vec_model:
-        print 'not'
+        print 'NOT FOUND WORD2VEC MODEL'
         return None
 
     target_word = stem.stemming(word)

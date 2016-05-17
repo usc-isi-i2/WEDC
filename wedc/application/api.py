@@ -1,7 +1,11 @@
-import numpy as np
 import os
+import sys
 
-# from wedc.domain.conf.global_settings import TARGET_PERSON_NAME
+from wedc.domain.conf import configuration
+
+class WEDC():
+    def __init__(self):
+        self.config = configuration.load_config()
 
 
 
