@@ -18,6 +18,8 @@ TEST_DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
 post2vec_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'post2vec.txt'))
 post2vec_label_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'post2vec_label.txt'))
 post2vec_predict_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'post2vec_predict.txt'))
+graph_knn_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'graph_knn.txt'))
+graph_lp_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'graph_lp.txt'))
 
 from wedc.domain.core.ml.graph import knn
 from wedc.domain.core.ml.helper import label
@@ -44,13 +46,6 @@ class TestLabelPropagationMethods(unittest.TestCase):
                                 max_iter=100, 
                                 tol=0.000001)
 
-        # print label_prop_model.classes_
-        # print len(label_prop_model.label_distributions_)
-
-
-    def test_build_knn_graph(self):
-        knn.build_graph(post2vec_, graph_)
-
     def test_load_unknown_post_index(self):
         print label.load_unknown_post_index(post2vec_)
 
@@ -61,15 +56,33 @@ class TestLabelPropagationMethods(unittest.TestCase):
     def tearDown(self):
         pass
 
+
+class TestGraphMethods(unittest.TestCase):
+    def setUp(self):
+        pass
+
+    def test_build_knn_graph(self):
+        print knn.build_graph(input=post2vec_, output=graph_knn_, n_neighbors=20, algorithm='ball_tree')
+
+    def tearDown(self):
+        pass
+
 if __name__ == '__main__':
     # unittest.main()
 
     def run_main_test():
         suite = unittest.TestSuite()
+
+        ### Test Label Propagation ###
         # suite.addTest(TestLabelPropagationMethods("test_generate_label_file"))
         # suite.addTest(TestLabelPropagationMethods("test_do_label_propagation"))
         # suite.addTest(TestLabelPropagationMethods("test_load_unknown_post_index"))
-        suite.addTest(TestLabelPropagationMethods("test_evaluate"))
+        # suite.addTest(TestLabelPropagationMethods("test_evaluate"))
+
+        ### Test Graph ###
+        suite.addTest(TestGraphMethods("test_build_knn_graph"))
+
+
         runner = unittest.TextTestRunner()
         runner.run(suite)
 

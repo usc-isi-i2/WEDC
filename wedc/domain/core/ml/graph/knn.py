@@ -4,7 +4,7 @@ from sklearn import preprocessing
 import numpy as np
 
 
-def build_graph(input, output, n_neighbors=40, algorithm='ball_tree'):
+def build_graph(input, output, n_neighbors=20, algorithm='ball_tree'):
     n_neighbors += 1
     input_fh = open(input, 'rb')
     output_fh = open(output, 'wb')
@@ -17,9 +17,15 @@ def build_graph(input, output, n_neighbors=40, algorithm='ball_tree'):
     distances, indices = nbrs.kneighbors(X)
     distances = preprocessing.normalize(distances, norm='l2')
 
+    # sort post by weight
+    post_dict = {}
+
     for post_id in range(0, size):    
         post_indices = indices[post_id]
         post_k_distances = distances[post_id]
+
+        post_dict[str(post_id)] = sum(post_k_distances)
+
         # change to start from 1 for lab propagation library input format
         if max([float(_) for _ in lines[post_id].split(' ')]) == 0:
             graph_item = [post_id+1, 1]
@@ -36,4 +42,6 @@ def build_graph(input, output, n_neighbors=40, algorithm='ball_tree'):
     input_fh.close()
     output_fh.close()
 
+    # post_dict = sorted(post_dict, key=lambda x: x[1], reverse=True)
+    return post_dict
 
