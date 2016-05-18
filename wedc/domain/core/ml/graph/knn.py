@@ -10,7 +10,7 @@ def build_graph(input, output, n_neighbors=20, algorithm='ball_tree'):
     lines = input_fh.readlines()# [:100]
     size = len(lines)
     X = np.array(np.mat(';'.join(lines)))
-    print X
+    
     nbrs = NearestNeighbors(n_neighbors=n_neighbors, algorithm=algorithm).fit(X)
     # Because the query set matches the training set, the nearest neighbor of each point is the point itself, at a distance of zero.
     distances, indices = nbrs.kneighbors(X)

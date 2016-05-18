@@ -37,13 +37,14 @@ def load_data_by_post_id_set(path, post_id_set, output, no_dups=False):
         text = re.sub(r"([\t\n\r]|\\+)", " ", raw_posts[i])
         text = text.encode('ascii', 'ignore')
 
-        target_file.write('#'*70 + '\n')
-        target_file.write(' '*6 + 'Post id: ' + str(post_id_set[i]) + '|' + str(target_id_set[i]) + '\n')
-        target_file.write('#'*70 + '\n')
+        target_file.write('#'*40 + '\n')
+        target_file.write(' '*6 + 'Post id: ' + str(post_id_set[i]) + ' & ' + str(target_id_set[i]) + '    Label: ' +' \n')
+        target_file.write('#'*40 + '\n')
         target_file.write(text + '\n')
-        target_file.write('#'*70 + '\n'*3)
+        target_file.write('#'*40 + '\n')
+        target_file.write(posts[i])
+        target_file.write('#'*40 + '\n'*3)
     target_file.close()
-    # return raw_posts, posts
 
 def load_nodups2dups_mapping(path):
     mapping = {}

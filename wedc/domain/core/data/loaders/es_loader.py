@@ -101,6 +101,9 @@ def load_post_by_id_set(path, post_id_set):
     pn_file.close()
     hits = raw['hits']['hits']
     posts = []
+
+    print [idx for idx in range(len(hits)) if idx in post_id_set]
+
     hits = [hits[idx] for idx in range(len(hits)) if idx in post_id_set]
     raw_posts = []
     for hit in hits: # [:100]:
