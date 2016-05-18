@@ -7,7 +7,7 @@ def build_graph(input, output, n_neighbors=20, algorithm='ball_tree'):
     n_neighbors += 1
     input_fh = open(input, 'rb')
     output_fh = open(output, 'wb')
-    lines = input_fh.readlines()[:100]
+    lines = input_fh.readlines()# [:100]
     size = len(lines)
     X = np.array(np.mat(';'.join(lines)))
     print X

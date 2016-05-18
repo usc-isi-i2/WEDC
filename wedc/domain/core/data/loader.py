@@ -23,8 +23,27 @@ def load_data_by_post_id(path, post_id, no_dups=False):
     target_id = post_id
     if no_dups and mapping:
         target_id = mapping[post_id]
-    # print 'target_id', target_id
     return es_loader.load_post(path, target_id)
+
+def load_data_by_post_id_set(path, post_id_set, output, no_dups=False):
+    import re
+    target_id_set = post_id_set
+    if no_dups and mapping:
+        target_id_set = [mapping[post_id] for post_id in post_id_set]
+    raw_posts, posts = es_loader.load_post_by_id_set(path, target_id_set)
+
+    target_file = open(output, 'wb')
+    for i in range(len(raw_posts)):
+        text = re.sub(r"([\t\n\r]|\\+)", " ", raw_posts[i])
+        text = text.encode('ascii', 'ignore')
+
+        target_file.write('#'*70 + '\n')
+        target_file.write(' '*6 + 'Post id: ' + str(post_id_set[i]) + '|' + str(target_id_set[i]) + '\n')
+        target_file.write('#'*70 + '\n')
+        target_file.write(text + '\n')
+        target_file.write('#'*70 + '\n'*3)
+    target_file.close()
+    # return raw_posts, posts
 
 def load_nodups2dups_mapping(path):
     mapping = {}

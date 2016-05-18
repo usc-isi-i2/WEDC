@@ -7,7 +7,7 @@ class Post(object):
         self.title = title
         self.body = self.parse_body_word(body)
 
-    def parse_body_word(self,body):
+    def parse_body_word(self, body):
         contents = []
         if isinstance(body, basestring):
             contents.append(body)
