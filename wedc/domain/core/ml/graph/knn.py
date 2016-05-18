@@ -3,7 +3,6 @@ from sklearn.neighbors import NearestNeighbors
 from sklearn import preprocessing
 import numpy as np
 
-
 def build_graph(input, output, n_neighbors=20, algorithm='ball_tree'):
     n_neighbors += 1
     input_fh = open(input, 'rb')
@@ -19,6 +18,8 @@ def build_graph(input, output, n_neighbors=20, algorithm='ball_tree'):
 
     # sort post by weight
     post_dict = {}
+    k_rate = 0.005
+    top_k = int(k_rate * size)
 
     for post_id in range(0, size):    
         post_indices = indices[post_id]
@@ -42,6 +43,8 @@ def build_graph(input, output, n_neighbors=20, algorithm='ball_tree'):
     input_fh.close()
     output_fh.close()
 
-    # post_dict = sorted(post_dict, key=lambda x: x[1], reverse=True)
-    return post_dict
+    post_dict = sorted(post_dict.iteritems(), key=lambda x: x[1], reverse=True)
+    post_dict = [int(_[0]) for _ in post_dict]
+
+    return post_dict[:top_k], top_k
 
