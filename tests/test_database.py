@@ -9,6 +9,9 @@ TEST_DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
 # text_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'text'))
 
 from wedc.infrastructure import database
+from wedc.infrastructure.model.labelled_data import LabelledData
+from wedc.infrastructure.model.need_to_label_data import NeedToLabelData
+from wedc.infrastructure.model.seed_dict import SeedDict
 
 class TestDatabaseMethods(unittest.TestCase):
     def setUp(self):
@@ -44,18 +47,41 @@ class TestLabelledDataMethods(unittest.TestCase):
     def tearDown(self):
         pass
 
+class TestSeedDictMethods(unittest.TestCase):
+    def setUp(self):
+        pass
+
+    def test_insert_from_txt(self):
+        txt_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'weighted_seed_dict'))
+        SeedDict.insert_from_txt(txt_)
+
+    def test_load_data(self):
+        for data in SeedDict.load_data():
+            print data.seed, data.weight
+
+    def test_clear_data(self):
+        print SeedDict.clear_data()
+
+    def tearDown(self):
+        pass
+
 if __name__ == '__main__':
     # unittest.main()
 
     def run_main_test():
         suite = unittest.TestSuite()
-        suite.addTest(TestDatabaseMethods("test_create_database"))
+        # suite.addTest(TestDatabaseMethods("test_create_database"))
         # suite.addTest(TestDatabaseMethods("test_drop_database"))
     
         # suite.addTest(TestLabelledDataMethods("test_insert_data"))
         # suite.addTest(TestLabelledDataMethods("test_insert_from_csv"))
         # suite.addTest(TestLabelledDataMethods("test_load_data"))
         # suite.addTest(TestLabelledDataMethods("test_clear_data"))
+        
+        # suite.addTest(TestSeedDictMethods("test_insert_from_txt"))
+        suite.addTest(TestSeedDictMethods("test_load_data"))
+        # suite.addTest(TestSeedDictMethods("test_clear_data"))
+
         runner = unittest.TextTestRunner()
         runner.run(suite)
 

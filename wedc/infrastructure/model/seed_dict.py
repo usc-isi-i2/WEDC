@@ -16,31 +16,18 @@ class SeedDict(dbase):
             new_data = SeedDict(seed=seed, weight=weight)
             session.add(new_data)
 
-    """
+
     @staticmethod
-    def insert_from_csv(csv_file_path):
-        import csv
-        from wedc.domain.entities.post import Post
+    def insert_from_txt(txt_file_path):
+        with open(txt_file_path, 'rb') as txtfile:
+            lines = txtfile.readlines()
 
-        with open(csv_file_path, 'rb') as csvfile:
-            reader = csv.reader(csvfile)
             with session_scope() as session:
-                for idx, row in enumerate(reader):
-                    post_id = idx + 1
-                    label = row[0]
-                    content = row[1].decode('ascii', 'ignore')
-                    post = Post("", "", content)
-                    extraction = post.body
-                    checksum = hash_helper.checksum(extraction)
-
-                    # filter dups
-                    if not session.query(LabelledData).filter_by(checksum=checksum).all():
-                        new_data = LabelledData(content=content, 
-                                        label=label,
-                                        checksum=checksum,
-                                        flag=1)
-                        session.add(new_data)
-    """
+                for line in lines:
+                    line = line.strip().lower()
+                    line = line.split('\t')
+                    new_data = SeedDict(seed=str(line[0]), weight=float(line[1]))
+                    session.add(new_data)
 
     @staticmethod
     def load_data():
@@ -55,3 +42,6 @@ class SeedDict(dbase):
     
 
 
+
+
+  

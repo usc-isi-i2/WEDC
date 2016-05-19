@@ -13,13 +13,6 @@ def load_engine():
     engine = create_engine(db_uri)
     return engine
 
-dbase = declarative_base()
-engine = load_engine()
-
-from wedc.infrastructure.model.labelled_data import LabelledData
-from wedc.infrastructure.model.need_to_label_data import NeedToLabelData
-from wedc.infrastructure.model.seed_dict import SeedDict
-
 def load_session():
     dbase.metadata.create_all(engine)
     dbase.metadata.bind = engine
@@ -45,3 +38,10 @@ def create_database():
 
 def drop_database():
     dbase.metadata.drop_all(engine)
+
+dbase = declarative_base()
+engine = load_engine()
+
+from wedc.infrastructure.model.labelled_data import LabelledData
+from wedc.infrastructure.model.need_to_label_data import NeedToLabelData
+from wedc.infrastructure.model.seed_dict import SeedDict
