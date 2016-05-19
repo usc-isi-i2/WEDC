@@ -118,8 +118,10 @@ def evaluate_from_database(output=None,
                         max_iter=1000, 
                         tol=0.00001):
     from wedc.domain.core.data.seed import seed_vector
+
     from wedc.infrastructure import database
     from wedc.infrastructure.model.labelled_data import LabelledData
+    from wedc.infrastructure.model.seed_dict import SeedDict
 
     labelled_dataset = LabelledData.load_data()
     # print labelled_data
@@ -128,33 +130,24 @@ def evaluate_from_database(output=None,
     for labelled_data in labelled_dataset:
         ld_data.append(labelled_data.extraction)
         ld_label.append(labelled_data.label)
-        
-    seed_vector.generate_post_vector(ld_data, seeds, output)
 
+    seeds = SeedDict.load_data()
+    post_vectors = seed_vector.generate_post_vector(ld_data, seeds)
+    X = np.array(np.mat(';'.join(post_vectors)))
+    y = ld_label
 
+    do_evaluation(X, y, kernel=kernel, gamma=gamma, n_neighbors=n_neighbors, alpha=alpha, max_iter=max_iter, tol=tol)
 
-
-    """
+def do_evaluation(X, y, 
+                kernel='knn', 
+                gamma=None,
+                n_neighbors=10, 
+                alpha=1, 
+                max_iter=1000, 
+                tol=0.00001):
     from sklearn.cross_validation import train_test_split
     from sklearn.metrics import classification_report
     from sklearn.metrics import accuracy_score
-
-    label_dict = label.load_label_dict()
-    label_dict = sorted(label_dict.iteritems(), key=lambda x:x[0])
-    post_id_list = []
-    y = []
-    for (k, v) in label_dict:
-        post_id_list.append(k)
-        y.append(v)
-
-    input_data_fh = open(input_data, 'rb')
-    data_lines = input_data_fh.readlines()
-    data_lines = [data_lines[i] for i in post_id_list]
-    data_lines = [_.strip() for _ in data_lines]
-
-    X = np.array(np.mat(';'.join(data_lines)))
-    input_data_fh.close()
-
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.9, random_state=3)
     label_prop_model = LabelPropagation(kernel=kernel, 
@@ -174,7 +167,7 @@ def evaluate_from_database(output=None,
     print classification_report(y_test, y_predict)
     print 'accuracy: ' + str(accuracy_score(y_test, y_predict))
     print '\n\n'
-    """
+    
 
 
     
