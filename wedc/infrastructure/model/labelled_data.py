@@ -8,6 +8,7 @@ class LabelledData(dbase):
     
     id = Column(Integer, primary_key=True)
     content = Column(String(1*1024*1024), nullable=False)
+    # extraction = Column(String(1*1024*1024), nullable=False)
     label = Column(Integer, nullable=False)
     checksum = Column(String(200), nullable=False)
 
@@ -42,7 +43,7 @@ class LabelledData(dbase):
                     post_id = idx + 1
                     label = row[0]
                     content = row[1].decode('ascii', 'ignore')
-                    post = Post(post_url, post_title, post_body)
+                    post = Post("", "", content)
                     extraction = post.body
                     checksum = hash_helper.checksum(extraction)
 

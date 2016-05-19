@@ -3,6 +3,7 @@ import hashlib
 
 def checksum(content):
     """ SHA256+MD5
+    196 characters
     """
     sha256 = hashlib.sha256()
     md5 = hashlib.md5()

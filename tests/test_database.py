@@ -37,7 +37,7 @@ class TestLabelledDataMethods(unittest.TestCase):
 
     def test_load_data(self):
         for data in LabelledData.load_data():
-            print data.content
+            print data.label, data.content
 
     def test_clear_data(self):
         print LabelledData.clear_data()
