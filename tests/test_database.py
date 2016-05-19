@@ -39,7 +39,8 @@ class TestLabelledDataMethods(unittest.TestCase):
 
     def test_load_data(self):
         for data in LabelledData.load_data():
-            print data.label, data.content
+            # print data.label, data.content
+            print data.label, data.extraction
 
     def test_clear_data(self):
         print LabelledData.clear_data()
@@ -56,8 +57,9 @@ class TestSeedDictMethods(unittest.TestCase):
         SeedDict.insert_from_txt(txt_)
 
     def test_load_data(self):
-        for data in SeedDict.load_data():
-            print data.seed, data.weight
+        for seed, weight in SeedDict.load_data().items():
+            print seed, weight
+            
 
     def test_clear_data(self):
         print SeedDict.clear_data()

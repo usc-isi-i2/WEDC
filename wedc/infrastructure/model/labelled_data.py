@@ -8,7 +8,7 @@ class LabelledData(dbase):
     
     id = Column(Integer, primary_key=True)
     content = Column(String(1*1024*1024), nullable=False)
-    # extraction = Column(String(1*1024*1024), nullable=False)
+    extraction = Column(String(1*1024*1024), nullable=False)
     label = Column(Integer, nullable=False)
     checksum = Column(String(200), nullable=False)
 
@@ -21,11 +21,15 @@ class LabelledData(dbase):
 
     @staticmethod
     def insert(content, label, flag):
+        from wedc.domain.entities.post import Post
+        post = Post("", "", content)
+        extraction = post.body
         checksum = hash_helper.checksum(content)
         with session_scope() as session:
             # filter dups
             if not session.query(LabelledData).filter_by(checksum=checksum).all():
                 new_data = LabelledData(content=content, 
+                                extraction=extraction,
                                 label=label,
                                 checksum=checksum,
                                 flag=flag)
@@ -49,7 +53,8 @@ class LabelledData(dbase):
 
                     # filter dups
                     if not session.query(LabelledData).filter_by(checksum=checksum).all():
-                        new_data = LabelledData(content=content, 
+                        new_data = LabelledData(content=content,
+                                        extraction=extraction, 
                                         label=label,
                                         checksum=checksum,
                                         flag=1)

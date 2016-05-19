@@ -2,6 +2,10 @@
 from wedc.domain.core.data.seed import seed_word
 
 
+
+def generate_post_vector(extraction_list, seeds):
+
+
 def post2sv(input, output, seeds):
     seed_words = seeds.keys()
     seeds_size = len(seed_words)
@@ -19,7 +23,6 @@ def post2sv(input, output, seeds):
             output.write(' '.join(vector) + '\n')
     output.close()
     return seed_words
-
 
 def post2seed(input, output, seeds):
     seed_words = seeds.keys()

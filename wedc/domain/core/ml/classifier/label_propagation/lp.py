@@ -121,8 +121,16 @@ def evaluate_from_database(output=None,
     from wedc.infrastructure import database
     from wedc.infrastructure.model.labelled_data import LabelledData
 
-    labelled_data = LabelledData.load_data()
+    labelled_dataset = LabelledData.load_data()
     # print labelled_data
+    ld_data = []
+    ld_label = []
+    for labelled_data in labelled_dataset:
+        ld_data.append(labelled_data.extraction)
+        ld_label.append(labelled_data.label)
+
+    
+
 
 
     """

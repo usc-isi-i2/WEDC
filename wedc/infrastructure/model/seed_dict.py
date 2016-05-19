@@ -32,7 +32,10 @@ class SeedDict(dbase):
     @staticmethod
     def load_data():
         session = load_session()
-        return session.query(SeedDict).all()
+        seed_words = session.query(SeedDict).all()
+
+        seeds = {str(_.seed):float(_.weight) for _ in seed_words}
+        return seeds
 
     @staticmethod
     def clear_data():
