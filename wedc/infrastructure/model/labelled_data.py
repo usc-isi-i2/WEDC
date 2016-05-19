@@ -60,7 +60,11 @@ class LabelledData(dbase):
         session = load_session()
         return session.query(LabelledData).all()
 
-    
+    @staticmethod
+    def clear_data():
+        with session_scope() as session:
+            num_rows_deleted = session.query(LabelledData).delete()
+        return num_rows_deleted
     
 
 

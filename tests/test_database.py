@@ -39,6 +39,9 @@ class TestLabelledDataMethods(unittest.TestCase):
         for data in LabelledData.load_data():
             print data.content
 
+    def test_clear_data(self):
+        print LabelledData.clear_data()
+
     def tearDown(self):
         pass
 
@@ -53,6 +56,7 @@ if __name__ == '__main__':
         # suite.addTest(TestLabelledDataMethods("test_insert_data"))
         # suite.addTest(TestLabelledDataMethods("test_insert_from_csv"))
         suite.addTest(TestLabelledDataMethods("test_load_data"))
+        # suite.addTest(TestLabelledDataMethods("test_clear_data"))
         runner = unittest.TextTestRunner()
         runner.run(suite)
 
