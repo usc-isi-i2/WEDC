@@ -34,8 +34,7 @@ class TestLabelledDataMethods(unittest.TestCase):
     def test_load_data(self):
         for data in LabelledData.load_data():
             print data.content
-        
-
+            
     def tearDown(self):
         pass
 
