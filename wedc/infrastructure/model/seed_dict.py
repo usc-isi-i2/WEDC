@@ -33,7 +33,6 @@ class SeedDict(dbase):
     def load_data():
         session = load_session()
         seed_words = session.query(SeedDict).all()
-
         seeds = {str(_.seed):float(_.weight) for _ in seed_words}
         return seeds
 

@@ -3,9 +3,36 @@ from wedc.domain.core.data.seed import seed_word
 
 
 
-def generate_post_vector(extraction_list, seeds):
+def generate_post_vector(extraction_list, seeds, output=None):
+    seed_words = seeds.keys()
+    seeds_size = len(seed_words)
+    seed_words.sort()
 
+    
+    vectors = []
+    for line in extraction_list:
+        vector = ['0'] * seeds_size
+        tokens = line.split(' ')
+        for i in range(seeds_size):
+            if seed_words[i] in tokens:
+                vector[i] = str(1.0 * float(seeds[seed_words[i]]))
+        vector = ' '.join(vector)
+        vectors.append(vector)
 
+    if output:
+        output = open(output, 'wb')
+        output.writelines(vectors)
+        output.close()
+        
+    return vectors
+
+def post2sv(input, output, seeds):
+    with open(input, 'rb') as f:
+        lines = f.readlines()
+        lines = [line.strip() for line in lines]
+        return generate_post_vector(lines, seeds, output)
+
+"""
 def post2sv(input, output, seeds):
     seed_words = seeds.keys()
     seeds_size = len(seed_words)
@@ -23,6 +50,8 @@ def post2sv(input, output, seeds):
             output.write(' '.join(vector) + '\n')
     output.close()
     return seed_words
+"""
+
 
 def post2seed(input, output, seeds):
     seed_words = seeds.keys()

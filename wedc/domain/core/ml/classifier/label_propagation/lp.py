@@ -117,7 +117,7 @@ def evaluate_from_database(output=None,
                         alpha=1, 
                         max_iter=1000, 
                         tol=0.00001):
-    
+    from wedc.domain.core.data.seed import seed_vector
     from wedc.infrastructure import database
     from wedc.infrastructure.model.labelled_data import LabelledData
 
@@ -128,8 +128,9 @@ def evaluate_from_database(output=None,
     for labelled_data in labelled_dataset:
         ld_data.append(labelled_data.extraction)
         ld_label.append(labelled_data.label)
+        
+    seed_vector.generate_post_vector(ld_data, seeds, output)
 
-    
 
 
 
