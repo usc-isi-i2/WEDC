@@ -21,9 +21,10 @@ def generate_post_vector(extraction_list, seeds, output=None):
 
     if output:
         output = open(output, 'wb')
-        output.writelines(vectors)
+        for vector in vectors:
+            output.write(vector+'\n')
         output.close()
-        
+
     return vectors
 
 def post2sv(input, output, seeds):

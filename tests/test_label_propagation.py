@@ -30,7 +30,7 @@ class TestLabelPropagationMethods(unittest.TestCase):
         label_dict = label.load_label_dict()
         label.generate_label_file(label_dict, post2vec_label_)
         # label.generate_label_file(label_dict, post2vec_label_, post2vec_txt_path=post2vec_)
-
+        
     def test_generate_label_file(self):
         label_dict = label.load_label_dict()
         label.generate_label_file(label_dict, output=post2vec_label_)
@@ -51,8 +51,13 @@ class TestLabelPropagationMethods(unittest.TestCase):
 
     def test_evaluate(self):
         # lp.evaluate_from_file(input_data=post2vec_)
-        lp.evaluate_from_database()
-
+        lp.evaluate_from_database(kernel='knn', 
+                        output=graph_knn_,
+                        gamma=None,
+                        n_neighbors=10, 
+                        alpha=1, 
+                        max_iter=1000, 
+                        tol=0.00001)
         
     def tearDown(self):
         pass
@@ -82,7 +87,6 @@ if __name__ == '__main__':
 
         ### Test Graph ###
         # suite.addTest(TestGraphMethods("test_build_knn_graph"))
-
 
         runner = unittest.TextTestRunner()
         runner.run(suite)

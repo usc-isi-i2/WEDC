@@ -117,14 +117,16 @@ def evaluate_from_database(output=None,
                         alpha=1, 
                         max_iter=1000, 
                         tol=0.00001):
+
     from wedc.domain.core.data.seed import seed_vector
+    from wedc.domain.core.ml.graph import knn
 
     from wedc.infrastructure import database
     from wedc.infrastructure.model.labelled_data import LabelledData
     from wedc.infrastructure.model.seed_dict import SeedDict
 
     labelled_dataset = LabelledData.load_data()
-    # print labelled_data
+
     ld_data = []
     ld_label = []
     for labelled_data in labelled_dataset:
@@ -136,7 +138,10 @@ def evaluate_from_database(output=None,
     X = np.array(np.mat(';'.join(post_vectors)))
     y = ld_label
 
-    do_evaluation(X, y, kernel=kernel, gamma=gamma, n_neighbors=n_neighbors, alpha=alpha, max_iter=max_iter, tol=tol)
+    knn.do_knn(post_vectors, output)
+
+
+    # do_evaluation(X, y, kernel=kernel, gamma=gamma, n_neighbors=n_neighbors, alpha=alpha, max_iter=max_iter, tol=tol)
 
 def do_evaluation(X, y, 
                 kernel='knn', 
@@ -148,25 +153,34 @@ def do_evaluation(X, y,
     from sklearn.cross_validation import train_test_split
     from sklearn.metrics import classification_report
     from sklearn.metrics import accuracy_score
+    import random
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.9, random_state=3)
-    label_prop_model = LabelPropagation(kernel=kernel, 
-                                        gamma=gamma, 
-                                        n_neighbors=n_neighbors, 
-                                        alpha=alpha, 
-                                        max_iter=max_iter, 
-                                        tol=tol)
-    label_prop_model.fit(X_train, y_train)
 
-    y_predict = label_prop_model.predict(X_test)
+    random_seeds = np.random.randint(1, 1000, size=10)
+    for i in range(len(random_seeds)):
+        
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.9, random_state=None)
 
-    
-    print '+--------------------------------------------------------+'
-    print '|                         Report                         +'
-    print '+--------------------------------------------------------+'
-    print classification_report(y_test, y_predict)
-    print 'accuracy: ' + str(accuracy_score(y_test, y_predict))
-    print '\n\n'
+        label_prop_model = LabelPropagation(kernel=kernel, 
+                                            gamma=gamma, 
+                                            n_neighbors=n_neighbors, 
+                                            alpha=alpha, 
+                                            max_iter=max_iter, 
+                                            tol=tol)
+        label_prop_model.fit(X_train, y_train)
+
+
+        y_predict = label_prop_model.predict(X_test)
+        
+        print '+--------------------------------------------------------+'
+        print '|                         Report                         |'
+        print '+--------------------------------------------------------+'
+        print 'test round:', (i+1), ' with random seed: ', random_seeds[i]
+        print 'training label: ', y_train
+        print 'predict label: ', y_predict
+        print classification_report(y_test, y_predict)
+        print 'accuracy: ' + str(accuracy_score(y_test, y_predict))
+        print '\n\n'
     
 
 
