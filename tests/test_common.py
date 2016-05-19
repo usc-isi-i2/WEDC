@@ -14,7 +14,7 @@ class TestCSVMethods(unittest.TestCase):
     def test_read_csv(self):
         import csv
         csv_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'groundtruth.csv'))
-        with open(csv_) as csvfile:
+        with open(csv_, 'rb') as csvfile:
             reader = csv.reader(csvfile)
             for i, row in enumerate(reader):
                 print i+1
@@ -32,7 +32,7 @@ if __name__ == '__main__':
     def run_main_test():
         suite = unittest.TestSuite()
         suite.addTest(TestCSVMethods("test_read_csv"))
-       
+        
         runner = unittest.TextTestRunner()
         runner.run(suite)
 

@@ -1,7 +1,7 @@
 from sqlalchemy import Column, ForeignKey, Integer, String
 
 from wedc.infrastructure.database import dbase, session_scope, load_session
-
+from wedc.domain.core.common import hash_helper
 
 class LabelledData(dbase):
     __tablename__ = 'labelled_data'
@@ -19,16 +19,8 @@ class LabelledData(dbase):
     flag = Column(Integer, nullable=False)
 
     @staticmethod
-    def calc_checksum(content):
-        import hashlib
-        hashobj = hashlib.sha256()
-        hashobj.update(content.strip())
-        hash_value = hashobj.hexdigest().lower()
-        return hash_value
-
-    @staticmethod
     def insert(content, label, flag):
-        checksum = LabelledData.calc_checksum(content)
+        checksum = hash_helper.checksum(content)
         with session_scope() as session:
             # filter dups
             if not session.query(LabelledData).filter_by(checksum=checksum).all():
@@ -38,12 +30,37 @@ class LabelledData(dbase):
                                 flag=flag)
                 session.add(new_data)
 
-    # def delete()
+    @staticmethod
+    def insert_from_csv(csv_file_path):
+        import csv
+        from wedc.domain.entities.post import Post
+
+        with open(csv_file_path, 'rb') as csvfile:
+            reader = csv.reader(csvfile)
+            with session_scope() as session:
+                for idx, row in enumerate(reader):
+                    post_id = idx + 1
+                    label = row[0]
+                    content = row[1].decode('ascii', 'ignore')
+                    post = Post(post_url, post_title, post_body)
+                    extraction = post.body
+                    checksum = hash_helper.checksum(extraction)
+
+                    # filter dups
+                    if not session.query(LabelledData).filter_by(checksum=checksum).all():
+                        new_data = LabelledData(content=content, 
+                                        label=label,
+                                        checksum=checksum,
+                                        flag=1)
+                        session.add(new_data)
+
+    
     @staticmethod
     def load_data():
         session = load_session()
         return session.query(LabelledData).all()
 
+    
     
 
 

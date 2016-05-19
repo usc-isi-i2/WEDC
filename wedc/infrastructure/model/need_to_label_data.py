@@ -1,6 +1,7 @@
 from sqlalchemy import Column, ForeignKey, Integer, String
 
 from wedc.infrastructure.database import dbase, session_scope, load_session
+from wedc.domain.core.common import hash_helper
 
 
 class NeedToLabelData(dbase):
@@ -12,18 +13,9 @@ class NeedToLabelData(dbase):
     # checksum = Column(String(200), nullable=False)    # compared before insert
 
     @staticmethod
-    def calc_checksum(content):
-        # need to update
-        import hashlib
-        hashobj = hashlib.sha256()
-        hashobj.update(content.strip())
-        hash_value = hashobj.hexdigest().lower()
-        return hash_value
-
-    @staticmethod
     def insert(content, label, flag):
         # need to update
-        checksum = NeedToLabelData.calc_checksum(content)
+        checksum = hash_helper.checksum(content)
         with session_scope() as session:
             # filter dups
             if not session.query(NeedToLabelData).filter_by(checksum=checksum).all():
