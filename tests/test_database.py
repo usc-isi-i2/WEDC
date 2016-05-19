@@ -9,7 +9,6 @@ TEST_DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
 # text_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'text'))
 
 from wedc.infrastructure import database
-from wedc.infrastructure.model.labelled_data import LabelledData
 
 class TestDatabaseMethods(unittest.TestCase):
     def setUp(self):
@@ -50,12 +49,12 @@ if __name__ == '__main__':
 
     def run_main_test():
         suite = unittest.TestSuite()
-        # suite.addTest(TestDatabaseMethods("test_create_database"))
+        suite.addTest(TestDatabaseMethods("test_create_database"))
         # suite.addTest(TestDatabaseMethods("test_drop_database"))
     
         # suite.addTest(TestLabelledDataMethods("test_insert_data"))
         # suite.addTest(TestLabelledDataMethods("test_insert_from_csv"))
-        suite.addTest(TestLabelledDataMethods("test_load_data"))
+        # suite.addTest(TestLabelledDataMethods("test_load_data"))
         # suite.addTest(TestLabelledDataMethods("test_clear_data"))
         runner = unittest.TextTestRunner()
         runner.run(suite)

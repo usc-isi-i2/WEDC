@@ -23,6 +23,9 @@ class TestDataLoaderMethods(unittest.TestCase):
         filename = 'san-francisco-maria-2.json'
         self.path = os.path.join(TEST_DATA_DIR, filename)  
         self.no_dups = True     
+
+    def test_load(self):
+        loader.load(data_, text_, no_dups=self.no_dups, input_file_type='csv')
         
     def test_data_loader(self):
         start_time = time.time()
@@ -76,9 +79,10 @@ if __name__ == '__main__':
     # unittest.main()
     def run_main_test():
         suite = unittest.TestSuite()
+        # suite.addTest(TestDataLoaderMethods("test_load"))
         # suite.addTest(TestDataLoaderMethods("test_data_loader"))
         # suite.addTest(TestDataLoaderMethods("test_mapping"))
-        suite.addTest(TestDataLoaderMethods("test_load_post"))
+        # suite.addTest(TestDataLoaderMethods("test_load_post"))
         # suite.addTest(TestDataLoaderMethods("test_load_data_by_post_id_set"))
         # suite.addTest(TestDataLoaderMethods("test_get_posts_for_token"))
         runner = unittest.TextTestRunner()

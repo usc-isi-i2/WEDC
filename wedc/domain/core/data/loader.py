@@ -5,6 +5,11 @@ from wedc.domain.core.data import cleaner
 
 mapping = None
 
+def load(input, output, no_dups=False, input_file_type='csv'):
+    if input_file_type == 'csv':
+        pass
+
+
 def load_data(input, output, no_dups=False):
     data = es_loader.load(input)
 

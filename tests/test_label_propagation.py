@@ -50,7 +50,8 @@ class TestLabelPropagationMethods(unittest.TestCase):
         print label.load_unknown_post_index(post2vec_)
 
     def test_evaluate(self):
-        lp.evaluate(input_data=post2vec_)
+        # lp.evaluate_from_file(input_data=post2vec_)
+        lp.evaluate_from_database()
 
         
     def tearDown(self):
@@ -77,10 +78,10 @@ if __name__ == '__main__':
         # suite.addTest(TestLabelPropagationMethods("test_generate_label_file"))
         # suite.addTest(TestLabelPropagationMethods("test_do_label_propagation"))
         # suite.addTest(TestLabelPropagationMethods("test_load_unknown_post_index"))
-        # suite.addTest(TestLabelPropagationMethods("test_evaluate"))
+        suite.addTest(TestLabelPropagationMethods("test_evaluate"))
 
         ### Test Graph ###
-        suite.addTest(TestGraphMethods("test_build_knn_graph"))
+        # suite.addTest(TestGraphMethods("test_build_knn_graph"))
 
 
         runner = unittest.TextTestRunner()

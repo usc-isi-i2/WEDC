@@ -8,7 +8,6 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from contextlib import contextmanager
 
-
 def load_engine():
     db_uri = api.config('DATABASE_URI')
     engine = create_engine(db_uri)
@@ -16,6 +15,10 @@ def load_engine():
 
 dbase = declarative_base()
 engine = load_engine()
+
+from wedc.infrastructure.model.labelled_data import LabelledData
+from wedc.infrastructure.model.need_to_label_data import NeedToLabelData
+from wedc.infrastructure.model.seed_dict import SeedDict
 
 def load_session():
     dbase.metadata.create_all(engine)

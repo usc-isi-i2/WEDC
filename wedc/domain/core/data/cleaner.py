@@ -9,6 +9,7 @@ from wedc.domain.vendor.nltk import stem
 from wedc.domain.core.common import stopword_helper
 from wedc.domain.core.common import str_helper
 from wedc.domain.core.data.seed import seed_word
+from wedc.domain.core.common import hash_helper
 
 enchant_dict = enchant.Dict("en_US")
 stopset = stopword_helper.get_stopword_set()
@@ -47,7 +48,6 @@ seed_words = seed_word.load_seed_words()
 ############################################################
 
 def remove_dups(posts, mapping_path=None):
-    import hashlib
     hs = set()
     size = len(posts)
     no_dups = []
@@ -60,11 +60,9 @@ def remove_dups(posts, mapping_path=None):
         post = posts[pid-1] # pid start from 1
         if not post or post.strip() == '':
             continue
-        hashobj = hashlib.sha256()
-        hashobj.update(post.strip())
-        hash_value = hashobj.hexdigest().lower()
-        if hash_value not in hs:
-            hs.add(hash_value)
+        checksum = hash_helper.checksum(content)
+        if checksum not in hs:
+            hs.add(checksum)
             no_dups.append(post)
             new_pid += 1
             if mapping_file:
