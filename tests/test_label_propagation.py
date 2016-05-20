@@ -58,8 +58,8 @@ class TestLabelPropagationMethods(unittest.TestCase):
                         gamma=None,
                         n_neighbors=10, 
                         alpha=1, 
-                        max_iter=1000, 
-                        tol=0.00001)
+                        max_iter=100, 
+                        tol=0.000001)
         
         # lp.run_lp(graph_knn_, graph_lp_, lp_jar_)
 

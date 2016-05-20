@@ -267,7 +267,7 @@ def do_evaluation(X, y,
                 alpha=1, 
                 max_iter=1000, 
                 tol=0.00001):
-    from sklearn.cross_validation import train_test_split
+    # from sklearn.cross_validation import train_test_split
     from sklearn.metrics import classification_report
     from sklearn.metrics import accuracy_score
     import random
@@ -278,8 +278,18 @@ def do_evaluation(X, y,
     for i in range(len(random_seeds)):
         
         # X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.6, random_state=random_seeds[i])
-        
-        # random_unlabeled_points = np.where(np.random.random_integers(0, 1, size=size))
+        labels = np.copy(y)
+        tmp = np.arange(size)
+        np.random.shuffle(tmp)
+        train_test_split_rate = int(size*.9)
+        random_unlabeled_points = tmp[:train_test_split_rate]
+        labeled_points = tmp[train_test_split_rate:]
+        random_unlabeled_points.sort()
+        X_test = [X[_] for _ in range(size) if _ in random_unlabeled_points]
+        y_test = [y[_] for _ in range(size) if _ in random_unlabeled_points]
+        y_train = [y[_] for _ in range(size) if _ in labeled_points]
+
+        labels[random_unlabeled_points] = -1
 
         label_prop_model = LabelPropagation(kernel=kernel, 
                                             gamma=gamma, 
@@ -287,8 +297,7 @@ def do_evaluation(X, y,
                                             alpha=alpha, 
                                             max_iter=max_iter, 
                                             tol=tol)
-        label_prop_model.fit(X_train, y_train)
-
+        label_prop_model.fit(X, labels)
 
         y_predict = label_prop_model.predict(X_test)
         
