@@ -60,6 +60,20 @@ def do_label_propagation(input_data,
 
     return label_prop_model
 
+
+def run_lp(input, output, lp_jar):
+    import subprocess
+    import os
+    if os.path.isfile(output):
+        os.remove(output)
+    output_file = open(output, 'a')
+    working_dir = os.sep.join(lp_jar.split(os.sep)[:-1])
+    jar_file = lp_jar.split(os.sep)[-1]
+    
+    argsArray = ['java', '-classpath', jar_file, 'org.ooxo.LProp', '-a', 'GFHF', '-m', '100', '-e', '10e-6', input]
+    subprocess.call(argsArray, cwd=working_dir, stdout=output_file)
+    output_file.close()
+
     
 def evaluate_from_file(input_data,
             output=None,
@@ -138,7 +152,57 @@ def evaluate_from_database(output=None,
     X = np.array(np.mat(';'.join(post_vectors)))
     y = ld_label
 
-    knn.do_knn(post_vectors, output)
+
+    # X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.9, random_state=42)
+
+    # code below is for test
+
+    post_dict, top_k, training_index, training_labels, testing_index, testing_labels = knn.do_knn(post_vectors, output, post_labels=ld_label)
+
+    print 'training_labels:', training_labels #, len(training_labels)
+    print 'training_index:', training_index #, len(training_index)
+    # print len(training_index), ' + ', len(testing_index)
+    # print testing_index
+
+    gk_path = '/Users/ZwEin/job_works/StudentWork_USC-ISI/projects/WEDC/tests/data/graph_knn.txt'
+    gl_path = '/Users/ZwEin/job_works/StudentWork_USC-ISI/projects/WEDC/tests/data/graph_lp.txt'
+    lp_path = '/Users/ZwEin/job_works/StudentWork_USC-ISI/projects/WEDC/tests/data/labelprop.jar'
+
+    run_lp(gk_path, gl_path, lp_path)
+
+    y_test = testing_labels
+    y_predict = []
+
+    with open(gl_path, 'rb') as gl_file:
+        lines = gl_file.readlines()
+        for line in lines:
+            line = line.strip()
+            if not line:
+                continue
+            line = line[1:-1]
+            line = line.split(',')
+            post_id = int(line[0])
+
+            if post_id not in training_index:
+                y_predict.append(int(line[1])) 
+
+    # print 'y_predict', len(y_predict), y_predict
+    # print 'y_test', len(y_test), y_test
+    from sklearn.metrics import classification_report
+    from sklearn.metrics import accuracy_score
+    print '+--------------------------------------------------------+'
+    print '|                         Report                         |'
+    print '+--------------------------------------------------------+'
+    # print 'test round:', (i+1), ' with random seed: ', random_seeds[i]
+    # print 'training label: ', training_labels
+    print 'predict label: ', y_predict
+    print 'y_test: ', y_test
+    print classification_report(y_test, y_predict)
+    print 'accuracy: ' + str(accuracy_score(y_test, y_predict))
+    print '\n\n'
+
+
+
 
 
     # do_evaluation(X, y, kernel=kernel, gamma=gamma, n_neighbors=n_neighbors, alpha=alpha, max_iter=max_iter, tol=tol)
@@ -159,7 +223,7 @@ def do_evaluation(X, y,
     random_seeds = np.random.randint(1, 1000, size=10)
     for i in range(len(random_seeds)):
         
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.9, random_state=None)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.9, random_state=random_seeds[i])
 
         label_prop_model = LabelPropagation(kernel=kernel, 
                                             gamma=gamma, 
