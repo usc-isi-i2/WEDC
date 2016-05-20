@@ -45,15 +45,16 @@ def do_knn(post_vectors, output, post_labels=None, n_neighbors=20, algorithm='ba
     # print testing_index
 
     graph = []
-    for post_id in range(0, size):
-        line = post_vectors[post_id].strip().split(' ') 
-        post_indices = indices[post_id]
-        post_k_distances = distances[post_id]
+    for i in range(0, size):
+        post_id = i + 1
+        line = post_vectors[i].strip().split(' ') 
+        post_indices = indices[i]
+        post_k_distances = distances[i]
         post_dict[str(post_id)] = sum(post_k_distances)
 
         # if max([float(_) for _ in line]) == 0:
         #     post_labels[post_id] = 1
-        graph_item = [post_id+1, post_labels[post_id]]
+        graph_item = [post_id, post_labels[i]]
 
         post_neighbors = []
         for idx in range(n_neighbors):

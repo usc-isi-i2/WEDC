@@ -57,8 +57,10 @@ class TestSeedDictMethods(unittest.TestCase):
         SeedDict.insert_from_txt(txt_)
 
     def test_load_data(self):
-        for seed, weight in SeedDict.load_data().items():
+        seeds = SeedDict.load_data()
+        for seed, weight in seeds.items():
             print seed, weight
+        print len(seeds)
             
 
     def test_clear_data(self):

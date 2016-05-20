@@ -83,10 +83,7 @@ def evaluate_from_file(input_data,
             alpha=1, 
             max_iter=1000, 
             tol=0.00001):
-    from sklearn.cross_validation import train_test_split
-    from sklearn.metrics import classification_report
-    from sklearn.metrics import accuracy_score
-
+    
     label_dict = label.load_label_dict()
     label_dict = sorted(label_dict.iteritems(), key=lambda x:x[0])
     post_id_list = []
@@ -103,6 +100,22 @@ def evaluate_from_file(input_data,
     X = np.array(np.mat(';'.join(data_lines)))
     input_data_fh.close()
 
+    sklearn_lp(X, y, output=output, kernel=kernel, gamma=gamma, n_neighbors=n_neighbors, alpha=alpha, max_iter=max_iter, tol=tol)
+
+
+
+def sklearn_lp(X, y,
+            output=None,
+            kernel='knn', 
+            gamma=None,
+            n_neighbors=10, 
+            alpha=1, 
+            max_iter=1000, 
+            tol=0.00001):
+
+    from sklearn.cross_validation import train_test_split
+    from sklearn.metrics import classification_report
+    from sklearn.metrics import accuracy_score
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.9, random_state=3)
     label_prop_model = LabelPropagation(kernel=kernel, 
@@ -114,7 +127,8 @@ def evaluate_from_file(input_data,
     label_prop_model.fit(X_train, y_train)
 
     y_predict = label_prop_model.predict(X_test)
-
+    print 'y_train: ', y_train
+    print 'y_predict: ', y_predict
     
     print '+--------------------------------------------------------+'
     print '|                         Report                         +'
@@ -140,7 +154,7 @@ def evaluate_from_database(output=None,
     from wedc.infrastructure.model.seed_dict import SeedDict
 
     labelled_dataset = LabelledData.load_data()
-
+    size = len(labelled_dataset)
     ld_data = []
     ld_label = []
     for labelled_data in labelled_dataset:
@@ -149,9 +163,47 @@ def evaluate_from_database(output=None,
 
     seeds = SeedDict.load_data()
     post_vectors = seed_vector.generate_post_vector(ld_data, seeds)
+    short_post_indexes = []
+    for i, vec in enumerate(post_vectors):
+        post_id = i + 1
+        if max([float(_) for _ in vec.strip().split(' ')]) == 0:
+            short_post_indexes.append(post_id)
+        
+    # print short_post_indexes
+    
     X = np.array(np.mat(';'.join(post_vectors)))
     y = ld_label
 
+    mapping = {}
+    new_X = []
+    new_y = []
+    new_post_id = 1
+    for i in range(size):
+        post_id = i + 1
+        if post_id not in short_post_indexes:
+            new_X.append(X[i])
+            new_y.append(y[i])
+            mapping[new_post_id] = post_id
+            new_post_id += 1
+
+            
+    do_evaluation(new_X, new_y, output=output, kernel=kernel, gamma=gamma, n_neighbors=n_neighbors, alpha=alpha, max_iter=max_iter, tol=tol)
+
+    # sklearn_lp(new_X, new_y, output=output, kernel=kernel, gamma=gamma, n_neighbors=n_neighbors, alpha=alpha, max_iter=max_iter, tol=tol)
+
+
+    # java_lp(X, y, output=output, kernel=kernel, gamma=gamma, n_neighbors=n_neighbors, alpha=alpha, max_iter=max_iter, tol=tol)
+
+
+
+def java_lp(X, y,
+        output=None,
+            kernel='knn', 
+            gamma=None,
+            n_neighbors=10, 
+            alpha=1, 
+            max_iter=1000, 
+            tol=0.00001):
 
     # X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.9, random_state=42)
 
@@ -208,7 +260,8 @@ def evaluate_from_database(output=None,
     # do_evaluation(X, y, kernel=kernel, gamma=gamma, n_neighbors=n_neighbors, alpha=alpha, max_iter=max_iter, tol=tol)
 
 def do_evaluation(X, y, 
-                kernel='knn', 
+                kernel='knn',
+                output=None, 
                 gamma=None,
                 n_neighbors=10, 
                 alpha=1, 
@@ -219,11 +272,14 @@ def do_evaluation(X, y,
     from sklearn.metrics import accuracy_score
     import random
 
+    size = len(X)
 
     random_seeds = np.random.randint(1, 1000, size=10)
     for i in range(len(random_seeds)):
         
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.9, random_state=random_seeds[i])
+        # X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.6, random_state=random_seeds[i])
+        
+        # random_unlabeled_points = np.where(np.random.random_integers(0, 1, size=size))
 
         label_prop_model = LabelPropagation(kernel=kernel, 
                                             gamma=gamma, 
