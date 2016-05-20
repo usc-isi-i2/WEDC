@@ -15,6 +15,7 @@ original_seed_similar_words_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'o
 google_news_similar_words_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'google_new_seed_similar_words'))
 weighted_seed_dict_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'weighted_seed_dict'))
 
+
 class TestSeedWordMethods(unittest.TestCase):
     def setUp(self):
         w2v.word2vec_model = w2v.load_model(word2vec_model_)
@@ -25,7 +26,8 @@ class TestSeedWordMethods(unittest.TestCase):
         print seed_word.get_seed_files()
 
     def test_load_seed_words(self):
-        print seed_word.load_seed_words()
+        categories = ['massage', 'escort','job_ads']
+        print seed_word.load_seed_words(category=categories[2])
 
     def test_load_seed_similar_words(self):
         seed_word.load_seed_similar_words(level=self.similar_level, n=self.n)
@@ -52,11 +54,11 @@ if __name__ == '__main__':
         suite = unittest.TestSuite()
 
         # suite.addTest(TestSeedWordMethods("test_get_seed_files"))
-        # suite.addTest(TestSeedWordMethods("test_load_seed_words"))
+        suite.addTest(TestSeedWordMethods("test_load_seed_words"))
         # suite.addTest(TestSeedWordMethods("test_load_seed_similar_words"))
         # suite.addTest(TestSeedWordMethods("test_cache_seed_similar_words_original"))
         # suite.addTest(TestSeedWordMethods("test_cache_seed_similar_words_gn"))
-        suite.addTest(TestSeedWordMethods("test_generate_weighted_seed_dict"))
+        # suite.addTest(TestSeedWordMethods("test_generate_weighted_seed_dict"))
         # suite.addTest(TestSeedWordMethods("test_load_weighted_seed_dict"))
 
         runner = unittest.TextTestRunner()

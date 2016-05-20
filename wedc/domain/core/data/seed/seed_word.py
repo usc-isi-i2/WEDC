@@ -20,15 +20,19 @@ def get_seed_files():
                 file_paths[cate_name].append(file_path)
     return file_paths
 
-def load_seed_words():
+def load_seed_words(category=None):
     files_dict = get_seed_files()
+    if category:
+        paths = files_dict[category]
+    else:
+        paths = files_dict.values()
+
     seeds = []
-    for (cate, paths) in files_dict.items():
-        for path in paths:
-            with open(path) as f:
-                lines = f.readlines()
-                for line in lines:
-                    seeds.append(line.strip().lower())
+    for path in paths:
+        with open(path) as f:
+            lines = f.readlines()
+            for line in lines:
+                seeds.append(line.strip().lower())
     return seeds
 
 def load_seed_words_with_category():
@@ -47,9 +51,11 @@ def load_seed_words_with_category():
 #   Similar Words of Seed Words
 ############################################################
 
-def load_seed_similar_words(level=1, n=10):
+def load_seed_similar_words(seed_words=None, level=1, n=10):
     # seed_words = [stem.stemming(_) for _ in load_seed_words()]
-    seed_words = [_ for _ in load_seed_words()]
+    if not seed_words:
+        seed_words = [_ for _ in load_seed_words()]
+
     ans = {}
     [ans.setdefault(_, 1) for _ in seed_words]
 

@@ -80,10 +80,10 @@ if __name__ == '__main__':
     
         # suite.addTest(TestLabelledDataMethods("test_insert_data"))
         # suite.addTest(TestLabelledDataMethods("test_insert_from_csv"))
-        suite.addTest(TestLabelledDataMethods("test_load_data"))
+        # suite.addTest(TestLabelledDataMethods("test_load_data"))
         # suite.addTest(TestLabelledDataMethods("test_clear_data"))
         
-        # suite.addTest(TestSeedDictMethods("test_insert_from_txt"))
+        suite.addTest(TestSeedDictMethods("test_insert_from_txt"))
         # suite.addTest(TestSeedDictMethods("test_load_data"))
         # suite.addTest(TestSeedDictMethods("test_clear_data"))
 

@@ -27,9 +27,10 @@ def session_scope():
     try:
         yield session
         session.commit()
-    except:
+    except Exception as e:
         session.rollback()
-        raise
+        print 'DATABASE ERROR'
+        # raise
     finally:
         session.close()
 

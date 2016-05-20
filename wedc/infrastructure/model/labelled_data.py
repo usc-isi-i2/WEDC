@@ -10,7 +10,7 @@ class LabelledData(dbase):
     content = Column(String(1*1024*1024), nullable=False)
     extraction = Column(String(1*1024*1024), nullable=False)
     label = Column(Integer, nullable=False)
-    checksum = Column(String(200), nullable=False)
+    checksum = Column(String(200), unique=True, nullable=False)
 
     """ use flag to note data
     0: normal data
@@ -26,14 +26,17 @@ class LabelledData(dbase):
         extraction = post.body
         checksum = hash_helper.checksum(content)
         with session_scope() as session:
+            try:
             # filter dups
-            if not session.query(LabelledData).filter_by(checksum=checksum).all():
-                new_data = LabelledData(content=content, 
-                                extraction=extraction,
-                                label=label,
-                                checksum=checksum,
-                                flag=flag)
-                session.add(new_data)
+                if not session.query(LabelledData).filter_by(checksum=checksum).all():
+                    new_data = LabelledData(content=content, 
+                                    extraction=extraction,
+                                    label=label,
+                                    checksum=checksum,
+                                    flag=flag)
+                    session.add(new_data)
+            except Exception as e:
+                print "INSERT ERROR"
 
     @staticmethod
     def insert_from_csv(csv_file_path):
@@ -43,22 +46,26 @@ class LabelledData(dbase):
         with open(csv_file_path, 'rb') as csvfile:
             reader = csv.reader(csvfile)
             with session_scope() as session:
+                
                 for idx, row in enumerate(reader):
-                    post_id = idx + 1
-                    label = row[0]
-                    content = row[1].decode('ascii', 'ignore')
-                    post = Post("", "", content)
-                    extraction = post.body
-                    checksum = hash_helper.checksum(extraction)
+                    try:
+                        post_id = idx + 1
+                        label = row[0]
+                        content = row[1].decode('ascii', 'ignore')
+                        post = Post("", "", content)
+                        extraction = post.body
+                        checksum = hash_helper.checksum(extraction)
 
-                    # filter dups
-                    if not session.query(LabelledData).filter_by(checksum=checksum).all():
-                        new_data = LabelledData(content=content,
-                                        extraction=extraction, 
-                                        label=label,
-                                        checksum=checksum,
-                                        flag=1)
-                        session.add(new_data)
+                        # filter dups
+                        if not session.query(LabelledData).filter_by(checksum=checksum).all():
+                            new_data = LabelledData(content=content,
+                                            extraction=extraction, 
+                                            label=label,
+                                            checksum=checksum,
+                                            flag=1)
+                            session.add(new_data)
+                    except Exception as e:
+                        print "INSERT ERROR"
 
     
     @staticmethod

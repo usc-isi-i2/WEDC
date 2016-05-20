@@ -7,14 +7,17 @@ class SeedDict(dbase):
     __tablename__ = 'seed_dict'
     
     id = Column(Integer, primary_key=True)
-    seed = Column(String(100), nullable=False)
+    seed = Column(String(100), unique=True, nullable=False)
     weight = Column(Float, nullable=False)
 
     @staticmethod
     def insert(content, label, flag):
         with session_scope() as session:
-            new_data = SeedDict(seed=seed, weight=weight)
-            session.add(new_data)
+            try:
+                new_data = SeedDict(seed=seed, weight=weight)
+                session.add(new_data)
+            except Exception as e:
+                print "INSERT ERROR"
 
 
     @staticmethod
@@ -24,10 +27,13 @@ class SeedDict(dbase):
 
             with session_scope() as session:
                 for line in lines:
-                    line = line.strip().lower()
-                    line = line.split('\t')
-                    new_data = SeedDict(seed=str(line[0]), weight=float(line[1]))
-                    session.add(new_data)
+                    try:
+                        line = line.strip().lower()
+                        line = line.split('\t')
+                        new_data = SeedDict(seed=str(line[0]), weight=float(line[1]))
+                        session.add(new_data)
+                    except Exception as e:
+                        print "INSERT ERROR"
 
     @staticmethod
     def load_data():
@@ -41,6 +47,7 @@ class SeedDict(dbase):
         with session_scope() as session:
             num_rows_deleted = session.query(SeedDict).delete()
         return num_rows_deleted
+
     
 
 
