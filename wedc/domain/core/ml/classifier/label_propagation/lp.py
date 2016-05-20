@@ -3,6 +3,12 @@ import numpy as np
 from sklearn import datasets
 from sklearn.semi_supervised import LabelPropagation
 from wedc.domain.core.ml.helper import label
+from wedc.domain.core.ml.graph import knn
+from wedc.domain.core.data.seed import seed_vector
+
+from wedc.infrastructure import database
+from wedc.infrastructure.model.labelled_data import LabelledData
+from wedc.infrastructure.model.seed_dict import SeedDict
 
 # label_prop_model = LabelPropagation()
 iris = datasets.load_iris()
@@ -146,13 +152,6 @@ def evaluate_from_database(output=None,
                         max_iter=1000, 
                         tol=0.00001):
 
-    from wedc.domain.core.data.seed import seed_vector
-    from wedc.domain.core.ml.graph import knn
-
-    from wedc.infrastructure import database
-    from wedc.infrastructure.model.labelled_data import LabelledData
-    from wedc.infrastructure.model.seed_dict import SeedDict
-
     labelled_dataset = LabelledData.load_data()
     size = len(labelled_dataset)
     ld_data = []
@@ -187,29 +186,30 @@ def evaluate_from_database(output=None,
             new_post_id += 1
 
             
-    do_evaluation(new_X, new_y, output=output, kernel=kernel, gamma=gamma, n_neighbors=n_neighbors, alpha=alpha, max_iter=max_iter, tol=tol)
+    # do_evaluation(new_X, new_y, output=output, kernel=kernel, gamma=gamma, n_neighbors=n_neighbors, alpha=alpha, max_iter=max_iter, tol=tol)
 
     # sklearn_lp(new_X, new_y, output=output, kernel=kernel, gamma=gamma, n_neighbors=n_neighbors, alpha=alpha, max_iter=max_iter, tol=tol)
 
 
-    # java_lp(X, y, output=output, kernel=kernel, gamma=gamma, n_neighbors=n_neighbors, alpha=alpha, max_iter=max_iter, tol=tol)
+    java_lp(X, y, output=output, kernel=kernel, gamma=gamma, n_neighbors=n_neighbors, alpha=alpha, max_iter=max_iter, tol=tol)
 
 
 
 def java_lp(X, y,
-        output=None,
+            output=None,
             kernel='knn', 
             gamma=None,
             n_neighbors=10, 
             alpha=1, 
             max_iter=1000, 
             tol=0.00001):
+    
 
     # X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.9, random_state=42)
 
     # code below is for test
 
-    post_dict, top_k, training_index, training_labels, testing_index, testing_labels = knn.do_knn(post_vectors, output, post_labels=ld_label)
+    post_dict, top_k, training_index, training_labels, testing_index, testing_labels = knn.do_knn(X, output, post_labels=y)
 
     print 'training_labels:', training_labels #, len(training_labels)
     print 'training_index:', training_index #, len(training_index)

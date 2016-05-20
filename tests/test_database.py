@@ -46,6 +46,13 @@ class TestLabelledDataMethods(unittest.TestCase):
     def test_clear_data(self):
         print LabelledData.clear_data()
 
+    def test_load_potential_seeds(self):
+        potential_seeds = LabelledData.load_potential_seeds()
+        for seed, vec in potential_seeds.items():
+            weight = vec[0]
+            label = vec[1]
+            SeedDict.insert(seed, weight)
+
     def tearDown(self):
         pass
 
@@ -82,9 +89,10 @@ if __name__ == '__main__':
         # suite.addTest(TestLabelledDataMethods("test_insert_from_csv"))
         # suite.addTest(TestLabelledDataMethods("test_load_data"))
         # suite.addTest(TestLabelledDataMethods("test_clear_data"))
+        # suite.addTest(TestLabelledDataMethods("test_load_potential_seeds"))
         
-        suite.addTest(TestSeedDictMethods("test_insert_from_txt"))
-        # suite.addTest(TestSeedDictMethods("test_load_data"))
+        # suite.addTest(TestSeedDictMethods("test_insert_from_txt"))
+        suite.addTest(TestSeedDictMethods("test_load_data"))
         # suite.addTest(TestSeedDictMethods("test_clear_data"))
 
         runner = unittest.TextTestRunner()

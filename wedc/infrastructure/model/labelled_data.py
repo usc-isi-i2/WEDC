@@ -26,17 +26,14 @@ class LabelledData(dbase):
         extraction = post.body
         checksum = hash_helper.checksum(content)
         with session_scope() as session:
-            try:
-            # filter dups
-                if not session.query(LabelledData).filter_by(checksum=checksum).all():
-                    new_data = LabelledData(content=content, 
-                                    extraction=extraction,
-                                    label=label,
-                                    checksum=checksum,
-                                    flag=flag)
-                    session.add(new_data)
-            except Exception as e:
-                print "INSERT ERROR"
+            if not session.query(LabelledData).filter_by(checksum=checksum).all():
+                new_data = LabelledData(content=content, 
+                                extraction=extraction,
+                                label=label,
+                                checksum=checksum,
+                                flag=flag)
+                session.add(new_data)
+           
 
     @staticmethod
     def insert_from_csv(csv_file_path):
@@ -48,26 +45,23 @@ class LabelledData(dbase):
             with session_scope() as session:
                 
                 for idx, row in enumerate(reader):
-                    try:
-                        post_id = idx + 1
-                        label = row[0]
-                        content = row[1].decode('ascii', 'ignore')
-                        post = Post("", "", content)
-                        extraction = post.body
-                        checksum = hash_helper.checksum(extraction)
+                    post_id = idx + 1
+                    label = row[0]
+                    content = row[1].decode('ascii', 'ignore')
+                    post = Post("", "", content)
+                    extraction = post.body
+                    checksum = hash_helper.checksum(extraction)
 
-                        # filter dups
-                        if not session.query(LabelledData).filter_by(checksum=checksum).all():
-                            new_data = LabelledData(content=content,
-                                            extraction=extraction, 
-                                            label=label,
-                                            checksum=checksum,
-                                            flag=1)
-                            session.add(new_data)
-                    except Exception as e:
-                        print "INSERT ERROR"
+                    # filter dups
+                    if not session.query(LabelledData).filter_by(checksum=checksum).all():
+                        new_data = LabelledData(content=content,
+                                        extraction=extraction, 
+                                        label=label,
+                                        checksum=checksum,
+                                        flag=1)
+                        session.add(new_data)
+                    
 
-    
     @staticmethod
     def load_data():
         session = load_session()
@@ -78,6 +72,42 @@ class LabelledData(dbase):
         with session_scope() as session:
             num_rows_deleted = session.query(LabelledData).delete()
         return num_rows_deleted
-    
+
+    @staticmethod
+    def load_potential_seeds():
+        offset = 2 # offset from index to label
+        labelled_data = LabelledData.load_data()
+        tokens = {}
+        for idx, data in enumerate(labelled_data):
+            label = data.label
+            for token in data.extraction.strip().split(' '):
+                tokens.setdefault(str(token), [0, 0, 0])    # 2,3,4
+                tokens[token][label-offset] += 1
+            
+        # print tokens
+        ans = {}
+        for token, cnt_list in tokens.items():
+            max_cnt = max(cnt_list)
+            max_cnt_idx = cnt_list.index(max_cnt)
+            potential_flag = True
+            if max_cnt == 0:
+                continue
+            for i, cnt in enumerate(cnt_list):
+                if cnt == 0:
+                    continue
+                if i != max_cnt_idx:
+                    if max_cnt == cnt or max_cnt < cnt * 3:
+                        potential_flag = False
+            if potential_flag:
+                weight = 1.*max_cnt/sum(cnt_list)
+                # print max_cnt, cnt_list, sum(cnt_list)
+                label = max_cnt_idx + offset
+                ans.setdefault(token, [weight, label])
+
+        # print 'massage:\n', [k for k,v in ans.items() if v[1] == 2], '\n'
+        # print 'escort:\n', [k for k,v in ans.items() if v[1] == 3], '\n'
+        # print 'job_ads:\n', [k for k,v in ans.items() if v[1] == 4], '\n'
+
+        return ans
 
 

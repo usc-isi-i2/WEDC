@@ -11,7 +11,7 @@ class SeedDict(dbase):
     weight = Column(Float, nullable=False)
 
     @staticmethod
-    def insert(content, label, flag):
+    def insert(seed, weight):
         with session_scope() as session:
             try:
                 new_data = SeedDict(seed=seed, weight=weight)

@@ -30,7 +30,10 @@ class TestSeedWordMethods(unittest.TestCase):
         print seed_word.load_seed_words(category=categories[2])
 
     def test_load_seed_similar_words(self):
-        seed_word.load_seed_similar_words(level=self.similar_level, n=self.n)
+        categories = ['massage', 'escort','job_ads']
+        seed_words = seed_word.load_seed_words(category=categories[2])
+        seeds = seed_word.load_seed_similar_words(seed_words=seed_words, level=self.similar_level, n=self.n)
+        print seeds.keys()
 
     def test_cache_seed_similar_words_original(self):
         seed_word.cache_seed_similar_words(path=original_seed_similar_words_, level=self.similar_level, n=self.n)
@@ -54,8 +57,8 @@ if __name__ == '__main__':
         suite = unittest.TestSuite()
 
         # suite.addTest(TestSeedWordMethods("test_get_seed_files"))
-        suite.addTest(TestSeedWordMethods("test_load_seed_words"))
-        # suite.addTest(TestSeedWordMethods("test_load_seed_similar_words"))
+        # suite.addTest(TestSeedWordMethods("test_load_seed_words"))
+        suite.addTest(TestSeedWordMethods("test_load_seed_similar_words"))
         # suite.addTest(TestSeedWordMethods("test_cache_seed_similar_words_original"))
         # suite.addTest(TestSeedWordMethods("test_cache_seed_similar_words_gn"))
         # suite.addTest(TestSeedWordMethods("test_generate_weighted_seed_dict"))

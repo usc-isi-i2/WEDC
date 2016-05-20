@@ -5,9 +5,10 @@ import numpy as np
 import random
 
 
-def do_knn(post_vectors, output, post_labels=None, n_neighbors=20, algorithm='ball_tree'):
-    size = len(post_vectors)
-    X = np.array(np.mat(';'.join(post_vectors)))
+def do_knn(X, output, post_labels=None, n_neighbors=20, algorithm='ball_tree'):
+    n_neighbors += 1
+    size = len(X)
+    # X = np.array(np.mat(';'.join(post_vectors)))
     
     nbrs = NearestNeighbors(n_neighbors=n_neighbors, algorithm=algorithm).fit(X)
     # Because the query set matches the training set, the nearest neighbor of each point is the point itself, at a distance of zero.
@@ -47,7 +48,8 @@ def do_knn(post_vectors, output, post_labels=None, n_neighbors=20, algorithm='ba
     graph = []
     for i in range(0, size):
         post_id = i + 1
-        line = post_vectors[i].strip().split(' ') 
+        # line = X[i].strip().split(' ') 
+        line = X[i]
         post_indices = indices[i]
         post_k_distances = distances[i]
         post_dict[str(post_id)] = sum(post_k_distances)
@@ -76,8 +78,6 @@ def do_knn(post_vectors, output, post_labels=None, n_neighbors=20, algorithm='ba
 
 
 def build_graph(input, output, n_neighbors=20, algorithm='ball_tree'):
-    n_neighbors += 1
-
     with open(input, 'rb') as f:
         lines = f.readlines()
         return do_knn(lines, output)
