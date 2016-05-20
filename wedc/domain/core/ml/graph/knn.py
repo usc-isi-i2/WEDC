@@ -2,9 +2,10 @@
 from sklearn.neighbors import NearestNeighbors
 from sklearn import preprocessing
 import numpy as np
+import random
 
 
-def do_knn(post_vectors, output, n_neighbors=20, algorithm='ball_tree'):
+def do_knn(post_vectors, output, post_labels=None, n_neighbors=20, algorithm='ball_tree'):
     size = len(post_vectors)
     X = np.array(np.mat(';'.join(post_vectors)))
     
@@ -18,19 +19,42 @@ def do_knn(post_vectors, output, n_neighbors=20, algorithm='ball_tree'):
     k_rate = 0.005
     top_k = int(k_rate * size)
 
+    # load post labels
+    if not post_labels:
+        post_labels = [0]*size
+
+    training_index = list(np.random.choice(size-1, int(size*.1), replace=False))
+    training_index = [_+1 for _ in training_index]
+    print 'training size:', len(training_index)
+    training_index.sort()
+
+    testing_index = []
+    testing_labels = []
+    training_labels = []
+    for i in range(len(post_labels)):
+        post_id = i+1
+        if post_id in training_index:
+            training_labels.append(post_labels[i])
+        else:
+            testing_labels.append(post_labels[i])
+            testing_index.append(post_id)
+            post_labels[i] = 0
+            
+    # print training_labels
+    # print training_index
+    # print testing_index
+
     graph = []
     for post_id in range(0, size):
         line = post_vectors[post_id].strip().split(' ') 
         post_indices = indices[post_id]
         post_k_distances = distances[post_id]
-
         post_dict[str(post_id)] = sum(post_k_distances)
 
-        # change to start from 1 for lab propagation library input format
         if max([float(_) for _ in line]) == 0:
-            graph_item = [post_id+1, 1]
-        else:
-            graph_item = [post_id+1, 0]
+            post_labels[post_id] = 1
+        graph_item = [post_id+1, post_labels[post_id]]
+
         post_neighbors = []
         for idx in range(n_neighbors):
             if post_id == post_indices[idx]:
@@ -44,11 +68,10 @@ def do_knn(post_vectors, output, n_neighbors=20, algorithm='ball_tree'):
         output_fh.write(node+'\n')
     output_fh.close()
 
-
     post_dict = sorted(post_dict.iteritems(), key=lambda x: x[1], reverse=True)
     post_dict = [int(_[0]) for _ in post_dict]
 
-    return post_dict[:top_k], top_k
+    return post_dict[:top_k], top_k, training_index, training_labels, testing_index, testing_labels
 
 
 def build_graph(input, output, n_neighbors=20, algorithm='ball_tree'):
