@@ -185,6 +185,9 @@ def clean_token(token):
     if re.search(r'girl', token.lower()):
         return 'girl'
 
+    if re.search(r'job', token.lower()):
+        return 'job'
+
     if re.search(r'day', token.lower()):
         return 'day'
 

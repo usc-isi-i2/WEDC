@@ -38,9 +38,10 @@ class TestLabelledDataMethods(unittest.TestCase):
         LabelledData.insert_from_csv(csv_)
 
     def test_load_data(self):
-        for data in LabelledData.load_data():
+        for idx, data in enumerate(LabelledData.load_data()):
+            post_id = idx + 1
             # print data.label, data.content
-            print data.label, data.extraction
+            print post_id, data.label, data.extraction
 
     def test_clear_data(self):
         print LabelledData.clear_data()
@@ -79,11 +80,11 @@ if __name__ == '__main__':
     
         # suite.addTest(TestLabelledDataMethods("test_insert_data"))
         # suite.addTest(TestLabelledDataMethods("test_insert_from_csv"))
-        # suite.addTest(TestLabelledDataMethods("test_load_data"))
+        suite.addTest(TestLabelledDataMethods("test_load_data"))
         # suite.addTest(TestLabelledDataMethods("test_clear_data"))
         
         # suite.addTest(TestSeedDictMethods("test_insert_from_txt"))
-        suite.addTest(TestSeedDictMethods("test_load_data"))
+        # suite.addTest(TestSeedDictMethods("test_load_data"))
         # suite.addTest(TestSeedDictMethods("test_clear_data"))
 
         runner = unittest.TextTestRunner()

@@ -306,6 +306,7 @@ def do_evaluation(X, y,
         print '+--------------------------------------------------------+'
         print 'test round:', (i+1), ' with random seed: ', random_seeds[i]
         print 'training label: ', y_train
+        print 'training post id: ', [_+1 for _ in labeled_points]
         print 'predict label: ', y_predict
         print classification_report(y_test, y_predict)
         print 'accuracy: ' + str(accuracy_score(y_test, y_predict))
