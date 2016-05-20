@@ -51,8 +51,8 @@ def do_knn(post_vectors, output, post_labels=None, n_neighbors=20, algorithm='ba
         post_k_distances = distances[post_id]
         post_dict[str(post_id)] = sum(post_k_distances)
 
-        if max([float(_) for _ in line]) == 0:
-            post_labels[post_id] = 1
+        # if max([float(_) for _ in line]) == 0:
+        #     post_labels[post_id] = 1
         graph_item = [post_id+1, post_labels[post_id]]
 
         post_neighbors = []
