@@ -191,7 +191,7 @@ def evaluate_from_database(output=None,
     # sklearn_lp(new_X, new_y, output=output, kernel=kernel, gamma=gamma, n_neighbors=n_neighbors, alpha=alpha, max_iter=max_iter, tol=tol)
 
 
-    java_lp(X, y, output=output, kernel=kernel, gamma=gamma, n_neighbors=n_neighbors, alpha=alpha, max_iter=max_iter, tol=tol)
+    java_lp(new_X, new_y, output=output, kernel=kernel, gamma=gamma, n_neighbors=n_neighbors, alpha=alpha, max_iter=max_iter, tol=tol)
 
 
 
@@ -204,21 +204,20 @@ def java_lp(X, y,
             max_iter=1000, 
             tol=0.00001):
     
+    gk_path = '/Users/ZwEin/job_works/StudentWork_USC-ISI/projects/WEDC/tests/data/graph_knn.txt'
+    gl_path = '/Users/ZwEin/job_works/StudentWork_USC-ISI/projects/WEDC/tests/data/graph_lp.txt'
+    lp_path = '/Users/ZwEin/job_works/StudentWork_USC-ISI/projects/WEDC/tests/data/labelprop.jar'
 
     # X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.9, random_state=42)
 
     # code below is for test
 
-    post_dict, top_k, training_index, training_labels, testing_index, testing_labels = knn.do_knn(X, output, post_labels=y)
+    post_dict, top_k, training_index, training_labels, testing_index, testing_labels = knn.do_knn(X, output=gk_path, post_labels=y)
 
     print 'training_labels:', training_labels #, len(training_labels)
     print 'training_index:', training_index #, len(training_index)
     # print len(training_index), ' + ', len(testing_index)
     # print testing_index
-
-    gk_path = '/Users/ZwEin/job_works/StudentWork_USC-ISI/projects/WEDC/tests/data/graph_knn.txt'
-    gl_path = '/Users/ZwEin/job_works/StudentWork_USC-ISI/projects/WEDC/tests/data/graph_lp.txt'
-    lp_path = '/Users/ZwEin/job_works/StudentWork_USC-ISI/projects/WEDC/tests/data/labelprop.jar'
 
     run_lp(gk_path, gl_path, lp_path)
 
