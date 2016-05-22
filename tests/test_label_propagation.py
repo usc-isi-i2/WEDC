@@ -42,7 +42,7 @@ class TestLabelPropagationMethods(unittest.TestCase):
                                 input_label=post2vec_label_,
                                 output=post2vec_predict_,
                                 kernel='knn',
-                                n_neighbors=40, 
+                                n_neighbors=20, 
                                 alpha=1,
                                 max_iter=100, 
                                 tol=0.000001)
@@ -56,7 +56,7 @@ class TestLabelPropagationMethods(unittest.TestCase):
         lp.evaluate_from_database(kernel='knn', 
                         output=graph_knn_,
                         gamma=None,
-                        n_neighbors=10, 
+                        n_neighbors=20, 
                         alpha=1, 
                         max_iter=100, 
                         tol=0.000001)

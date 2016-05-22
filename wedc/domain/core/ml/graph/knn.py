@@ -26,7 +26,7 @@ def do_knn(X, output, post_labels=None, n_neighbors=20, algorithm='ball_tree'):
 
     training_index = list(np.random.choice(size-1, int(size*.1), replace=False))
     training_index = [_+1 for _ in training_index]
-    print 'training size:', len(training_index)
+    # print 'training size:', len(training_index)
     training_index.sort()
 
     testing_index = []

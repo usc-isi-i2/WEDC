@@ -216,16 +216,15 @@ def java_lp(X, y,
 
     post_dict, top_k, training_index, training_labels, testing_index, testing_labels = knn.do_knn(X, output=gk_path, post_labels=y, n_neighbors=n_neighbors)
 
-    print 'training_labels:', training_labels #, len(training_labels)
-    print 'training_index:', training_index #, len(training_index)
-    # print len(training_index), ' + ', len(testing_index)
-    # print testing_index
+    
 
     run_lp(gk_path, gl_path, lp_path)
 
-    y_test = testing_labels
+    # y_test = testing_labels
+    y_test = []
     y_predict = []
 
+    valid_predict_indexes = []
     with open(gl_path, 'rb') as gl_file:
         lines = gl_file.readlines()
         for line in lines:
@@ -236,9 +235,25 @@ def java_lp(X, y,
             line = line.split(',')
             post_id = int(line[0])
 
-            if post_id not in training_index:
-                y_predict.append(int(line[1])) 
+            check_point = float(line[3][:-1]) + float(line[5][:-1]) + float(line[7][:-1])
+            # if check_point > 0:
+            #     valid_predict_indexes.append(post_id-1)
 
+            if post_id not in training_index and check_point > 0: 
+                valid_predict_indexes.append(post_id-1)
+                y_predict.append(int(line[1]))
+
+                if post_id in testing_index:
+                    tmp = testing_index.index(post_id)
+                    y_test.append(testing_labels[tmp])
+
+
+
+    # print len(valid_predict_indexes), valid_predict_indexes
+    # print len(y_predict), y_predict
+    # print len(y_test), y_test
+
+    # """
     # print 'y_predict', len(y_predict), y_predict
     # print 'y_test', len(y_test), y_test
     from sklearn.metrics import classification_report
@@ -246,6 +261,11 @@ def java_lp(X, y,
     print '+--------------------------------------------------------+'
     print '|                         Report                         |'
     print '+--------------------------------------------------------+'
+    print 'training size:', len(training_index)
+    print 'training_labels:', training_labels #, len(training_labels)
+    print 'training_index:', training_index #, len(training_index)
+    # print len(training_index), ' + ', len(testing_index)
+    # print testing_index
     # print 'test round:', (i+1), ' with random seed: ', random_seeds[i]
     # print 'training label: ', training_labels
     print 'predict label: ', y_predict
@@ -253,7 +273,7 @@ def java_lp(X, y,
     print classification_report(y_test, y_predict)
     print 'accuracy: ' + str(accuracy_score(y_test, y_predict))
     print '\n\n'
-
+    # """
 
 
 
