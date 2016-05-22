@@ -163,11 +163,10 @@ def evaluate_from_database(output=None,
     seeds = SeedDict.load_data()
     post_vectors = seed_vector.generate_post_vector(ld_data, seeds)
 
-    post_vector_seeds = seed_vector.generate_post_vector_seed(ld_data, seeds=seeds)
-    for vector in vectors:
-    for i, vector in enumerate(post_vector_seeds)
-        if ld_label[i] == 4:
-        print vector.strip()
+    # post_vector_seeds = seed_vector.generate_post_vector_seed(ld_data, seeds=seeds)
+    # for i, vector in enumerate(post_vector_seeds):
+    #     if ld_label[i] == 4:
+    #         print vector.strip()
 
     short_post_indexes = []
     for i, vec in enumerate(post_vectors):
@@ -215,7 +214,7 @@ def java_lp(X, y,
     gl_path = '/Users/ZwEin/job_works/StudentWork_USC-ISI/projects/WEDC/tests/data/graph_lp.txt'
     lp_path = '/Users/ZwEin/job_works/StudentWork_USC-ISI/projects/WEDC/tests/data/labelprop.jar'
 
-    post_dict, top_k, training_index, training_labels, testing_index, testing_labels = knn.do_knn(X, output=gk_path, post_labels=y)
+    post_dict, top_k, training_index, training_labels, testing_index, testing_labels = knn.do_knn(X, output=gk_path, post_labels=y, n_neighbors=n_neighbors)
 
     print 'training_labels:', training_labels #, len(training_labels)
     print 'training_index:', training_index #, len(training_index)

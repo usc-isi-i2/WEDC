@@ -42,7 +42,7 @@ class TestLabelPropagationMethods(unittest.TestCase):
                                 input_label=post2vec_label_,
                                 output=post2vec_predict_,
                                 kernel='knn',
-                                n_neighbors=10, 
+                                n_neighbors=40, 
                                 alpha=1,
                                 max_iter=100, 
                                 tol=0.000001)
