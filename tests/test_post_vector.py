@@ -25,7 +25,7 @@ class TestPostVectorMethods(unittest.TestCase):
         seed_vector.post2sv(text_, post2vec_, self.seeds)
 
     def test_post2seeds(self):
-        seed_vector.post2seed(text_, post2vec_seeds_, self.seeds)
+        seed_vector.post2seed(text_, output=post2vec_seeds_, seeds=self.seeds)
 
     def tearDown(self):
         pass
