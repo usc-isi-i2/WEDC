@@ -1,6 +1,5 @@
 import numpy as np
 import os
-import subprocess
 
 from sklearn import datasets
 from sklearn.semi_supervised import LabelPropagation
@@ -15,25 +14,70 @@ from wedc.infrastructure.model.seed_dict import SeedDict
 from wedc.domain.conf.storage import __res_dir__
 
 
+def run(input, output=None):
+    return run_by_jar(input, output=output)
+
+def run_by_jar(input, output=None, iter=100, eps='1e-05'):
+    import ast
+    import subprocess
+    from subprocess import check_output
+
+    lp_runnable_jar_ = os.path.expanduser(os.path.join(__res_dir__, 'labelprop.jar'))
+
+    # run label propagation
+    argsArray = ['java', '-classpath', lp_runnable_jar_, 'org.ooxo.LProp', '-a', 'GFHF', '-m', str(iter), '-e', eps, input]
+    raw_output = check_output(argsArray)
+
+    # output into file
+    if output:
+        output_file = open(output, 'wb')
+        output_file.writelines(raw_output)
+        output_file.close()
+
+    # refine result
+    ans = []
+    for line in raw_output.split('\n'):
+        if not line:    # actually in the end of file
+            continue
+
+        # line[0]: post id
+        # line[1]: predict label
+        # line[2:]: categories with weight
+        line = ast.literal_eval(line)
+        ans.append(line)
+
+    return ans
+   
+
+    """
+    valid_predict_indexes = []
+    with open(gl_path, 'rb') as gl_file:
+        lines = gl_file.readlines()
+        for line in lines:
+            line = line.strip()
+            if not line:
+                continue
+            line = line[1:-1]
+            line = line.split(',')
+            post_id = int(line[0])
+
+            check_point = float(line[3][:-1]) + float(line[5][:-1]) + float(line[7][:-1])
+            # if check_point > 0:
+            #     valid_predict_indexes.append(post_id-1)
+
+            if post_id not in training_index and check_point > 0: 
+                valid_predict_indexes.append(post_id)
+                y_predict.append(int(line[1]))
+
+                if post_id in testing_index:
+                    tmp = testing_index.index(post_id)
+                    y_test.append(testing_labels[tmp])
+    """
 
 
-def run_by_jar(input, output, lp_runnable_jar_=None, iter=100, eps='1e-05'):
-    if not lp_runnable_jar_:
-        lp_runnable_jar_ = os.path.expanduser(os.path.join(__res_dir__, 'labelprop.jar'))
-
-    if os.path.isfile(output):  # remove existing output file
-        os.remove(output)
-
-    output_file = open(output, 'a')
-    working_dir = os.sep.join(lp_runnable_jar_.split(os.sep)[:-1])
-    jar_file = lp_runnable_jar_.split(os.sep)[-1]
-    argsArray = ['java', '-classpath', jar_file, 'org.ooxo.LProp', '-a', 'GFHF', '-m', str(iter), '-e', eps, input]
-    subprocess.call(argsArray, cwd=working_dir, stdout=output_file)
-    output_file.close()
 
 
 
-    
 def evaluate_from_database(output=None,
                         kernel='knn', 
                         gamma=None,

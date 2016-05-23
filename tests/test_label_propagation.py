@@ -81,6 +81,9 @@ class TestLabelPropagationMethods(unittest.TestCase):
         
         labelprop.run_by_jar(graph_knn_, graph_lp_)
 
+    def test_run(self):
+        print labelprop.run(graph_knn_, output=graph_lp_)
+
     def tearDown(self):
         pass
 
@@ -105,7 +108,8 @@ if __name__ == '__main__':
         # suite.addTest(TestLabelPropagationMethods("test_generate_label_file"))
         # suite.addTest(TestLabelPropagationMethods("test_do_label_propagation"))
         # suite.addTest(TestLabelPropagationMethods("test_load_unknown_post_index"))
-        suite.addTest(TestLabelPropagationMethods("test_evaluate"))
+        # suite.addTest(TestLabelPropagationMethods("test_evaluate"))
+        suite.addTest(TestLabelPropagationMethods("test_run"))
 
         ### Test Graph ###
         # suite.addTest(TestGraphMethods("test_build_knn_graph"))
