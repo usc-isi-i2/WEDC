@@ -164,11 +164,11 @@ def evaluate_from_database(output=None,
     short_ext_word_edge = 8
     for i, vec in enumerate(post_vectors):
         post_id = i + 1
-        # print post_id, len(ld_data[i]), ld_data[i]
+
         if len(ld_data[i].split(' ')) < short_ext_word_edge or max([float(_) for _ in vec.strip().split(' ')]) == 0:
             short_post_indexes.append(post_id)
         
-    print short_post_indexes
+    # print short_post_indexes
     
     X = np.array(np.mat(';'.join(post_vectors)))
     y = ld_label
@@ -190,12 +190,13 @@ def evaluate_from_database(output=None,
 
     # sklearn_lp(new_X, new_y, output=output, kernel=kernel, gamma=gamma, n_neighbors=n_neighbors, alpha=alpha, max_iter=max_iter, tol=tol)
 
-    print len(new_X), len(new_y)
-    print len(X), len(y)
+    # print len(new_X), len(new_y)
+    # print len(X), len(y)
+    print mapping
 
 
 
-    # return java_lp(new_X, new_y, mapping=mapping, output=output, kernel=kernel, gamma=gamma, n_neighbors=n_neighbors, alpha=alpha, max_iter=max_iter, tol=tol)
+    return java_lp(new_X, new_y, mapping=mapping, output=output, kernel=kernel, gamma=gamma, n_neighbors=n_neighbors, alpha=alpha, max_iter=max_iter, tol=tol)
 
 
 
@@ -239,13 +240,14 @@ def java_lp(X, y,
             #     valid_predict_indexes.append(post_id-1)
 
             if post_id not in training_index and check_point > 0: 
-                valid_predict_indexes.append(post_id-1)
+                valid_predict_indexes.append(post_id)
                 y_predict.append(int(line[1]))
 
                 if post_id in testing_index:
                     tmp = testing_index.index(post_id)
                     y_test.append(testing_labels[tmp])
 
+    # valid_predict_indexes = [mapping[_] for _ in valid_predict_indexes]
 
 
     # print len(valid_predict_indexes), valid_predict_indexes
@@ -258,7 +260,7 @@ def java_lp(X, y,
     from sklearn.metrics import classification_report
     from sklearn.metrics import accuracy_score
     accuracy = accuracy_score(y_test, y_predict)
-    if accuracy > 0.9:
+    if accuracy > 0.5:
         print accuracy, '\n'
         return accuracy
     print '+--------------------------------------------------------+'
@@ -274,7 +276,8 @@ def java_lp(X, y,
     
     print 'predict label: ', y_predict
     print 'y_test: ', y_test
-    print 'post_id:', valid_predict_indexes
+    print 'graph post_id:', valid_predict_indexes
+    print 'original post_id:', [mapping[_] for _ in valid_predict_indexes]
 
     print classification_report(y_test, y_predict)
     print 'accuracy: ' + str(accuracy_score(y_test, y_predict))

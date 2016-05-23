@@ -25,6 +25,7 @@ lp_jar_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'labelprop.jar'))
 from wedc.domain.core.ml.graph import knn
 from wedc.domain.core.ml.helper import label
 from wedc.domain.core.ml.classifier.label_propagation import lp
+from wedc.domain.core.ml.classifier.label_propagation import labelprop
 
 class TestLabelPropagationMethods(unittest.TestCase):
     def setUp(self):
@@ -55,14 +56,14 @@ class TestLabelPropagationMethods(unittest.TestCase):
     def test_evaluate(self):
         # lp.evaluate_from_file(input_data=post2vec_)
         
-        accuracy = lp.evaluate_from_database(kernel='knn', 
-                                output=graph_knn_,
-                                gamma=None,
-                                n_neighbors=10, 
-                                alpha=1, 
-                                max_iter=100, 
-                                tol=0.000001)
-        
+        # accuracy = lp.evaluate_from_database(kernel='knn', 
+        #                         output=graph_knn_,
+        #                         gamma=None,
+        #                         n_neighbors=10, 
+        #                         alpha=1, 
+        #                         max_iter=100, 
+        #                         tol=0.000001)
+
         # for i in range(100):
         #     try:
         #         accuracy = lp.evaluate_from_database(kernel='knn', 
@@ -72,13 +73,13 @@ class TestLabelPropagationMethods(unittest.TestCase):
         #                         alpha=1, 
         #                         max_iter=100, 
         #                         tol=0.000001)
-        #         if accuracy > 0.9:
+        #         if accuracy < 0.5:
         #             break
         #     except Exception as e:
         #         print "IGNORE \n"
 
         
-        # lp.run_lp(graph_knn_, graph_lp_, lp_jar_)
+        labelprop.run_by_jar(graph_knn_, graph_lp_)
 
     def tearDown(self):
         pass
