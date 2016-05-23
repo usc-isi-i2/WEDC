@@ -168,10 +168,12 @@ def evaluate_from_database(output=None,
     #     if ld_label[i] == 4:
     #         print vector.strip()
 
+    # remove short post
     short_post_indexes = []
+    short_ext_word_edge = 8
     for i, vec in enumerate(post_vectors):
         post_id = i + 1
-        if max([float(_) for _ in vec.strip().split(' ')]) == 0:
+        if len(ld_data[i]) < short_ext_word_edge and max([float(_) for _ in vec.strip().split(' ')]) == 0:
             short_post_indexes.append(post_id)
         
     # print short_post_indexes

@@ -56,7 +56,7 @@ class TestLabelPropagationMethods(unittest.TestCase):
         lp.evaluate_from_database(kernel='knn', 
                         output=graph_knn_,
                         gamma=None,
-                        n_neighbors=20, 
+                        n_neighbors=10, 
                         alpha=1, 
                         max_iter=100, 
                         tol=0.000001)
