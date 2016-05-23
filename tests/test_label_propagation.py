@@ -42,10 +42,12 @@ class TestLabelPropagationMethods(unittest.TestCase):
                                 input_label=post2vec_label_,
                                 output=post2vec_predict_,
                                 kernel='knn',
-                                n_neighbors=20, 
+                                n_neighbors=10, 
                                 alpha=1,
                                 max_iter=100, 
                                 tol=0.000001)
+
+
 
     def test_load_unknown_post_index(self):
         print label.load_unknown_post_index(post2vec_)
@@ -53,13 +55,28 @@ class TestLabelPropagationMethods(unittest.TestCase):
     def test_evaluate(self):
         # lp.evaluate_from_file(input_data=post2vec_)
         
-        lp.evaluate_from_database(kernel='knn', 
-                        output=graph_knn_,
-                        gamma=None,
-                        n_neighbors=10, 
-                        alpha=1, 
-                        max_iter=100, 
-                        tol=0.000001)
+        accuracy = lp.evaluate_from_database(kernel='knn', 
+                                output=graph_knn_,
+                                gamma=None,
+                                n_neighbors=10, 
+                                alpha=1, 
+                                max_iter=100, 
+                                tol=0.000001)
+        
+        # for i in range(100):
+        #     try:
+        #         accuracy = lp.evaluate_from_database(kernel='knn', 
+        #                         output=graph_knn_,
+        #                         gamma=None,
+        #                         n_neighbors=10, 
+        #                         alpha=1, 
+        #                         max_iter=100, 
+        #                         tol=0.000001)
+        #         if accuracy > 0.9:
+        #             break
+        #     except Exception as e:
+        #         print "IGNORE \n"
+
         
         # lp.run_lp(graph_knn_, graph_lp_, lp_jar_)
 
@@ -72,7 +89,7 @@ class TestGraphMethods(unittest.TestCase):
         pass
 
     def test_build_knn_graph(self):
-        print knn.build_graph(input=post2vec_, output=graph_knn_, n_neighbors=20, algorithm='ball_tree')
+        print knn.build_graph(input=post2vec_, output=graph_knn_, n_neighbors=10, algorithm='ball_tree')
 
     def tearDown(self):
         pass

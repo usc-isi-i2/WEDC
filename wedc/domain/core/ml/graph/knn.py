@@ -5,7 +5,7 @@ import numpy as np
 import random
 
 
-def do_knn(X, output, post_labels=None, n_neighbors=20, algorithm='ball_tree'):
+def do_knn(X, output, post_labels=None, n_neighbors=10, algorithm='ball_tree'):
     n_neighbors += 1
     size = len(X)
     # X = np.array(np.mat(';'.join(post_vectors)))
@@ -60,7 +60,7 @@ def do_knn(X, output, post_labels=None, n_neighbors=20, algorithm='ball_tree'):
 
         post_neighbors = []
         for idx in range(n_neighbors):
-            if post_id == post_indices[idx]:
+            if post_id == post_indices[idx] + 1:
                 continue
             post_neighbors.append([post_indices[idx]+1, 1-post_k_distances[idx]])
         graph_item.append(post_neighbors)
@@ -77,7 +77,7 @@ def do_knn(X, output, post_labels=None, n_neighbors=20, algorithm='ball_tree'):
     return post_dict[:top_k], top_k, training_index, training_labels, testing_index, testing_labels
 
 
-def build_graph(input, output, n_neighbors=20, algorithm='ball_tree'):
+def build_graph(input, output, n_neighbors=10, algorithm='ball_tree'):
     with open(input, 'rb') as f:
         lines = f.readlines()
         return do_knn(lines, output)

@@ -10,17 +10,6 @@ from wedc.infrastructure import database
 from wedc.infrastructure.model.labelled_data import LabelledData
 from wedc.infrastructure.model.seed_dict import SeedDict
 
-# label_prop_model = LabelPropagation()
-iris = datasets.load_iris()
-# random_unlabeled_points = np.where(np.random.random_integers(0, 1,
-# size=len(iris.target)))
-# labels = np.copy(iris.target)
-# labels[random_unlabeled_points] = -1
-# label_prop_model.fit(iris.data, labels)
-
-# print iris.data
-# print iris.target
-
 def do_label_propagation(input_data,
                         input_label,
                         output=None,
@@ -87,7 +76,7 @@ def evaluate_from_file(input_data,
             gamma=None,
             n_neighbors=10, 
             alpha=1, 
-            max_iter=1000, 
+            max_iter=100, 
             tol=0.00001):
     
     label_dict = label.load_label_dict()
@@ -106,7 +95,9 @@ def evaluate_from_file(input_data,
     X = np.array(np.mat(';'.join(data_lines)))
     input_data_fh.close()
 
-    sklearn_lp(X, y, output=output, kernel=kernel, gamma=gamma, n_neighbors=n_neighbors, alpha=alpha, max_iter=max_iter, tol=tol)
+    # sklearn_lp(X, y, output=output, kernel=kernel, gamma=gamma, n_neighbors=n_neighbors, alpha=alpha, max_iter=max_iter, tol=tol)
+
+    java_lp(new_X, new_y, output=output, kernel=kernel, gamma=gamma, n_neighbors=n_neighbors, alpha=alpha, max_iter=max_iter, tol=tol)
 
 
 
@@ -149,7 +140,7 @@ def evaluate_from_database(output=None,
                         gamma=None,
                         n_neighbors=10, 
                         alpha=1, 
-                        max_iter=1000, 
+                        max_iter=100, 
                         tol=0.00001):
 
     labelled_dataset = LabelledData.load_data()
@@ -173,10 +164,11 @@ def evaluate_from_database(output=None,
     short_ext_word_edge = 8
     for i, vec in enumerate(post_vectors):
         post_id = i + 1
-        if len(ld_data[i]) < short_ext_word_edge and max([float(_) for _ in vec.strip().split(' ')]) == 0:
+        # print post_id, len(ld_data[i]), ld_data[i]
+        if len(ld_data[i].split(' ')) < short_ext_word_edge or max([float(_) for _ in vec.strip().split(' ')]) == 0:
             short_post_indexes.append(post_id)
         
-    # print short_post_indexes
+    print short_post_indexes
     
     X = np.array(np.mat(';'.join(post_vectors)))
     y = ld_label
@@ -198,12 +190,17 @@ def evaluate_from_database(output=None,
 
     # sklearn_lp(new_X, new_y, output=output, kernel=kernel, gamma=gamma, n_neighbors=n_neighbors, alpha=alpha, max_iter=max_iter, tol=tol)
 
+    print len(new_X), len(new_y)
+    print len(X), len(y)
 
-    java_lp(new_X, new_y, output=output, kernel=kernel, gamma=gamma, n_neighbors=n_neighbors, alpha=alpha, max_iter=max_iter, tol=tol)
+
+
+    # return java_lp(new_X, new_y, mapping=mapping, output=output, kernel=kernel, gamma=gamma, n_neighbors=n_neighbors, alpha=alpha, max_iter=max_iter, tol=tol)
 
 
 
 def java_lp(X, y,
+            mapping=None,
             output=None,
             kernel='knn', 
             gamma=None,
@@ -218,7 +215,7 @@ def java_lp(X, y,
 
     post_dict, top_k, training_index, training_labels, testing_index, testing_labels = knn.do_knn(X, output=gk_path, post_labels=y, n_neighbors=n_neighbors)
 
-    
+    # print top_k, post_dict
 
     run_lp(gk_path, gl_path, lp_path)
 
@@ -260,6 +257,10 @@ def java_lp(X, y,
     # print 'y_test', len(y_test), y_test
     from sklearn.metrics import classification_report
     from sklearn.metrics import accuracy_score
+    accuracy = accuracy_score(y_test, y_predict)
+    if accuracy > 0.9:
+        print accuracy, '\n'
+        return accuracy
     print '+--------------------------------------------------------+'
     print '|                         Report                         |'
     print '+--------------------------------------------------------+'
@@ -270,13 +271,16 @@ def java_lp(X, y,
     # print testing_index
     # print 'test round:', (i+1), ' with random seed: ', random_seeds[i]
     # print 'training label: ', training_labels
+    
     print 'predict label: ', y_predict
     print 'y_test: ', y_test
+    print 'post_id:', valid_predict_indexes
+
     print classification_report(y_test, y_predict)
     print 'accuracy: ' + str(accuracy_score(y_test, y_predict))
     print '\n\n'
     # """
-
+    return accuracy
 
 
 
