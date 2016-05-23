@@ -82,7 +82,9 @@ class TestLabelPropagationMethods(unittest.TestCase):
         labelprop.run_by_jar(graph_knn_, graph_lp_)
 
     def test_run(self):
-        print labelprop.run(graph_knn_, output=graph_lp_)
+        output = labelprop.run(graph_knn_, output=graph_lp_)
+        print len(output)
+        print output
 
     def tearDown(self):
         pass

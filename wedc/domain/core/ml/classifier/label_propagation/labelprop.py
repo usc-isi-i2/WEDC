@@ -40,12 +40,15 @@ def run_by_jar(input, output=None, iter=100, eps='1e-05'):
         if not line:    # actually in the end of file
             continue
 
+        # line definition
         # line[0]: post id
         # line[1]: predict label
         # line[2:]: categories with weight
         line = ast.literal_eval(line)
-        ans.append(line)
 
+        # filter invalid prediction
+        if sum([float(_[1]) for _ in line[2:]]):
+            ans.append(line)
     return ans
    
 
