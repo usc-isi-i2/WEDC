@@ -1,5 +1,7 @@
 import numpy as np
 import os
+import shutil
+
 
 from sklearn import datasets
 from sklearn.semi_supervised import LabelPropagation
@@ -13,18 +15,23 @@ from wedc.infrastructure.model.seed_dict import SeedDict
 
 from wedc.domain.conf.storage import __res_dir__
 
+#######################################################
+#   Run Label Propagation
+#######################################################
 
-def run(input, output=None):
+def run_lp(input, output=None):
     return run_by_jar(input, output=output)
 
-def run_by_jar(input, output=None, iter=100, eps='1e-05'):
+def run_by_jar(input, output=None, iter=100, eps=0.00001):
     import ast
     import subprocess
     from subprocess import check_output
+    from decimal import Decimal
 
     lp_runnable_jar_ = os.path.expanduser(os.path.join(__res_dir__, 'labelprop.jar'))
 
     # run label propagation
+    eps = '%.e' % Decimal(eps)  # change decimal into e format
     argsArray = ['java', '-classpath', lp_runnable_jar_, 'org.ooxo.LProp', '-a', 'GFHF', '-m', str(iter), '-e', eps, input]
     raw_output = check_output(argsArray)
 
@@ -46,150 +53,59 @@ def run_by_jar(input, output=None, iter=100, eps='1e-05'):
         # line[2:]: categories with weight
         line = ast.literal_eval(line)
 
-        # filter invalid prediction
+        # filter invalid predictionobject
         if sum([float(_[1]) for _ in line[2:]]):
             ans.append(line)
+
     return ans
-   
 
+
+#######################################################
+#   Evaluation
+#######################################################
+
+def do_evaluation(output_path, n_neighbors=10, max_iter=100, tol=0.00001):
     """
-    valid_predict_indexes = []
-    with open(gl_path, 'rb') as gl_file:
-        lines = gl_file.readlines()
-        for line in lines:
-            line = line.strip()
-            if not line:
-                continue
-            line = line[1:-1]
-            line = line.split(',')
-            post_id = int(line[0])
+    # load data and label
+    dataset = load_dataset()
 
-            check_point = float(line[3][:-1]) + float(line[5][:-1]) + float(line[7][:-1])
-            # if check_point > 0:
-            #     valid_predict_indexes.append(post_id-1)
-
-            if post_id not in training_index and check_point > 0: 
-                valid_predict_indexes.append(post_id)
-                y_predict.append(int(line[1]))
-
-                if post_id in testing_index:
-                    tmp = testing_index.index(post_id)
-                    y_test.append(testing_labels[tmp])
-    """
-
-
-
-
-
-def evaluate_from_database(output=None,
-                        kernel='knn', 
-                        gamma=None,
-                        n_neighbors=10, 
-                        alpha=1, 
-                        max_iter=100, 
-                        tol=0.00001):
-
-    labelled_dataset = LabelledData.load_data()
-    size = len(labelled_dataset)
-    ld_data = []
-    ld_label = []
-    for labelled_data in labelled_dataset:
-        ld_data.append(labelled_data.extraction)
-        ld_label.append(labelled_data.label)
-
+    # load seeds and generate post vector
+    # short posts will be removed when load post vectors
     seeds = SeedDict.load_data()
-    post_vectors = seed_vector.generate_post_vector(ld_data, seeds)
+    dataset = load_post_vectors(dataset, seeds)
 
-    # post_vector_seeds = seed_vector.generate_post_vector_seed(ld_data, seeds=seeds)
-    # for i, vector in enumerate(post_vector_seeds):
-    #     if ld_label[i] == 4:
-    #         print vector.strip()
-
-    # remove short post
-    short_post_indexes = []
-    short_ext_word_edge = 8
-    for i, vec in enumerate(post_vectors):
-        post_id = i + 1
-
-        if len(ld_data[i].split(' ')) < short_ext_word_edge or max([float(_) for _ in vec.strip().split(' ')]) == 0:
-            short_post_indexes.append(post_id)
-        
-    # print short_post_indexes
+    # do knn here
+    # X, y (y contain 0 randomly for test)
+    """
     
-    X = np.array(np.mat(';'.join(post_vectors)))
-    y = ld_label
-
-    mapping = {}
-    new_X = []
-    new_y = []
-    new_post_id = 1
-    for i in range(size):
-        post_id = i + 1
-        if post_id not in short_post_indexes:
-            new_X.append(X[i])
-            new_y.append(y[i])
-            mapping[new_post_id] = post_id
-            new_post_id += 1
-
-            
-    # do_evaluation(new_X, new_y, output=output, kernel=kernel, gamma=gamma, n_neighbors=n_neighbors, alpha=alpha, max_iter=max_iter, tol=tol)
-
-    # sklearn_lp(new_X, new_y, output=output, kernel=kernel, gamma=gamma, n_neighbors=n_neighbors, alpha=alpha, max_iter=max_iter, tol=tol)
-
-    # print len(new_X), len(new_y)
-    # print len(X), len(y)
-    print mapping
-
-
-
-    return java_lp(new_X, new_y, mapping=mapping, output=output, kernel=kernel, gamma=gamma, n_neighbors=n_neighbors, alpha=alpha, max_iter=max_iter, tol=tol)
-
-def java_lp(X, y,
-            mapping=None,
-            output=None,
-            kernel='knn', 
-            gamma=None,
-            n_neighbors=10, 
-            alpha=1, 
-            max_iter=1000, 
-            tol=0.00001):
+    # load file path
+    if os.path.isdir(output_path):
+        shutil.rmtree(output_path)
+    os.mkdir(output_path)
+    graph_path_ = os.path.join(output_path, 'graph_knn.txt')
+    labelprop_path_ = os.path.join(output_path, 'graph_lp.txt')
+    report_path_ = os.path.join(output_path, 'report_path_.txt')
     
-    gk_path = '/Users/ZwEin/job_works/StudentWork_USC-ISI/projects/WEDC/tests/data/graph_knn.txt'
-    gl_path = '/Users/ZwEin/job_works/StudentWork_USC-ISI/projects/WEDC/tests/data/graph_lp.txt'
-    lp_path = '/Users/ZwEin/job_works/StudentWork_USC-ISI/projects/WEDC/tests/data/labelprop.jar'
 
-    post_dict, top_k, training_index, training_labels, testing_index, testing_labels = knn.do_knn(X, output=gk_path, post_labels=y, n_neighbors=n_neighbors)
 
-    # print top_k, post_dict
 
-    run_lp(gk_path, gl_path, lp_path)
+
+    # X = np.array(np.mat(';'.join(post_vectors)))
+    # y = ld_label
+
+
+    # output = run_lp(graph_knn_, output=graph_lp_)
+
+    # post_dict, top_k, training_index, training_labels, testing_index, testing_labels = knn.do_knn(X, output=gk_path, post_labels=y, n_neighbors=n_neighbors)
+
+    # # print top_k, post_dict
+
+    # run_lp(gk_path, gl_path, lp_path)
+
 
     # y_test = testing_labels
     y_test = []
     y_predict = []
-
-    valid_predict_indexes = []
-    with open(gl_path, 'rb') as gl_file:
-        lines = gl_file.readlines()
-        for line in lines:
-            line = line.strip()
-            if not line:
-                continue
-            line = line[1:-1]
-            line = line.split(',')
-            post_id = int(line[0])
-
-            check_point = float(line[3][:-1]) + float(line[5][:-1]) + float(line[7][:-1])
-            # if check_point > 0:
-            #     valid_predict_indexes.append(post_id-1)
-
-            if post_id not in training_index and check_point > 0: 
-                valid_predict_indexes.append(post_id)
-                y_predict.append(int(line[1]))
-
-                if post_id in testing_index:
-                    tmp = testing_index.index(post_id)
-                    y_test.append(testing_labels[tmp])
 
     # valid_predict_indexes = [mapping[_] for _ in valid_predict_indexes]
 
@@ -228,4 +144,63 @@ def java_lp(X, y,
     print '\n\n'
     # """
     return accuracy
+
+
+
+
+#######################################################
+#   Common
+#######################################################
+
+
+
+
+def load_dataset():
+    
+    # load dataset from database
+    labelled_dataset = LabelledData.load_data()
+
+    dataset = []
+    for idx, ld in enumerate(labelled_dataset):
+
+        # data[0]: post id
+        # data[1]: data label
+        # data[2]: data extraction
+        data = [idx+1, int(ld.label), str(ld.extraction)]
+
+        dataset.append(data)
+
+    return dataset
+
+def load_post_vectors(dataset, seeds):
+
+    # load extractions and generate post vectors
+    post_vectors = seed_vector.generate_post_vector([_[2] for _ in dataset], seeds)
+
+    # add post_id for post vectors
+    # data[0]: post id
+    # data[1]: post label
+    # data[2]: post extration
+    # data[3]: post vector
+    [dataset[i].extend([_]) for i, _ in enumerate(post_vectors)]
+
+    # refine dataset
+    # 1. less than 8 extraction words will be removed
+    # 2. extraction without any seed words will be removed
+    refined_dataset = []
+    ext_len_threshold = 8
+    for data in dataset:
+        # pid = data[0]
+        # label = data[1]
+        # extraction = data[2]
+        # vector = data[3]
+        extractions_count = len(data[2].split(' '))
+        vector_list = [float(_) for _ in data[3].strip().split(' ')]
+        if extractions_count < ext_len_threshold or max(vector_list) == 0:
+            continue
+        else:
+            refined_dataset.append(data)
+    
+    return refined_dataset
+
 

@@ -21,6 +21,8 @@ post2vec_predict_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'post2vec_pre
 graph_knn_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'graph_knn.txt'))
 graph_lp_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'graph_lp.txt'))
 lp_jar_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'labelprop.jar'))
+lp_evaluation_dir_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'evaluation'))
+
 
 from wedc.domain.core.ml.graph import knn
 from wedc.domain.core.ml.helper import label
@@ -82,9 +84,13 @@ class TestLabelPropagationMethods(unittest.TestCase):
         labelprop.run_by_jar(graph_knn_, graph_lp_)
 
     def test_run(self):
-        output = labelprop.run(graph_knn_, output=graph_lp_)
+        output = labelprop.run_lp(graph_knn_, output=graph_lp_)
         print len(output)
         print output
+
+    def test_do_evaluation(self):
+        output = labelprop.do_evaluation(lp_evaluation_dir_, n_neighbors=10, max_iter=100, tol=0.00001)
+        
 
     def tearDown(self):
         pass
@@ -111,7 +117,8 @@ if __name__ == '__main__':
         # suite.addTest(TestLabelPropagationMethods("test_do_label_propagation"))
         # suite.addTest(TestLabelPropagationMethods("test_load_unknown_post_index"))
         # suite.addTest(TestLabelPropagationMethods("test_evaluate"))
-        suite.addTest(TestLabelPropagationMethods("test_run"))
+        # suite.addTest(TestLabelPropagationMethods("test_run"))
+        suite.addTest(TestLabelPropagationMethods("test_do_evaluation"))
 
         ### Test Graph ###
         # suite.addTest(TestGraphMethods("test_build_knn_graph"))
