@@ -24,8 +24,8 @@ def load_seed_words(category=None):
     files_dict = get_seed_files()
     if category:
         paths = files_dict[category]
-    else:
-        paths = files_dict.values()
+    else:        
+        paths = [path for _ in files_dict.values() for path in _]
 
     seeds = []
     for path in paths:
