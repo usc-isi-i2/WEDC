@@ -82,6 +82,9 @@ def do_evaluation(output_path, num_of_tests=1, test_rate=.9, n_neighbors=10, max
     
     pid_set = [_[0] for _ in dataset]
     random_seeds = np.random.randint(1, 10000000, size=num_of_tests)
+
+    count = 0
+
     for i, random_seed in enumerate(random_seeds):
         # prepare report env
         round_path_ = os.path.join(output_path, 'round_' + str(i+1) + '_random_seed_' + str(random_seed))
@@ -119,24 +122,32 @@ def do_evaluation(output_path, num_of_tests=1, test_rate=.9, n_neighbors=10, max
         testing_label = [_[1] for _ in dataset if _[0] in testing_pid_set]
 
         # prepare X, y for graph
-        X = np.array(np.mat(';'.join([_[3] for _ in dataset])))
-        y = np.copy([_[1] for _ in dataset])
-        y[[pid_set.index(_) for _ in testing_pid_set]] = 0
+        X = np.array(np.mat(';'.join([_[3] for _ in dataset]))) # in order, asc
+        y = np.copy([_[1] for _ in dataset])    # in order, asc
+        y[[pid_set.index(_) for _ in testing_pid_set]] = 0  # in order, asc
 
         # item[0]: post id
         # item[1]: vector in numpy
         # item[2]: label in numpy, filling with 0 for testing data
-        graph_input = [[pid_set[i], X[i], y[i]] for i in range(len(pid_set))]
+        graph_input = [[pid_set[_], X[_], y[_]] for _ in range(len(pid_set))]
 
         # build knn graph
         graph = knn.build(graph_input, output=graph_path_, n_neighbors=n_neighbors)
         rtn_lp = run_lp(graph_path_, output=labelprop_path_)
         
-        valid_pid_set = [_[0] for _ in rtn_lp if _[0] in testing_pid_set]
-        y_predict = [_[1] for _ in rtn_lp if _[0] in valid_pid_set]
-        y_test = [_[1] for _ in dataset if _[0] in valid_pid_set]
+        valid_pid_set = [_[0] for _ in rtn_lp if _[0] in testing_pid_set]   # in order, asc
 
-        generate_report(report_path_, i+1, random_seed, [[training_pid_set, training_data, training_label], [testing_pid_set, testing_data, testing_label], [len(y), len(valid_pid_set)]], [y_test, y_predict])
+        y_predict = [_[1] for _ in rtn_lp if _[0] in valid_pid_set] # in order, asc
+        y_test = [_[1] for _ in dataset if _[0] in valid_pid_set]   # in order, asc
+
+        # from sklearn.metrics import accuracy_score
+        # accuracy = accuracy_score(y_test, y_predict)
+        # if accuracy < 0.9:
+        #     count += 1
+
+        generate_report(report_path_, i+1, random_seed, [[training_pid_set, training_data, training_label], [testing_pid_set, testing_data, testing_label], [len(y), len(valid_pid_set)]], [y_test, y_predict, valid_pid_set])
+    
+    # print 1.*count/num_of_tests
 
 def generate_report(report_path_, round_id, random_seed, info_data, label_data):
     from sklearn.metrics import classification_report
@@ -155,10 +166,17 @@ def generate_report(report_path_, round_id, random_seed, info_data, label_data):
     size_valid_lp_pred = info_data[2][0]
 
     # label data
+    # label_data = sorted(label_data, key=lambda x: x[2])
     y_test = label_data[0]
     y_predict = label_data[1]
+    valid_pid_set = label_data[2]
     report = classification_report(y_test, y_predict)
     accuracy = accuracy_score(y_test, y_predict)
+
+    # test only
+    if accuracy < 0.8:
+        print 'round_id:', round_id, ', accuracy: ', accuracy 
+        print valid_pid_set
 
     with open(report_path_, 'wb') as rf:
         rf.write('+--------------------------------------------------------+\n')
@@ -171,19 +189,15 @@ def generate_report(report_path_, round_id, random_seed, info_data, label_data):
         rf.write('\n'+ report +'\n')
         rf.write('accuracy: ' + str(accuracy) + '\n')
 
-        
         rf.write('y_test:\n')
         rf.write(str(y_test) + '\n')
         rf.write('y_predict:\n')
         rf.write(str(y_predict) + '\n')
+
+        rf.write('y_test | y_pred | pid \n')
         
-        rf.write('y_test | y_pred \n')
         for i in range(len(y_test)):
-            rf.write(str(y_test[i]) + ' | ' + str(y_predict[i]) + '\n')
-
-        rf.write('\n\n\n\n')
-
-
+            rf.write(str(y_test[i]) + ' | ' + str(y_predict[i]) + ' | ' + str(valid_pid_set[i]) + '\n')
 
         rf.write('\n\n\n\n')
         
@@ -191,7 +205,7 @@ def generate_report(report_path_, round_id, random_seed, info_data, label_data):
         rf.write('size: '+str(len(training_pid_set))+'\n')
         rf.write('post id set:\n'+str(training_pid_set)+'\n')
         rf.write('training labels:\n'+str(training_label)+'\n')
-        rf.write('pid | label \n')
+        rf.write('label | pid \n')
         for i in range(len(training_pid_set)):
             rf.write(str(training_label[i]) + ' | ' + str(training_pid_set[i]) + '\n')
         
@@ -201,7 +215,7 @@ def generate_report(report_path_, round_id, random_seed, info_data, label_data):
         rf.write('size: '+str(len(testing_pid_set))+'\n')
         rf.write('post id set:\n'+str(testing_pid_set)+'\n')
         rf.write('testing labels:\n'+str(testing_label)+'\n')
-        rf.write('pid | label \n')
+        rf.write('label | pid \n')
         for i in range(len(testing_pid_set)):
             rf.write(str(testing_label[i]) + ' | ' + str(testing_pid_set[i]) + '\n')
         
@@ -212,49 +226,6 @@ def generate_report(report_path_, round_id, random_seed, info_data, label_data):
 #######################################################
 #   Common
 #######################################################
-
-def generate_report_tmp():
-    # y_test = testing_labels
-    y_test = []
-    y_predict = []
-
-    # valid_predict_indexes = [mapping[_] for _ in valid_predict_indexes]
-
-
-    # print len(valid_predict_indexes), valid_predict_indexes
-    # print len(y_predict), y_predict
-    # print len(y_test), y_test
-
-    # """
-    # print 'y_predict', len(y_predict), y_predict
-    # print 'y_test', len(y_test), y_test
-    from sklearn.metrics import classification_report
-    from sklearn.metrics import accuracy_score
-    accuracy = accuracy_score(y_test, y_predict)
-    if accuracy > 0.5:
-        print accuracy, '\n'
-        return accuracy
-    print '+--------------------------------------------------------+'
-    print '|                         Report                         |'
-    print '+--------------------------------------------------------+'
-    print 'training size:', len(training_index)
-    print 'training_labels:', training_labels #, len(training_labels)
-    print 'training_index:', training_index #, len(training_index)
-    # print len(training_index), ' + ', len(testing_index)
-    # print testing_index
-    # print 'test round:', (i+1), ' with random seed: ', random_seeds[i]
-    # print 'training label: ', training_labels
-    
-    print 'predict label: ', y_predict
-    print 'y_test: ', y_test
-    print 'graph post_id:', valid_predict_indexes
-    print 'original post_id:', [mapping[_] for _ in valid_predict_indexes]
-
-    print classification_report(y_test, y_predict)
-    print 'accuracy: ' + str(accuracy_score(y_test, y_predict))
-    print '\n\n'
-    # """
-    return accuracy
 
 def load_dataset():
     

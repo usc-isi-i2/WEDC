@@ -90,9 +90,9 @@ class TestLabelPropagationMethods(unittest.TestCase):
         print output
 
     def test_do_evaluation(self):
-        output = labelprop.do_evaluation(lp_evaluation_dir_, n_neighbors=10, max_iter=100, tol=0.00001)
+        # 0.27: 27 out of 100 posts with accuracy below .9%
+        output = labelprop.do_evaluation(lp_evaluation_dir_, num_of_tests=100, test_rate=.9, n_neighbors=10, max_iter=100, tol=0.00001)
         
-
     def tearDown(self):
         pass
 
