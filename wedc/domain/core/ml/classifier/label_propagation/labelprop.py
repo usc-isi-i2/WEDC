@@ -6,7 +6,8 @@ import shutil
 from sklearn import datasets
 from sklearn.semi_supervised import LabelPropagation
 from wedc.domain.core.ml.helper import label
-from wedc.domain.core.ml.graph import knn
+# from wedc.domain.core.ml.graph import knn
+from wedc.domain.core.ml.classifier.label_propagation import knn
 from wedc.domain.core.data.seed import seed_vector
 
 from wedc.infrastructure import database
@@ -64,45 +65,155 @@ def run_by_jar(input, output=None, iter=100, eps=0.00001):
 #   Evaluation
 #######################################################
 
-def do_evaluation(output_path, n_neighbors=10, max_iter=100, tol=0.00001):
-    """
+def do_evaluation(output_path, num_of_tests=1, test_rate=.9, n_neighbors=10, max_iter=100, tol=0.00001):
+    
     # load data and label
     dataset = load_dataset()
 
     # load seeds and generate post vector
     # short posts will be removed when load post vectors
     seeds = SeedDict.load_data()
-    dataset = load_post_vectors(dataset, seeds)
-
-    # do knn here
-    # X, y (y contain 0 randomly for test)
-    """
+    dataset = load_post_vectors(dataset, seeds) # short post removed
     
     # load file path
     if os.path.isdir(output_path):
         shutil.rmtree(output_path)
     os.mkdir(output_path)
-    graph_path_ = os.path.join(output_path, 'graph_knn.txt')
-    labelprop_path_ = os.path.join(output_path, 'graph_lp.txt')
-    report_path_ = os.path.join(output_path, 'report_path_.txt')
     
+    pid_set = [_[0] for _ in dataset]
+    random_seeds = np.random.randint(1, 10000000, size=num_of_tests)
+    for i, random_seed in enumerate(random_seeds):
+        # prepare report env
+        round_path_ = os.path.join(output_path, 'round_' + str(i+1) + '_random_seed_' + str(random_seed))
+        os.mkdir(round_path_)
+        graph_path_ = os.path.join(round_path_, 'graph_knn.txt')
+        labelprop_path_ = os.path.join(round_path_, 'graph_lp.txt')
+        report_path_ = os.path.join(round_path_, 'report.txt')
+
+        # shuffle post id set to load random data
+        shuffled_pid_set = list(pid_set)
+        np.random.seed(random_seed)
+        np.random.shuffle(shuffled_pid_set) 
+        
+        total_size = len(shuffled_pid_set)
+        total_testing_items = int(total_size*test_rate)
+        total_training_items = total_size - total_testing_items
+        # print total_training_items, '+', total_testing_items, '=', total_size
+
+        training_pid_set = shuffled_pid_set[total_testing_items:]
+        testing_pid_set = shuffled_pid_set[:total_testing_items]
+
+        # item[0]: post id
+        # item[1]: label
+        # item[2]: vector
+        # training_set = [[_[0], _[1], _[3]] for _ in dataset if _[0] in training_pid_set] 
+        # testing_set = [[_[0], _[1], _[3]] for _ in dataset if _[0] in testing_pid_set] 
+
+        # # for X_train, vector formated in a string
+        training_data = [_[3] for _ in dataset if _[0] in training_pid_set] 
+        # # for y_train, label in int
+        training_label = [_[1] for _ in dataset if _[0] in training_pid_set] 
+        # # for X_test, vector formated in a string
+        testing_data = [_[3] for _ in dataset if _[0] in testing_pid_set]
+        # # for y_test, label in int
+        testing_label = [_[1] for _ in dataset if _[0] in testing_pid_set]
+
+        # prepare X, y for graph
+        X = np.array(np.mat(';'.join([_[3] for _ in dataset])))
+        y = np.copy([_[1] for _ in dataset])
+        y[[pid_set.index(_) for _ in testing_pid_set]] = 0
+
+        # item[0]: post id
+        # item[1]: vector in numpy
+        # item[2]: label in numpy, filling with 0 for testing data
+        graph_input = [[pid_set[i], X[i], y[i]] for i in range(len(pid_set))]
+
+        # build knn graph
+        graph = knn.build(graph_input, output=graph_path_, n_neighbors=n_neighbors)
+        rtn_lp = run_lp(graph_path_, output=labelprop_path_)
+        
+        valid_pid_set = [_[0] for _ in rtn_lp if _[0] in testing_pid_set]
+        y_predict = [_[1] for _ in rtn_lp if _[0] in valid_pid_set]
+        y_test = [_[1] for _ in dataset if _[0] in valid_pid_set]
+
+        generate_report(report_path_, i+1, random_seed, [[training_pid_set, training_data, training_label], [testing_pid_set, testing_data, testing_label], [len(y), len(valid_pid_set)]], [y_test, y_predict])
+
+def generate_report(report_path_, round_id, random_seed, info_data, label_data):
+    from sklearn.metrics import classification_report
+    from sklearn.metrics import accuracy_score
+
+    # info data
+    training_pid_set = info_data[0][0]
+    training_data = info_data[0][1]
+    training_label = info_data[0][2]
+
+    testing_pid_set = info_data[1][0]
+    testing_data = info_data[1][1]
+    testing_label = info_data[1][2]
+
+    size_witout_short_posts = info_data[2][0]
+    size_valid_lp_pred = info_data[2][0]
+
+    # label data
+    y_test = label_data[0]
+    y_predict = label_data[1]
+    report = classification_report(y_test, y_predict)
+    accuracy = accuracy_score(y_test, y_predict)
+
+    with open(report_path_, 'wb') as rf:
+        rf.write('+--------------------------------------------------------+\n')
+        rf.write('|                         Report                         |\n')
+        rf.write('+--------------------------------------------------------+\n\n')
+
+        rf.write('total size of posts without short posts: ' + str(size_witout_short_posts) + '\n')
+        rf.write('valid prediction from label propagation: ' + str(size_valid_lp_pred) + '\n')
+        
+        rf.write('\n'+ report +'\n')
+        rf.write('accuracy: ' + str(accuracy) + '\n')
+
+        
+        rf.write('y_test:\n')
+        rf.write(str(y_test) + '\n')
+        rf.write('y_predict:\n')
+        rf.write(str(y_predict) + '\n')
+        
+        rf.write('y_test | y_pred \n')
+        for i in range(len(y_test)):
+            rf.write(str(y_test[i]) + ' | ' + str(y_predict[i]) + '\n')
+
+        rf.write('\n\n\n\n')
 
 
 
+        rf.write('\n\n\n\n')
+        
+        rf.write('---- Training ----\n')
+        rf.write('size: '+str(len(training_pid_set))+'\n')
+        rf.write('post id set:\n'+str(training_pid_set)+'\n')
+        rf.write('training labels:\n'+str(training_label)+'\n')
+        rf.write('pid | label \n')
+        for i in range(len(training_pid_set)):
+            rf.write(str(training_label[i]) + ' | ' + str(training_pid_set[i]) + '\n')
+        
+        rf.write('\n\n\n\n')
+        
+        rf.write('---- Testing ----\n')
+        rf.write('size: '+str(len(testing_pid_set))+'\n')
+        rf.write('post id set:\n'+str(testing_pid_set)+'\n')
+        rf.write('testing labels:\n'+str(testing_label)+'\n')
+        rf.write('pid | label \n')
+        for i in range(len(testing_pid_set)):
+            rf.write(str(testing_label[i]) + ' | ' + str(testing_pid_set[i]) + '\n')
+        
 
-    # X = np.array(np.mat(';'.join(post_vectors)))
-    # y = ld_label
+        
 
 
-    # output = run_lp(graph_knn_, output=graph_lp_)
+#######################################################
+#   Common
+#######################################################
 
-    # post_dict, top_k, training_index, training_labels, testing_index, testing_labels = knn.do_knn(X, output=gk_path, post_labels=y, n_neighbors=n_neighbors)
-
-    # # print top_k, post_dict
-
-    # run_lp(gk_path, gl_path, lp_path)
-
-
+def generate_report_tmp():
     # y_test = testing_labels
     y_test = []
     y_predict = []
@@ -144,16 +255,6 @@ def do_evaluation(output_path, n_neighbors=10, max_iter=100, tol=0.00001):
     print '\n\n'
     # """
     return accuracy
-
-
-
-
-#######################################################
-#   Common
-#######################################################
-
-
-
 
 def load_dataset():
     
