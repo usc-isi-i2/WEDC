@@ -1,7 +1,54 @@
-    from sklearn.neighbors import NearestNeighbors
+from sklearn.neighbors import NearestNeighbors
 from sklearn import preprocessing
 import numpy as np
 import random
+
+
+
+def build(graph_input, output=None, n_neighbors=10, algorithm='ball_tree', top_k_rate=0.005):
+    n_neighbors += 1
+
+    # load data
+    pid_set = [_[0] for _ in graph_input]
+    X = [_[1] for _ in graph_input]
+    y = [_[2] for _ in graph_input]
+    size = len(graph_input)
+
+    nbrs = NearestNeighbors(n_neighbors=n_neighbors, algorithm=algorithm).fit(X)
+    # Because the query set matches the training set, the nearest neighbor of each point is the point itself, at a distance of zero.
+    distances, indices = nbrs.kneighbors(X)
+    distances = preprocessing.normalize(distances, norm='l2')
+
+    graph = []
+    post_weight_sum_dict = {}
+    for i in range(size):
+        post_id = pid_set[i]
+        graph_item = [post_id, y[i]]
+        post_indices = indices[i]
+        post_k_distances = distances[i]
+        post_weight_sum_dict[str(post_id)] = sum(post_k_distances) # for sort post by weight only
+
+        post_neighbors = []
+        for idx in range(1, n_neighbors):   # 0 is itself
+            post_neighbors.append([pid_set[post_indices[idx]], 1-post_k_distances[idx]])
+        graph_item.append(post_neighbors)
+        graph.append(graph_item) # graph.append(str(graph_item)), if reutrn graph is not required
+
+    if output:
+        output_fh = open(output, 'wb')
+        for item in [str(_) for _ in graph]:
+            output_fh.write(item+'\n')
+        output_fh.close()
+
+    # sort post by weight
+    if top_k_rate:
+        top_k_size = int(top_k_rate * size)
+        post_weight_sum_dict = sorted(post_weight_sum_dict.iteritems(), key=lambda x: x[1], reverse=True)
+        post_weight_sum_dict = [int(_[0]) for _ in post_weight_sum_dict]
+        return post_weight_sum_dict[:top_k_size]
+
+    return graph
+
 
 
 def do_knn(X, output, post_labels=None, n_neighbors=10, algorithm='ball_tree'):
