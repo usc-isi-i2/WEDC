@@ -83,8 +83,8 @@ def do_evaluation(output_path, num_of_tests=1, test_rate=.9, n_neighbors=10, max
     pid_set = [_[0] for _ in dataset]
     random_seeds = np.random.randint(1, 10000000, size=num_of_tests)
 
-    count = 0
-
+    # count = 0
+    ans = []
     for i, random_seed in enumerate(random_seeds):
         # prepare report env
         round_path_ = os.path.join(output_path, 'round_' + str(i+1) + '_random_seed_' + str(random_seed))
@@ -145,8 +145,14 @@ def do_evaluation(output_path, num_of_tests=1, test_rate=.9, n_neighbors=10, max
         # if accuracy < 0.9:
         #     count += 1
 
-        generate_report(report_path_, i+1, random_seed, [[training_pid_set, training_data, training_label], [testing_pid_set, testing_data, testing_label], [len(y), len(valid_pid_set)]], [y_test, y_predict, valid_pid_set])
-    
+        info_data = [[training_pid_set, training_data, training_label], [testing_pid_set, testing_data, testing_label], [len(y), len(valid_pid_set)]]
+        label_data = [y_test, y_predict, valid_pid_set]
+
+        accuracy = generate_report(report_path_, i+1, random_seed, info_data, label_data)
+
+        ans.append([i+1, accuracy, info_data, label_data])
+
+    return ans
     # print 1.*count/num_of_tests
 
 def generate_report(report_path_, round_id, random_seed, info_data, label_data):
@@ -174,9 +180,12 @@ def generate_report(report_path_, round_id, random_seed, info_data, label_data):
     accuracy = accuracy_score(y_test, y_predict)
 
     # test only
+    """
     if accuracy < 0.8:
         print 'round_id:', round_id, ', accuracy: ', accuracy 
         print valid_pid_set
+    print accuracy
+    """
 
     with open(report_path_, 'wb') as rf:
         rf.write('+--------------------------------------------------------+\n')
@@ -218,6 +227,7 @@ def generate_report(report_path_, round_id, random_seed, info_data, label_data):
         rf.write('label | pid \n')
         for i in range(len(testing_pid_set)):
             rf.write(str(testing_label[i]) + ' | ' + str(testing_pid_set[i]) + '\n')
+    return accuracy
         
 
         

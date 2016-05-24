@@ -38,6 +38,7 @@ class LabelledData(dbase):
     @staticmethod
     def insert_from_csv(csv_file_path):
         import csv
+        import re
         from wedc.domain.entities.post import Post
 
         with open(csv_file_path, 'rb') as csvfile:
@@ -48,6 +49,7 @@ class LabelledData(dbase):
                     post_id = idx + 1
                     label = row[0]
                     content = row[1].decode('ascii', 'ignore')
+                    content = re.sub(r'([\t\n\r]|\\+)', ' ', content)
                     post = Post("", "", content)
                     extraction = post.body
                     checksum = hash_helper.checksum(extraction)

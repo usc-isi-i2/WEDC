@@ -1,5 +1,6 @@
 
 import json
+import re
 from wedc.domain.entities.post import Post
 
 ES_POST_SOURCE = '_source'
@@ -19,9 +20,10 @@ def load(path):
     pn_file.close()
     hits = raw['hits']['hits']
     posts = []
-    
 
-    for hit in hits: # [:100]:
+    for i, hit in enumerate(hits[:10]):
+    
+    for hit in hits[:10]:
         try:
             source = hit[ES_POST_SOURCE]
             post_url, post_title, post_body = None, None, None
@@ -44,8 +46,17 @@ def load(path):
             post_title = source[ES_POST_TITLE][ES_POST_TEXT]
             post_body = source[ES_POST_BODY][ES_POST_TEXT]
 
+            # handle post body format
+            content = []
+            if isinstance(post_body, basestring):
+                content.append(post_body)
+            else:
+                content = post_body
+            content = ' '.join(content)
+            content = re.sub(r'([\t\n\r]|\\+)', ' ', content)
+
             try:
-                post = Post(post_url, post_title, post_body)
+                post = Post(post_url, post_title, content)
             except Exception as e:
                 print e
                 print post_body

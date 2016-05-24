@@ -12,9 +12,11 @@ import time
 import os
 import unittest
 import shutil
+import numpy as np
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 TEST_DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
+from wedc.domain.core.ml.classifier.label_propagation import plot
 
 post2vec_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'post2vec.txt'))
 post2vec_label_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'post2vec_label.txt'))
@@ -86,12 +88,34 @@ class TestLabelPropagationMethods(unittest.TestCase):
 
     def test_run(self):
         output = labelprop.run_lp(graph_knn_, output=graph_lp_)
-        print len(output)
-        print output
+        
 
     def test_do_evaluation(self):
         # 0.27: 27 out of 100 posts with accuracy below .9%
-        output = labelprop.do_evaluation(lp_evaluation_dir_, num_of_tests=100, test_rate=.9, n_neighbors=10, max_iter=100, tol=0.00001)
+        output = labelprop.do_evaluation(lp_evaluation_dir_, num_of_tests=100, test_rate=.7, n_neighbors=5, max_iter=200, tol=0.000001)
+
+        for rnd in output:
+            round_id = rnd[0]
+            accuracy = rnd[1]
+
+            # info data
+            info_data = rnd[2]
+            training_pid_set = info_data[0][0]
+            training_data = info_data[0][1]
+            training_label = info_data[0][2]
+
+            testing_pid_set = info_data[1][0]
+            testing_data = info_data[1][1]
+            testing_label = info_data[1][2]
+
+            size_witout_short_posts = info_data[2][0]
+            size_valid_lp_pred = info_data[2][0]
+
+            # label data
+            label_data = rnd[3]
+            y_test = label_data[0]
+            y_predict = label_data[1]
+            valid_pid_set = label_data[2]
         
     def tearDown(self):
         pass
@@ -103,6 +127,20 @@ class TestGraphMethods(unittest.TestCase):
 
     def test_build_knn_graph(self):
         print knn.build_graph(input=post2vec_, output=graph_knn_, n_neighbors=10, algorithm='ball_tree')
+
+    def tearDown(self):
+        pass
+
+class TestPlotMethods(unittest.TestCase):
+    def setUp(self):
+        pass
+
+    def test_accuracy_plot(self):
+        plot.plot_accuracy(lp_evaluation_dir_)
+        
+
+
+        
 
     def tearDown(self):
         pass
@@ -119,10 +157,14 @@ if __name__ == '__main__':
         # suite.addTest(TestLabelPropagationMethods("test_load_unknown_post_index"))
         # suite.addTest(TestLabelPropagationMethods("test_evaluate"))
         # suite.addTest(TestLabelPropagationMethods("test_run"))
-        suite.addTest(TestLabelPropagationMethods("test_do_evaluation"))
+        # suite.addTest(TestLabelPropagationMethods("test_do_evaluation"))
 
         ### Test Graph ###
         # suite.addTest(TestGraphMethods("test_build_knn_graph"))
+        
+        ### Test Plot ###
+        suite.addTest(TestPlotMethods("test_accuracy_plot"))
+
 
         runner = unittest.TextTestRunner()
         runner.run(suite)

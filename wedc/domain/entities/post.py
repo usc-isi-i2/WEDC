@@ -8,9 +8,15 @@ class Post(object):
         self.body = self.parse_body_word(body)
 
     def parse_body_word(self, body):
-        contents = []
-        if isinstance(body, basestring):
-            contents.append(body)
-        else:
-            contents = body
-        return parser.parse(' '.join(contents))
+        return parser.parse(body)
+
+
+
+""" for es join file
+contents = []
+if isinstance(body, basestring):
+    contents.append(body)
+else:
+    contents = body
+return parser.parse(' '.join(contents))
+"""
