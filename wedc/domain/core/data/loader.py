@@ -1,23 +1,70 @@
-
+import os
+from wedc.domain.entities.post import Post
 
 # from wedc.domain.core.data.loaders import es_loader
 from wedc.domain.core.data import cleaner
 
 mapping = None
 
-# data[0]: pid, used inside program
-# data[1]: sid, unique id for original data
-# data[2]: content, original content of data, \t\n\r should be removed
-# data[3]: extraction (tokens), split by space, extracted from original content
+
 
 
 def load(input):
-    contents = es_loader.load(input)
-    print contents
-    # for i, content in enumerate(contents):
-    #     pid = i + 1
-    #     print content[i]
-    # print content[0]
+    # data from intermediate data
+    # data[0]: source id
+    # data[1]: content, original content of data, \t\n\r should be removed
+    imd_dataset = load_intermediate_data(input)
+
+    dataset = []
+    for i, data in enumerate(imd_dataset):
+        # build data
+        # data[0]: pid, used inside program
+        # data[1]: sid, unique id for original data
+        # data[2]: label, 0 if unknown 
+        # data[3]: extraction (tokens), split by space, extracted from original content
+        
+        pid = i + 1
+        sid = data[0]
+        extraction = generate_extraction(data[1])
+        dataset.append([pid, sid, 0, extraction])
+    return dataset    
+
+
+def generate_extraction(content):
+    try:
+        post = Post('', '', content)
+    except Exception as e:
+        print e
+        return ''
+    else:
+        return post.body
+
+
+#######################################################
+#   Intermediate Data
+#######################################################
+
+def load_intermediate_data(path):
+    import csv
+    dataset = []
+    with open(path, 'rb') as csvfile:
+        reader = csv.reader(csvfile)
+        for row in reader:
+            dataset.append(row)
+    return dataset
+
+
+def generate_intermediate_data(dataset, output_path):
+    import csv
+    with open(output_path, 'wb') as csvfile:
+        spamwriter = csv.writer(csvfile)
+        for data in dataset:
+            spamwriter.writerow(data)
+
+
+#######################################################
+#   Load with pid
+#######################################################
 
 def load_data(input, output, no_dups=False):
     data = es_loader.load(input)
@@ -32,24 +79,6 @@ def load_data(input, output, no_dups=False):
     target_file.writelines(data)
     target_file.close()
     return data
-
-#######################################################
-#   Generate Intermediate Data
-#######################################################
-
-def generate_intermediate_data(dataset, output_path):
-    import csv
-    with open(output_path, 'wb') as csvfile:
-        spamwriter = csv.writer(csvfile)
-        for data in dataset:
-            spamwriter.writerow(data)
-            
-
-
-
-#######################################################
-#   Load with pid
-#######################################################
 
 def load_data_by_post_id(path, post_id, no_dups=False):
     target_id = post_id

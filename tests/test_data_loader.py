@@ -12,6 +12,7 @@ from wedc.domain.core.data.loaders import es_loader
 from wedc.domain.core.data import cleaner
 
 data_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'san-francisco-maria-2.json'))
+imd_data_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'imd_san-francisco-maria-2.json'))
 text_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'text'))
 text_nodups2dups_mapping_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'text_mapping'))
 raw_posts_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'raw_posts'))
@@ -25,7 +26,7 @@ class TestDataLoaderMethods(unittest.TestCase):
         self.no_dups = True     
 
     def test_load(self):
-        loader.load(data_)
+        loader.load(imd_data_)
         
     def test_data_loader(self):
         start_time = time.time()
@@ -75,6 +76,18 @@ class TestDataLoaderMethods(unittest.TestCase):
     def tearDown(self):
         pass
 
+
+class TestESLoaderMethods(unittest.TestCase):
+    def setUp(self):
+        pass
+
+    def test_es_data_loader(self):
+        es_loader.load(data_)
+
+    def tearDown(self):
+        pass   
+
+
 if __name__ == '__main__':
     # unittest.main()
     def run_main_test():
@@ -85,8 +98,17 @@ if __name__ == '__main__':
         # suite.addTest(TestDataLoaderMethods("test_load_post"))
         # suite.addTest(TestDataLoaderMethods("test_load_data_by_post_id_set"))
         # suite.addTest(TestDataLoaderMethods("test_get_posts_for_token"))
+        
+        # suite.addTest(TestESLoaderMethods("test_es_data_loader"))
+
+
+
+
         runner = unittest.TextTestRunner()
         runner.run(suite)
+
+
+
     run_main_test()
 
 

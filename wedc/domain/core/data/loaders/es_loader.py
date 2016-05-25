@@ -52,7 +52,7 @@ def load(path):
 
     drive, path_and_file = os.path.splitdrive(path)
     path_, file_ = os.path.split(path_and_file)
-    loader.generate_intermediate_data(dataset, 'imd_'+file_)
+    loader.generate_intermediate_data(dataset, os.path.join(path_, 'imd_'+file_))
     return dataset
 
 

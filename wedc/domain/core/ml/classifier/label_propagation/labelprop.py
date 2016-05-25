@@ -248,6 +248,7 @@ def load_dataset():
         # data[0]: post id
         # data[1]: data label
         # data[2]: data extraction
+        # data[3]: source id
         data = [idx+1, int(ld.label), str(ld.extraction)]
 
         dataset.append(data)

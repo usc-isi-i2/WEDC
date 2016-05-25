@@ -3,7 +3,7 @@ import numpy as np
 
 from wedc.domain.core.ml.classifier.label_propagation import labelprop
 
-DEFAULT_NUM_OF_TESTS = 20
+DEFAULT_NUM_OF_TESTS = 50
 DEFAULT_TEST_RATE = .9
 DEFAULT_N_NEIGHBORS = 5
 DEFAULT_MAX_ITER = 200
@@ -77,7 +77,7 @@ def plot_accuracy(lp_evaluation_dir_):
 
     def plot_accuracy_for_various_tol(): 
         target_name = 'tol values'
-        tol_set = [0.000001, 0.00001, 0.0001, 0.0001]
+        tol_set = [0.000001, 0.00001, 0.0001, 0.001]
         accuracy_lists = generate_accuracy_lists(lp_evaluation_dir_, tol_set=tol_set)
         generate_accuracy_plot(accuracy_lists, 'Accuracy for varous ' + target_name, [str(_)+' tol' for _ in tol_set])
 
@@ -146,7 +146,7 @@ def plot_confusion_matrix(lp_evaluation_dir_):
         plt.figure()
         generate_confusion_matrix_plot(cm_normalized, DEFAULT_TARGETS, title='Normalized confusion matrix (samples in each class)')
 
-        # Normalize the confusion matrix by row (i.e by the number of samples)
+        # Normalize the confusion matrix by row (i.e by the number of all samples)
         cm_normalized = cm.astype('float') / cm.sum(axis=0)
         print('Normalized confusion matrix by the number of samples')
         print(cm_normalized)
