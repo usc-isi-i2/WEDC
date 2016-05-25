@@ -8,8 +8,6 @@ TEST_DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
 
 
 from wedc.domain.core.data import loader
-from wedc.domain.core.data.loaders import es_loader
-from wedc.domain.core.data import cleaner
 
 data_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'san-francisco-maria-2.json'))
 imd_data_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'imd_san-francisco-maria-2.json'))
@@ -26,7 +24,8 @@ class TestDataLoaderMethods(unittest.TestCase):
         self.no_dups = True     
 
     def test_load(self):
-        loader.load(imd_data_)
+        # loader.load_input(imd_data_)
+        loader.generate_compressed_data()
         
     def test_data_loader(self):
         start_time = time.time()

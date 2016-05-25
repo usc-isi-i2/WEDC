@@ -35,6 +35,9 @@ def session_scope():
         session.close()
 
 def create_database():
+    from wedc.infrastructure.model.labelled_data import LabelledData
+    from wedc.infrastructure.model.need_to_label_data import NeedToLabelData
+    from wedc.infrastructure.model.seed_dict import SeedDict
     dbase.metadata.create_all(engine)
 
 def drop_database():
@@ -43,6 +46,5 @@ def drop_database():
 dbase = declarative_base()
 engine = load_engine()
 
-from wedc.infrastructure.model.labelled_data import LabelledData
-from wedc.infrastructure.model.need_to_label_data import NeedToLabelData
-from wedc.infrastructure.model.seed_dict import SeedDict
+
+

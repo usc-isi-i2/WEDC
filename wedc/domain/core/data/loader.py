@@ -9,7 +9,7 @@ mapping = None
 
 
 
-def load(input):
+def load_input(input):
     # data from intermediate data
     # data[0]: source id
     # data[1]: content, original content of data, \t\n\r should be removed
@@ -29,6 +29,37 @@ def load(input):
         dataset.append([pid, sid, 0, extraction])
     return dataset    
 
+def load_db(start_pid=1):
+    from wedc.infrastructure.model.labelled_data import LabelledData
+    # load dataset from database
+    labelled_dataset = LabelledData.load_data()
+
+    dataset = []
+    for idx, ld in enumerate(labelled_dataset):
+
+        # data[0]: pid, used inside program
+        # data[1]: sid, unique id for original data
+        # data[2]: label, 0 if unknown 
+        # data[3]: extraction (tokens), split by space, extracted from original content
+        data = [start_pid+idx, '', int(ld.label), str(ld.extraction)]
+        dataset.append(data)
+
+    return dataset
+
+def generate_compressed_data(input=None):
+    start_pid = 1
+    dataset = []
+    if input:
+        dataset = load(input)
+        start_pid += len(dataset)
+    dataset.extend(load_db())
+    print dataset
+    
+#######################################################
+#   Common
+#######################################################
+
+
 
 def generate_extraction(content):
     try:
@@ -38,7 +69,6 @@ def generate_extraction(content):
         return ''
     else:
         return post.body
-
 
 #######################################################
 #   Intermediate Data
