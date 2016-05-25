@@ -7,8 +7,6 @@ from wedc.domain.core.data import cleaner
 mapping = None
 
 
-
-
 def load_input(input):
     # data from intermediate data
     # data[0]: source id
@@ -58,8 +56,6 @@ def generate_compressed_data(input=None):
 #######################################################
 #   Common
 #######################################################
-
-
 
 def generate_extraction(content):
     try:
