@@ -9,6 +9,8 @@ DEFAULT_N_NEIGHBORS = 5
 DEFAULT_MAX_ITER = 200
 DEFAULT_TOL = 0.000001
 
+DEFAULT_TARGETS = ['Massage', 'Escort', 'Job_ads']
+
 #######################################################
 #   Accuracy
 #######################################################
@@ -90,5 +92,141 @@ def plot_accuracy(lp_evaluation_dir_):
     acc_test()
 
     
+#######################################################
+#   Confusion Matrix
+#######################################################   
+
+# http://scikit-learn.org/stable/auto_examples/model_selection/plot_confusion_matrix.html
+
+def generate_confusion_matrix_plot(cm, target_names, title='Confusion matrix', cmap=plt.cm.Blues):
+    plt.imshow(cm, interpolation='nearest', cmap=cmap)
+    plt.title(title)
+    plt.colorbar()
+    tick_marks = np.arange(len(target_names))
+    plt.xticks(tick_marks, target_names, rotation=45)
+    plt.yticks(tick_marks, target_names)
+    plt.tight_layout()
+    plt.ylabel('True label')
+    plt.xlabel('Predicted label')
+
+def plot_confusion_matrix(lp_evaluation_dir_):
+    import numpy as np
+    import matplotlib.pyplot as plt
+    from sklearn.metrics import confusion_matrix
+
+    output = labelprop.do_evaluation(lp_evaluation_dir_, num_of_tests=DEFAULT_NUM_OF_TESTS, test_rate=DEFAULT_TEST_RATE, n_neighbors=DEFAULT_N_NEIGHBORS, max_iter=DEFAULT_MAX_ITER, tol=DEFAULT_TOL)
+
+    for rnd in output:
+        round_id = rnd[0]
+        accuracy = rnd[1]
+
+        # label data
+        label_data = rnd[3]
+        y_test = label_data[0]
+        y_pred = label_data[1]
+        valid_pid_set = label_data[2]
+
+        # fig = plt.figure()
+
+        # Compute confusion matrix
+        cm = confusion_matrix(y_test, y_pred)
+        np.set_printoptions(precision=2)
+        print('Confusion matrix, without normalization')
+        print(cm)
+        # plt.subplot(221)
+        plt.figure()
+        generate_confusion_matrix_plot(cm, DEFAULT_TARGETS)
+
+        # Normalize the confusion matrix by row (i.e by the number of samples
+        # in each class)
+        cm_normalized = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
+        print('Normalized confusion matrix by the number of samples in each class')
+        print(cm_normalized)
+        # plt.subplot(222)
+        plt.figure()
+        generate_confusion_matrix_plot(cm_normalized, DEFAULT_TARGETS, title='Normalized confusion matrix (samples in each class)')
+
+        # Normalize the confusion matrix by row (i.e by the number of samples)
+        cm_normalized = cm.astype('float') / cm.sum(axis=0)
+        print('Normalized confusion matrix by the number of samples')
+        print(cm_normalized)
+        # plt.subplot(223)
+        plt.figure()
+        generate_confusion_matrix_plot(cm_normalized, DEFAULT_TARGETS, title='Normalized confusion matrix (all samples)')
+
+
+        # plt.subplot_tool()
+
+        plt.show()
+
+        break
+
     
+
+    # plt.show()
+
+
+#######################################################
+#   Histogram for precision, recall and f1-score
+####################################################### 
+
+def generate_histogram_plot(target_names, precisions, recalls, fscores):
+    N = len(target_names)
+    menMeans = (20, 35, 30, 35, 27)
+    menStd = (2, 3, 4, 1, 2)
+
+    ind = np.arange(N)  # the x locations for the groups
+    width = 0.35       # the width of the bars
+
+    fig, ax = plt.subplots()
+    rects1 = ax.bar(ind, menMeans, width, color='r', yerr=menStd)
+
+    womenMeans = (25, 32, 34, 20, 25)
+    womenStd = (3, 5, 2, 3, 3)
+    rects2 = ax.bar(ind + width, womenMeans, width, color='y', yerr=womenStd)
+
+    # add some text for labels, title and axes ticks
+    ax.set_ylabel('Scores')
+    ax.set_title('Scores by group and gender')
+    ax.set_xticks(ind + width)
+    ax.set_xticklabels(tuple(target_names))
+
+    ax.legend((rects1[0], rects2[0]), ('Men', 'Women'))
+
+
+    def autolabel(rects):
+        # attach some text labels
+        for rect in rects:
+            height = rect.get_height()
+            ax.text(rect.get_x() + rect.get_width()/2., 1.05*height,
+                    '%d' % int(height),
+                    ha='center', va='bottom')
+
+    autolabel(rects1)
+    autolabel(rects2)
+
+    plt.show()
+
+def plot_prf(lp_evaluation_dir_):
+    from sklearn.metrics import precision_recall_fscore_support
+
+    output = labelprop.do_evaluation(lp_evaluation_dir_, num_of_tests=DEFAULT_NUM_OF_TESTS, test_rate=DEFAULT_TEST_RATE, n_neighbors=DEFAULT_N_NEIGHBORS, max_iter=DEFAULT_MAX_ITER, tol=DEFAULT_TOL)
+
+    for rnd in output:
+        round_id = rnd[0]
+        accuracy = rnd[1]
+
+        # label data
+        label_data = rnd[3]
+        y_test = label_data[0]
+        y_pred = label_data[1]
+        valid_pid_set = label_data[2]
+
+        precisions, recalls, fscores, _ = precision_recall_fscore_support(y_test, y_pred)
+        print precision
+        print recall
+        print fscore
+        break
+
+
 

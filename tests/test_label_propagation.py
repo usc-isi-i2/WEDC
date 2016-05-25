@@ -137,10 +137,12 @@ class TestPlotMethods(unittest.TestCase):
 
     def test_accuracy_plot(self):
         plot.plot_accuracy(lp_evaluation_dir_)
-        
 
+    def test_confusion_matrix(self):
+        plot.plot_confusion_matrix(lp_evaluation_dir_)
 
-        
+    def test_plot_prf(self):
+        plot.plot_prf(lp_evaluation_dir_)
 
     def tearDown(self):
         pass
@@ -163,7 +165,9 @@ if __name__ == '__main__':
         # suite.addTest(TestGraphMethods("test_build_knn_graph"))
         
         ### Test Plot ###
-        suite.addTest(TestPlotMethods("test_accuracy_plot"))
+        # suite.addTest(TestPlotMethods("test_accuracy_plot"))
+        # suite.addTest(TestPlotMethods("test_confusion_matrix"))
+        suite.addTest(TestPlotMethods("test_plot_prf"))
 
 
         runner = unittest.TextTestRunner()
