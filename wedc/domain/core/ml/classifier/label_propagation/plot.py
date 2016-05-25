@@ -3,7 +3,7 @@ import numpy as np
 
 from wedc.domain.core.ml.classifier.label_propagation import labelprop
 
-DEFAULT_NUM_OF_TESTS = 1
+DEFAULT_NUM_OF_TESTS = 20
 DEFAULT_TEST_RATE = .9
 DEFAULT_N_NEIGHBORS = 5
 DEFAULT_MAX_ITER = 200
@@ -73,7 +73,7 @@ def plot_accuracy(lp_evaluation_dir_):
         max_iter_set = [100, 200, 500, 1000]
         accuracy_lists = generate_accuracy_lists(lp_evaluation_dir_, max_iter_set=max_iter_set)
         generate_accuracy_plot(accuracy_lists, 'Accuracy for varous ' + target_name, [str(_)+' iter' for _ in max_iter_set])
-        print accuracy_lists
+        # print accuracy_lists
 
     def plot_accuracy_for_various_tol(): 
         target_name = 'tol values'
@@ -88,8 +88,8 @@ def plot_accuracy(lp_evaluation_dir_):
 
     # plot_accuracy_for_various_n_neighbors()
     # plot_accuracy_for_various_max_iter()
-    # plot_accuracy_for_various_tol()
-    acc_test()
+    plot_accuracy_for_various_tol()
+    # acc_test()
 
     
 #######################################################
@@ -114,7 +114,7 @@ def plot_confusion_matrix(lp_evaluation_dir_):
     import matplotlib.pyplot as plt
     from sklearn.metrics import confusion_matrix
 
-    output = labelprop.do_evaluation(lp_evaluation_dir_, num_of_tests=DEFAULT_NUM_OF_TESTS, test_rate=DEFAULT_TEST_RATE, n_neighbors=DEFAULT_N_NEIGHBORS, max_iter=DEFAULT_MAX_ITER, tol=DEFAULT_TOL)
+    output = labelprop.do_evaluation(lp_evaluation_dir_, num_of_tests=1, test_rate=.9, n_neighbors=10, max_iter=100, tol=0.000001)
 
     for rnd in output:
         round_id = rnd[0]

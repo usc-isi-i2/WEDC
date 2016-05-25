@@ -165,9 +165,9 @@ if __name__ == '__main__':
         # suite.addTest(TestGraphMethods("test_build_knn_graph"))
         
         ### Test Plot ###
-        # suite.addTest(TestPlotMethods("test_accuracy_plot"))
+        suite.addTest(TestPlotMethods("test_accuracy_plot"))
         # suite.addTest(TestPlotMethods("test_confusion_matrix"))
-        suite.addTest(TestPlotMethods("test_plot_prf"))
+        # suite.addTest(TestPlotMethods("test_plot_prf"))
 
 
         runner = unittest.TextTestRunner()
