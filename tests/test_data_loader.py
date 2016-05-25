@@ -25,7 +25,7 @@ class TestDataLoaderMethods(unittest.TestCase):
 
     def test_load(self):
         # loader.load_input(imd_data_)
-        loader.generate_compressed_data()
+        loader.generate_compressed_data(imd_data_)
         
     def test_data_loader(self):
         start_time = time.time()
