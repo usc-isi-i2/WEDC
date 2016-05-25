@@ -171,27 +171,23 @@ def plot_confusion_matrix(lp_evaluation_dir_):
 ####################################################### 
 
 def generate_histogram_plot(target_names, precisions, recalls, fscores):
-    N = len(target_names)
-    menMeans = (20, 35, 30, 35, 27)
-    menStd = (2, 3, 4, 1, 2)
+    N = len(target_names)   
 
     ind = np.arange(N)  # the x locations for the groups
-    width = 0.35       # the width of the bars
+    width = 0.1       # the width of the bars
 
     fig, ax = plt.subplots()
-    rects1 = ax.bar(ind, menMeans, width, color='r', yerr=menStd)
-
-    womenMeans = (25, 32, 34, 20, 25)
-    womenStd = (3, 5, 2, 3, 3)
-    rects2 = ax.bar(ind + width, womenMeans, width, color='y', yerr=womenStd)
+    rects1 = ax.bar(ind, precisions, width, color='skyblue')
+    rects2 = ax.bar(ind + width, recalls, width, color='palegreen')
+    rects3 = ax.bar(ind + width*2, fscores, width, color='bisque')
 
     # add some text for labels, title and axes ticks
-    ax.set_ylabel('Scores')
-    ax.set_title('Scores by group and gender')
+    ax.set_ylabel('value')
+    ax.set_title('Precision & Recall & F1-score values')
     ax.set_xticks(ind + width)
     ax.set_xticklabels(tuple(target_names))
 
-    ax.legend((rects1[0], rects2[0]), ('Men', 'Women'))
+    ax.legend((rects1[0], rects2[0], rects3[0]), ('Precision', 'Recall', 'F1-score'), loc='lower right', shadow=True)
 
 
     def autolabel(rects):
@@ -199,18 +195,19 @@ def generate_histogram_plot(target_names, precisions, recalls, fscores):
         for rect in rects:
             height = rect.get_height()
             ax.text(rect.get_x() + rect.get_width()/2., 1.05*height,
-                    '%d' % int(height),
+                    '%.3f' % float(height),
                     ha='center', va='bottom')
 
-    autolabel(rects1)
-    autolabel(rects2)
+    # autolabel(rects1)
+    # autolabel(rects2)
+    # autolabel(rects3)
 
     plt.show()
 
 def plot_prf(lp_evaluation_dir_):
     from sklearn.metrics import precision_recall_fscore_support
 
-    output = labelprop.do_evaluation(lp_evaluation_dir_, num_of_tests=DEFAULT_NUM_OF_TESTS, test_rate=DEFAULT_TEST_RATE, n_neighbors=DEFAULT_N_NEIGHBORS, max_iter=DEFAULT_MAX_ITER, tol=DEFAULT_TOL)
+    output = labelprop.do_evaluation(lp_evaluation_dir_, num_of_tests=1, test_rate=.9, n_neighbors=10, max_iter=100, tol=0.000001)
 
     for rnd in output:
         round_id = rnd[0]
@@ -223,9 +220,10 @@ def plot_prf(lp_evaluation_dir_):
         valid_pid_set = label_data[2]
 
         precisions, recalls, fscores, _ = precision_recall_fscore_support(y_test, y_pred)
-        print precision
-        print recall
-        print fscore
+        print precisions
+        print recalls
+        print fscores
+        generate_histogram_plot(DEFAULT_TARGETS, precisions, recalls, fscores)
         break
 
 
