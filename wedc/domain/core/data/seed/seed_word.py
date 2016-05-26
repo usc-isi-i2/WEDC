@@ -77,6 +77,7 @@ def load_seed_similar_words(seed_words=None, level=1, n=10):
     # ans.sort()
     return ans
 
+"""
 def cache_seed_similar_words(path, seed_words=None, level=1, n=10, model=None):
     if not seed_words:
         # seed_words = [str(stem.stemming(_)) for _ in load_seed_words()]
@@ -121,12 +122,12 @@ def cache_seed_similar_words(path, seed_words=None, level=1, n=10, model=None):
             f.write(seed_word + '\t')
             f.write(' '.join(sw_words) + '\t')
             f.write(' '.join(sw_similarity) + '\n')
-
+"""
 
 ############################################################
 #   Seed Dict
 ############################################################ 
-
+"""
 def generate_weighted_seed_dict(ssw_cache_path, other_ssw_cache_path=None, output_path=None):
 
     seed_dict = {}
@@ -190,6 +191,44 @@ def load_weighted_seed_dict(path):
             
             ans[line[0]] = line[1]
     return ans
+"""
+
+############################################################
+#   Build Weighted Seed Dict from Word2Vec Model
+############################################################
+
+
+def generate_seed_dict(seed_words=None, w2v_model_path=None, level=1, n=10):
+    if not seed_words:
+        seed_words = [str(_) for _ in load_seed_words()]
+
+    if not w2v_model_path:
+        return {_:1. for _ in seed_words}
+
+    w2v.word2vec_model = w2v.load_model(w2v_model_path)
+    model = w2v.word2vec_model
+    num_words, num_vectors = model.vectors.shape
+
+    seed_dict = {}
+    for seed_word in seed_words:
+        try:
+            indexes, metrics = model.cosine(seed_word, n=num_words)
+        except Exception as e: # seed_word is not in w2v model
+            seed_dict.setdefault(seed_word, 1.) 
+            continue
+
+        similar_words_from_model = [str(_.encode('ascii', 'ignore')) for _ in list(model.vocab[indexes])]   # similar words in desc order by similarity
+
+        similar_words = w2v.get_level_similars(seed_word, level=level, n=n)
+        
+        similars = model.generate_response(indexes, metrics).tolist()
+        similar_words = [_ for _ in similars if _[0] in similar_words]
+
+        for sw in similar_words:
+            seed_dict.setdefault(sw[0], 0.)
+            seed_dict[sw[0]] = max(seed_dict[sw[0]], float(sw[1]))
+        
+    return seed_dict
 
 
         
@@ -204,4 +243,7 @@ NO FOUND SIMILAR WORDS:  transvestite
 NO FOUND SIMILAR WORDS:  tranny
 NO FOUND SIMILAR WORDS:  she-male
 NO FOUND SIMILAR WORDS:  ladyboy
+# idx = similar_words_from_model.index(sw)
+# seed_dict.setdefault(sw, 0.)
+# seed_dict[sw] = max(seed_dict[sw], float(metrics[idx]))
 """

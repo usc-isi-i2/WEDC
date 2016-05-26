@@ -49,6 +49,9 @@ class TestSeedWordMethods(unittest.TestCase):
     def test_load_weighted_seed_dict(self):
         print seed_word.load_weighted_seed_dict(weighted_seed_dict_)
 
+    def test_generate_seed_dict(self):
+        print seed_word.generate_seed_dict(w2v_model_path=word2vec_model_, level=2, n=10)
+
     def tearDown(self):
         pass
 
@@ -58,11 +61,13 @@ if __name__ == '__main__':
 
         # suite.addTest(TestSeedWordMethods("test_get_seed_files"))
         # suite.addTest(TestSeedWordMethods("test_load_seed_words"))
-        suite.addTest(TestSeedWordMethods("test_load_seed_similar_words"))
+        # suite.addTest(TestSeedWordMethods("test_load_seed_similar_words"))
         # suite.addTest(TestSeedWordMethods("test_cache_seed_similar_words_original"))
         # suite.addTest(TestSeedWordMethods("test_cache_seed_similar_words_gn"))
         # suite.addTest(TestSeedWordMethods("test_generate_weighted_seed_dict"))
         # suite.addTest(TestSeedWordMethods("test_load_weighted_seed_dict"))
+        
+        suite.addTest(TestSeedWordMethods("test_generate_seed_dict"))
 
         runner = unittest.TextTestRunner()
         runner.run(suite)

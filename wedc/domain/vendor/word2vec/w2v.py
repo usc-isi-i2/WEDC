@@ -61,7 +61,29 @@ def get_similars_by_word(word, n=10):
         return None
 
 
+def get_level_similars(word, level=1, n=10):
+    """
+    get word's similar words similar words, level by level
 
+    """
+    if not word2vec_model:
+        print 'NOT FOUND WORD2VEC MODEL'
+        return None
+
+    similar_words = {}
+    cur_sws = [word]
+    for _ in range(level):
+        next_sws = {}
+        for w in cur_sws:
+            tmp = get_similars_by_word(w, n=n)
+            if not tmp:
+                continue
+            tmp = tmp.keys()
+            [similar_words.setdefault(_, 0) for _ in tmp]
+            [next_sws.setdefault(_, 0) for _ in tmp]
+        cur_sws = next_sws.keys()
+
+    return similar_words.keys()
 
 
 
