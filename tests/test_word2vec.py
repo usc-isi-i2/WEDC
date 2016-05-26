@@ -25,8 +25,8 @@ class TestWord2VecMethods(unittest.TestCase):
         w2v.word2vec_model = w2v.load_model(word2vec_model_)
 
     def test_setup_model(self):
-        w2v.setup_model(text_, 
-                        word2vec_model_, 
+        w2v.setup_model(input, 
+                        output, 
                         binary=1, 
                         cbow=0, 
                         size=300, 
@@ -49,8 +49,8 @@ if __name__ == '__main__':
     def run_main_test():
         suite = unittest.TestSuite()
 
-        # suite.addTest(TestWord2VecMethods("test_setup_model"))
-        suite.addTest(TestWord2VecMethods("test_get_similars_by_word"))
+        suite.addTest(TestWord2VecMethods("test_setup_model"))
+        # suite.addTest(TestWord2VecMethods("test_get_similars_by_word"))
 
         runner = unittest.TextTestRunner()
         runner.run(suite)

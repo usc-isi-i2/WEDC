@@ -197,7 +197,6 @@ def load_weighted_seed_dict(path):
 #   Build Weighted Seed Dict from Word2Vec Model
 ############################################################
 
-
 def generate_seed_dict(seed_words=None, w2v_model_path=None, level=1, n=10):
     if not seed_words:
         seed_words = [str(_) for _ in load_seed_words()]
@@ -217,10 +216,7 @@ def generate_seed_dict(seed_words=None, w2v_model_path=None, level=1, n=10):
             seed_dict.setdefault(seed_word, 1.) 
             continue
 
-        similar_words_from_model = [str(_.encode('ascii', 'ignore')) for _ in list(model.vocab[indexes])]   # similar words in desc order by similarity
-
         similar_words = w2v.get_level_similars(seed_word, level=level, n=n)
-        
         similars = model.generate_response(indexes, metrics).tolist()
         similar_words = [_ for _ in similars if _[0] in similar_words]
 
@@ -243,6 +239,7 @@ NO FOUND SIMILAR WORDS:  transvestite
 NO FOUND SIMILAR WORDS:  tranny
 NO FOUND SIMILAR WORDS:  she-male
 NO FOUND SIMILAR WORDS:  ladyboy
+# similar_words_from_model = [str(_.encode('ascii', 'ignore')) for _ in list(model.vocab[indexes])]   # similar words in desc order by similarity
 # idx = similar_words_from_model.index(sw)
 # seed_dict.setdefault(sw, 0.)
 # seed_dict[sw] = max(seed_dict[sw], float(metrics[idx]))

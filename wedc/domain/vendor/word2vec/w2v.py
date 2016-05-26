@@ -6,6 +6,7 @@ import word2vec
 word2vec_model = None
 
 
+
 ############################################################
 #   Basic
 ############################################################
@@ -30,6 +31,20 @@ def load_model(model_path):
     if not os.path.exists(model_path):
         return None
     return word2vec.load(model_path)
+
+def setup_and_load_model(data,
+                binary=1, 
+                cbow=0, 
+                size=300, 
+                window=10, 
+                negative=5, 
+                hs=0, 
+                threads=12, 
+                iter_=5, 
+                min_count=5, 
+                verbose=False):
+    
+    output = StringIO.StringIO()
 
 
 ############################################################
@@ -57,7 +72,7 @@ def get_similars_by_word(word, n=10):
         
         return pairs
     except Exception:
-        print 'NO FOUND SIMILAR WORDS: ', target_word
+        # print 'NO FOUND SIMILAR WORDS: ', target_word
         return None
 
 

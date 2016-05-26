@@ -70,22 +70,35 @@ def generate_extraction(content):
 #   Intermediate Data
 #######################################################
 
-def load_intermediate_data(path):
-    import csv
+def load_intermediate_data(path, format='jsonlines'):
     dataset = []
-    with open(path, 'rb') as csvfile:
-        reader = csv.reader(csvfile)
-        for row in reader:
-            dataset.append(row)
+    if format == 'jsonlines':
+        import jsonlines
+        lines = jsonlines.open(path, mode='r')
+        for line in lines:
+            dataset.append([line['sid'], line['content']])
+    elif format == 'csv':
+        import csv
+        with open(path, 'rb') as csvfile:
+            reader = csv.reader(csvfile)
+            for row in reader:
+                dataset.append(row)
     return dataset
 
 
-def generate_intermediate_data(dataset, output_path):
-    import csv
-    with open(output_path, 'wb') as csvfile:
-        spamwriter = csv.writer(csvfile)
+def generate_intermediate_data(dataset, output_path, format='jsonlines'):
+    if format == 'jsonlines':
+        import jsonlines
+        obj = jsonlines.open(output_path, mode='w')
         for data in dataset:
-            spamwriter.writerow(data)
+            obj.dump([{'sid': data[0], 'content': data[1]}])
+
+    elif format == 'csv':
+        import csv
+        with open(output_path, 'wb') as csvfile:
+            spamwriter = csv.writer(csvfile)
+            for data in dataset:
+                spamwriter.writerow(data)
 
 
 #######################################################

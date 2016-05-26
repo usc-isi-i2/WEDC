@@ -9,7 +9,7 @@ def predict(input):
     # data[2]: label, 0 if unknown 
     # data[3]: extraction (tokens), split by space, extracted from original content
     dataset = generate_compressed_data(input)
-
-
+    
+    
 
 

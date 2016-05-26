@@ -33,7 +33,7 @@ def load(path):
 
     for hit in hits[:10]:
         try:
-            sid = str(hit[ES_POST_ID])
+            sid = hit[ES_POST_ID] # str(hit[ES_POST_ID])
             source = hit[ES_POST_SOURCE]
             post_url, post_title, post_body = None, None, None
 
@@ -69,7 +69,8 @@ def extract_content_from_post_body(post_body):
     content = ' '.join(content)
     content = content.encode('ascii', 'ignore')
     content = re.sub(r'([\t\n\r]|\\+)', ' ', content)
-    return str(content)
+    # return str(content)
+    return content
 
 #######################################################
 #   Old API
