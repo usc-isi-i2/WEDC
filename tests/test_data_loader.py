@@ -91,14 +91,14 @@ if __name__ == '__main__':
     # unittest.main()
     def run_main_test():
         suite = unittest.TestSuite()
-        # suite.addTest(TestDataLoaderMethods("test_load"))
+        suite.addTest(TestDataLoaderMethods("test_load"))
         # suite.addTest(TestDataLoaderMethods("test_data_loader"))
         # suite.addTest(TestDataLoaderMethods("test_mapping"))
         # suite.addTest(TestDataLoaderMethods("test_load_post"))
         # suite.addTest(TestDataLoaderMethods("test_load_data_by_post_id_set"))
         # suite.addTest(TestDataLoaderMethods("test_get_posts_for_token"))
         
-        suite.addTest(TestESLoaderMethods("test_es_data_loader"))
+        # suite.addTest(TestESLoaderMethods("test_es_data_loader"))
 
 
 

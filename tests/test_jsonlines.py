@@ -17,6 +17,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 TEST_DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
 
 jsonl_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'jsonlines.jsonl'))
+imd_data_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'imd_san-francisco-maria-2.json'))
 import jsonlines
 
 class TestJSONLINESMethods(unittest.TestCase):
@@ -24,9 +25,9 @@ class TestJSONLINESMethods(unittest.TestCase):
         pass
 
     def test_jsonl(self):
-        obj = jsonlines.open(jsonl_, mode='r')
+        obj = jsonlines.open(imd_data_, mode='r')
         for i in obj:
-            
+            print i
             # print obj.__next__
         # with open(jsonl_, 'rb') as f:
         #     for line in f.readlines():

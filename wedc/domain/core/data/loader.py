@@ -91,7 +91,8 @@ def generate_intermediate_data(dataset, output_path, format='jsonlines'):
         import jsonlines
         obj = jsonlines.open(output_path, mode='w')
         for data in dataset:
-            obj.dump([{'sid': data[0], 'content': data[1]}])
+            # obj.dump([{'sid': data[0], 'content': data[1]}])
+            obj.dump({'sid': data[0], 'content': data[1]})
 
     elif format == 'csv':
         import csv
