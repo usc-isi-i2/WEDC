@@ -1,4 +1,4 @@
-
+import argparse
 import json
 import os
 import re
@@ -20,9 +20,9 @@ def generate_jsonlines(input, output):
     hits = raw['hits']['hits']
 
     obj = jsonlines.open(output, mode='w')
-    for hit in hits[:10]:
-        # json.dumps(hit)
-        obj.dump(hit)
+    for hit in hits:
+        source = hit[WEBPAGE_SOURCE]
+        obj.dump(source)
 
 if __name__ == '__main__':
 
@@ -32,7 +32,4 @@ if __name__ == '__main__':
     args = arg_parser.parse_args()
 
     generate_jsonlines(input, output)
-
-    # sc = SparkContext(appName=APP_NAME)
-    # webpage_util.generate_jsonlines(sc, args.input, args.output)
 
