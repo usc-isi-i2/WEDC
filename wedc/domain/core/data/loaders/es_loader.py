@@ -3,12 +3,8 @@ import json
 import os
 import re
 
-
-# from wedc.domain.entities.post import Post
 from wedc.domain.core.data import loader
  
-
-
 ES_POST_ID = '_id'
 ES_POST_SOURCE = '_source'
 ES_POST_URL = 'url'
