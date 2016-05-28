@@ -48,6 +48,26 @@ class SeedDict(dbase):
             num_rows_deleted = session.query(SeedDict).delete()
         return num_rows_deleted
 
+    @staticmethod
+    def generate_seed_file(path):
+        session = load_session()
+        seed_words = session.query(SeedDict).all()
+        with open(path, 'wb') as f:
+            for sw in seed_words:
+                f.write(str(sw.seed) + '\t' + str(sw.weight) + '\n')
+
+    @staticmethod
+    def load_seed_file(path):
+        seeds = {}
+        with open(path, 'rb') as f:
+            for line in f.readlines():
+                line = line.strip().split('\t')
+                seeds.setdefault(line[0], line[1])
+        return seeds
+
+
+
+
     
 
 

@@ -11,7 +11,7 @@ def load_jsonlines(sc, input, output=None, file_format='text', data_type='jsonli
     # print rdd_strings.collect()
     return rdd_strings
 
-def load_text(data):
+def map_text(data):
     key, json_obj = data
     text_list = []
     if 'description' in json_obj:
@@ -59,7 +59,7 @@ if __name__ == '__main__':
     # webpage_util.generate_jsonlines(sc, args.input_file, args.output_dir)
     rdd_jsonlines = load_jsonlines(sc, args.input_file, file_format=args.input_file_format, data_type=args.input_data_type, separator=args.input_separator)
 
-    rdd_text = rdd_jsonlines.map(load_text)
+    rdd_text = rdd_jsonlines.map(map_text)
     print rdd_text.collect()
 
 
