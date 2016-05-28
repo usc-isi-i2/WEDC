@@ -5,6 +5,7 @@ import argparse
 from pyspark import SparkContext,SparkConf
 
 import webpage_util
+import cleaning_util
 
 # TEST_DATA_DIR = os.path.join(os.path.dirname(__file__), 'tests', 'data')
 # imd_data_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'imd_san-francisco-maria-2.json'))
@@ -20,23 +21,38 @@ import webpage_util
 #     value = json.loads(line)
 #     return [value['sid'], generate_extraction(value['content'])]
 
-APP_NAME = "WEDC"
 
 if __name__ == '__main__':
 
     arg_parser = argparse.ArgumentParser()
-    arg_parser.add_argument("-i","--input",help = "input file path",required=True)
-    arg_parser.add_argument("-o","--output",help = "output file path",required=True)
-    arg_parser.add_argument("--file_format",help = "file format text/sequence",default='text')
+    arg_parser.add_argument('-i','--input_file', required=True)
+    arg_parser.add_argument('--input_file_format', default='sequence')
+    arg_parser.add_argument('--input_data_type', default='json')
+    arg_parser.add_argument('--input_separator', default='\t')
+    # arg_parser.add_argument('-o','--output_dir', required=True)
+    # arg_parser.add_argument('--output_file_format', default='sequence')
+    # arg_parser.add_argument('--output_data_type', default='json')
+    # arg_parser.add_argument('--output_separator', default='\t')
 
     args = arg_parser.parse_args()
 
-    sc = SparkContext(appName=APP_NAME)
+    # can be inconvenient to specify tab on the command line
+    args.input_separator = "\t" if args.input_separator=='tab' else args.input_separator
+    # args.output_separator = "\t" if args.output_separator=='tab' else args.output_separator
 
-    webpage_util.generate_jsonlines(sc, args.input, args.output)
 
-    # distFile = sc.textFile(imd_data_, minPartitions=5)
-    # parsedData = distFile.map(loadData)
-    # print parsedData.collect()
 
-    # sc.stop()
+    sc = SparkContext(appName='WEDC')
+
+    rdd_jsonlines = webpage_util.load_jsonlines(sc, args.input_file, file_format=args.input_file_format, data_type=args.input_data_type, separator=args.input_separator)
+
+    rdd = rdd_jsonlines.map(webpage_util.load_text).map(cleaning_util.clean)
+    print rdd.collect()
+
+
+"""
+spark-submit spark_entrance.py -i /Users/ZwEin/job_works/StudentWork_USC-ISI/projects/WEDC/tests/data/webpage_jsonline.jsonl --input_file_format text --input_data_type jsonlines --input_separator '\n'
+
+"""
+
+

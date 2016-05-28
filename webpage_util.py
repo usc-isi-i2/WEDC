@@ -11,8 +11,8 @@ def load_jsonlines(sc, input, output=None, file_format='text', data_type='jsonli
     # print rdd_strings.collect()
     return rdd_strings
 
-def load_text(line):
-    key, json_obj = line
+def load_text(data):
+    key, json_obj = data
     text_list = []
     if 'description' in json_obj:
         desc = extract_content(json_obj['description'])
@@ -30,15 +30,7 @@ def extract_content(raw):
         content.append(raw)
     else:
         content = raw
-    return ' '.join(content)
-
-    
-
-
-
-
-    
-    
+    return ' '.join(content)    
 
 # regenerate jsonline for webpages
 
