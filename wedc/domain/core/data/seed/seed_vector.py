@@ -6,7 +6,7 @@ def generate_vector(extraction, seeds):
     seeds_size = len(seed_words)
     # seed_words.sort()
     vector = ['0'] * seeds_size
-    tokens = line.split(' ')
+    tokens = extraction.split(' ')
     for i in range(seeds_size):
         if seed_words[i] in tokens:
             vector[i] = str(1.0 * float(seeds[seed_words[i]]))

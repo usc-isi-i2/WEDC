@@ -52,8 +52,6 @@ if __name__ == '__main__':
     args.input_separator = "\t" if args.input_separator=='tab' else args.input_separator
     # args.output_separator = "\t" if args.output_separator=='tab' else args.output_separator
 
-
-
     sc = SparkContext(appName='WebPageUtil')
 
     # webpage_util.generate_jsonlines(sc, args.input_file, args.output_dir)
