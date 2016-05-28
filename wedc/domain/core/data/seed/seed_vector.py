@@ -1,22 +1,22 @@
 
 from wedc.domain.core.data.seed import seed_word
 
-
-
-def generate_post_vector(extraction_list, seeds, output=None):
+def generate_vector(extraction, seeds):
     seed_words = seeds.keys()
     seeds_size = len(seed_words)
-    seed_words.sort()
+    # seed_words.sort()
+    vector = ['0'] * seeds_size
+    tokens = line.split(' ')
+    for i in range(seeds_size):
+        if seed_words[i] in tokens:
+            vector[i] = str(1.0 * float(seeds[seed_words[i]]))
+    return ' '.join(vector)
 
-    
+def generate_post_vector(extraction_list, seeds, output=None):
     vectors = []
+    
     for line in extraction_list:
-        vector = ['0'] * seeds_size
-        tokens = line.split(' ')
-        for i in range(seeds_size):
-            if seed_words[i] in tokens:
-                vector[i] = str(1.0 * float(seeds[seed_words[i]]))
-        vector = ' '.join(vector)
+        vector = generate_vector(line, seeds)
         vectors.append(vector)
 
     if output:
