@@ -11,7 +11,26 @@ def load_jsonlines(sc, input, output=None, file_format='text', data_type='jsonli
     # print rdd_strings.collect()
     return rdd_strings
 
+def load_text(line):
+    key, json_obj = line
+    text_list = []
+    if 'description' in json_obj:
+        desc = extract_content(json_obj['description'])
+        text_list.append(desc)
+    if 'name' in json_obj:
+        name = extract_content(json_obj['name'])
+        text_list.append(name)
+    return (key, ' '.join(text_list))
 
+def extract_content(raw):
+    if not raw:
+        return ''
+    content = []
+    if isinstance(raw, basestring):
+        content.append(raw)
+    else:
+        content = raw
+    return ' '.join(content)
 
     
 
