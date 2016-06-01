@@ -8,6 +8,7 @@ TEST_DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
 
 # text_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'text'))
 seeds_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'seeds'))
+labelled_data_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'labelled_data'))
 
 
 from wedc.infrastructure import database
@@ -55,6 +56,13 @@ class TestLabelledDataMethods(unittest.TestCase):
             label = vec[1]
             SeedDict.insert(seed, weight)
 
+    def test_generate_labelled_data_file(self):
+        LabelledData.generate_labelled_data_file(labelled_data_)
+
+    def test_load_labelled_data_file(self):
+        print LabelledData.load_labelled_data_file(labelled_data_)[0]
+
+
     def tearDown(self):
         pass
 
@@ -98,12 +106,14 @@ if __name__ == '__main__':
         # suite.addTest(TestLabelledDataMethods("test_load_data"))
         # suite.addTest(TestLabelledDataMethods("test_clear_data"))
         # suite.addTest(TestLabelledDataMethods("test_load_potential_seeds"))
+        # suite.addTest(TestLabelledDataMethods("test_generate_labelled_data_file"))
+        suite.addTest(TestLabelledDataMethods("test_load_labelled_data_file"))
         
         # suite.addTest(TestSeedDictMethods("test_insert_from_txt"))
         # suite.addTest(TestSeedDictMethods("test_load_data"))
         # suite.addTest(TestSeedDictMethods("test_clear_data"))
         # suite.addTest(TestSeedDictMethods("test_generate_seed_file"))
-        suite.addTest(TestSeedDictMethods("test_load_seed_file"))
+        # suite.addTest(TestSeedDictMethods("test_load_seed_file"))
 
         runner = unittest.TextTestRunner()
         runner.run(suite)

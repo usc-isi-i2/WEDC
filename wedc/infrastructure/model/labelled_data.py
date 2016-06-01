@@ -2,6 +2,7 @@ from sqlalchemy import Column, ForeignKey, Integer, String
 
 from wedc.infrastructure.database import dbase, session_scope, load_session
 from wedc.domain.core.common import hash_helper
+from wedc.domain.core.data.seed.seed_vector import generate_vector
 
 class LabelledData(dbase):
     __tablename__ = 'labelled_data'
@@ -111,5 +112,27 @@ class LabelledData(dbase):
         # print 'job_ads:\n', [k for k,v in ans.items() if v[1] == 4], '\n'
 
         return ans
+
+    @staticmethod
+    def generate_labelled_data_file(path):
+        from wedc.infrastructure.model.seed_dict import SeedDict
+
+        session = load_session()
+        labelled_data = session.query(LabelledData).all()
+        seeds = SeedDict.load_data()
+        with open(path, 'wb') as f:
+            for data in labelled_data:
+                vector = generate_vector(data.extraction, seeds)
+                label = data.label
+                f.write(str(vector) + '\t' + str(label) + '\n')
+
+    @staticmethod
+    def load_labelled_data_file(path):
+        labelled_data = []
+        with open(path, 'rb') as f:
+            for line in f.readlines():
+                line = line.strip().split('\t')
+                labelled_data.append([line[0], line[1]])
+        return labelled_data
 
 
