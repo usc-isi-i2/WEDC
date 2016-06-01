@@ -92,7 +92,7 @@ class TestLabelPropagationMethods(unittest.TestCase):
 
     def test_do_evaluation(self):
         # 0.27: 27 out of 100 posts with accuracy below .9%
-        output = labelprop.do_evaluation(lp_evaluation_dir_, num_of_tests=100, test_rate=.7, n_neighbors=5, max_iter=200, tol=0.000001)
+        output = labelprop.do_evaluation(lp_evaluation_dir_, num_of_tests=1, test_rate=.7, n_neighbors=5, max_iter=200, tol=0.000001)
 
         for rnd in output:
             round_id = rnd[0]
@@ -159,13 +159,13 @@ if __name__ == '__main__':
         # suite.addTest(TestLabelPropagationMethods("test_load_unknown_post_index"))
         # suite.addTest(TestLabelPropagationMethods("test_evaluate"))
         # suite.addTest(TestLabelPropagationMethods("test_run"))
-        # suite.addTest(TestLabelPropagationMethods("test_do_evaluation"))
+        suite.addTest(TestLabelPropagationMethods("test_do_evaluation"))
 
         ### Test Graph ###
         # suite.addTest(TestGraphMethods("test_build_knn_graph"))
         
         ### Test Plot ###
-        suite.addTest(TestPlotMethods("test_accuracy_plot"))
+        # suite.addTest(TestPlotMethods("test_accuracy_plot"))
         # suite.addTest(TestPlotMethods("test_confusion_matrix"))
         # suite.addTest(TestPlotMethods("test_plot_prf"))
 

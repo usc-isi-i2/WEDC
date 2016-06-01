@@ -49,7 +49,7 @@ if __name__ == '__main__':
 
     rdd_jsonlines = webpage_util.load_jsonlines(sc, args.input_file, file_format=args.input_file_format, data_type=args.input_data_type, separator=args.input_separator)
 
-    rdd = rdd_jsonlines.map(webpage_util.map_text).map(cleaning_util.map_clean).map(map_vectorize)
+    rdd = rdd_jsonlines.map(webpage_util.map_text).map(cleaning_util.map_clean).map(map_vectorize).mapPartitions()
     # print rdd.collect()
     
     # remove output dir
