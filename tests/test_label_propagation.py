@@ -116,6 +116,9 @@ class TestLabelPropagationMethods(unittest.TestCase):
             y_test = label_data[0]
             y_predict = label_data[1]
             valid_pid_set = label_data[2]
+
+    def test_run_lp_tmp(self):
+
         
     def tearDown(self):
         pass
@@ -159,7 +162,8 @@ if __name__ == '__main__':
         # suite.addTest(TestLabelPropagationMethods("test_load_unknown_post_index"))
         # suite.addTest(TestLabelPropagationMethods("test_evaluate"))
         # suite.addTest(TestLabelPropagationMethods("test_run"))
-        suite.addTest(TestLabelPropagationMethods("test_do_evaluation"))
+        # suite.addTest(TestLabelPropagationMethods("test_do_evaluation"))
+        suite.addTest(TestLabelPropagationMethods("test_run_lp_tmp"))
 
         ### Test Graph ###
         # suite.addTest(TestGraphMethods("test_build_knn_graph"))

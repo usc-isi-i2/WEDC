@@ -1,9 +1,9 @@
 import os
-from py4j.java_gateway import JavaGateway
 
 def run_by_py4j():
-    gateway = JavaGateway()
-    random = gateway.jvm.java.util.Random()
+    pass
+    # gateway = JavaGateway()
+    # random = gateway.jvm.java.util.Random()
 
 
 

@@ -14,13 +14,45 @@ from wedc.infrastructure import database
 from wedc.infrastructure.model.labelled_data import LabelledData
 from wedc.infrastructure.model.seed_dict import SeedDict
 
-
-
 from wedc.domain.vendor.label_propagation import lp
 
 #######################################################
 #   Run Label Propagation
 #######################################################
+
+def run(data, labelled_data):
+    pid = 1
+    dataset = []
+    mapping = {}    # from pid to sid
+    
+    # load data
+    for i, kv in enumerate(data):
+        sid, vector = kv
+        mapping[pid] = sid
+        dataset.append([pid, vector, 0])
+        pid = i + 1
+
+    # load labelled data
+    for item in labelled_data: 
+        vector = item[0]
+        label = item[1]
+        dataset.append([0, vector, label])
+
+    graph = knn.build(dataset, output=graph_path_, n_neighbors=n_neighbors)
+    rtn_lp = run_lp(graph_path_, output=labelprop_path_)
+
+    ans = {}
+    for preds in rtn_lp:
+        pid = rtn_lp[0]
+        if pid not in mapping:
+            continue
+        pred_label = rtn_lp[1]
+        score = rtn_lp[2]
+        ans[maping[pid]] = [pred_label, score]
+
+    return ans
+
+
 
 def run_lp(input, output=None):
     return lp.run_by_jar(input, output=output)

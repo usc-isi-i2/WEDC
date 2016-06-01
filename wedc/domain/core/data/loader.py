@@ -51,7 +51,7 @@ def generate_compressed_data(input=None):
         dataset = load_input(input)
         start_pid += len(dataset)
     dataset.extend(load_db(start_pid=start_pid))
-    print dataset
+    return dataset
 
 #######################################################
 #   Common
