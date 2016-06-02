@@ -19,7 +19,7 @@ from wedc.domain.vendor.label_propagation import lp
 #   Run Label Propagation
 #######################################################
 
-def run(do_lp, data, labelled_data, n_neighbors=10, iter=100, eps=0.00001):
+def run(data, labelled_data, n_neighbors=10, iter=100, eps=0.00001):
     pid = 1
     mapping = {}    # from pid to sid
     X = []
@@ -34,7 +34,7 @@ def run(do_lp, data, labelled_data, n_neighbors=10, iter=100, eps=0.00001):
         X.append(vector)
         y.append(0)
         # dataset.append([pid, vector, 0])
-        pid = i + 1
+        pid = pid + 1
 
     # load labelled data
     for item in labelled_data: 
@@ -44,7 +44,7 @@ def run(do_lp, data, labelled_data, n_neighbors=10, iter=100, eps=0.00001):
         X.append(vector)
         y.append(label)
         # dataset.append([pid, vector, label])
-        pid = i + 1
+        pid = pid + 1
 
     # prepare X, y for graph
     X = np.array(np.mat(';'.join([_ for _ in X]))) # in order, asc
@@ -53,23 +53,23 @@ def run(do_lp, data, labelled_data, n_neighbors=10, iter=100, eps=0.00001):
     # graph
     graph_input = [[pids[_], X[_], y[_]] for _ in range(len(pids))]
     graph = knn.build(graph_input, n_neighbors=n_neighbors)
+    return ('helloworld', graph)
 
     # lp
-    lp_data = '\n'.join([str(_) for _ in graph])
-    rtn_lp = lp.run_by_py4j(do_lp, lp_data, iter=iter, eps=eps)
+    # lp_data = '\n'.join([str(_) for _ in graph])
+    # rtn_lp = lp.run_by_py4j(lp_data, iter=iter, eps=eps)
     
-
-    ans = {}
-    for preds in rtn_lp:
-        pid = rtn_lp[0]
-        if pid not in mapping:
-            continue
-        pred_label = rtn_lp[1]
-        score = rtn_lp[2]
-        ans[maping[pid]] = [pred_label, score]
-
     # return (10, '1')
-    return ans
+
+    # ans = {}
+    # for preds in rtn_lp:
+    #     pid = rtn_lp[0]
+    #     if pid not in mapping:
+    #         continue
+    #     pred_label = rtn_lp[1]
+    #     score = rtn_lp[2]
+    #     ans[maping[pid]] = [pred_label, score]
+    # return ans
 
 
 def run_lp(input, output=None):

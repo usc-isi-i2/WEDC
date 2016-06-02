@@ -5,7 +5,7 @@ import random
 
 
 
-def build(graph_input, output=None, n_neighbors=10, algorithm='ball_tree', top_k_rate=0.005):
+def build(graph_input, output=None, n_neighbors=10, algorithm='ball_tree', top_k_rate=None):
     n_neighbors += 1
 
     # load data
@@ -20,6 +20,7 @@ def build(graph_input, output=None, n_neighbors=10, algorithm='ball_tree', top_k
     distances = preprocessing.normalize(distances, norm='l2')
 
     graph = []
+
     post_weight_sum_dict = {}
     for i in range(size):
         post_id = pid_set[i]
