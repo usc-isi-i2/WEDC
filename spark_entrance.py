@@ -3,6 +3,7 @@ import os
 import shutil
 import argparse
 from pyspark import SparkContext, SparkConf
+from py4j.java_gateway import java_import
 
 from wedc.infrastructure.model.seed_dict import SeedDict
 from wedc.infrastructure.model.labelled_data import LabelledData
@@ -37,6 +38,8 @@ if __name__ == '__main__':
     # args.output_separator = "\t" if args.output_separator=='tab' else args.output_separator
 
     sc = SparkContext(appName='WEDC')
+    java_import(sc._jvm, "org.ooxo.*")
+    lp = sc._jvm.LProp()
 
     seeds = SeedDict.load_seed_file(args.seed_file)
     broadcast_seeds = sc.broadcast(seeds)
@@ -55,7 +58,7 @@ if __name__ == '__main__':
     from wedc.domain.core.ml.classifier.label_propagation import labelprop
     def map_labelprop(iterator):
         labelled_data = broadcast_labelled_data.value
-        return labelprop.run(sc, list(iterator), labelled_data)
+        return labelprop.run(lp.do_lp, list(iterator), labelled_data)
 
     rdd_jsonlines = webpage_util.load_jsonlines(sc, args.input_file, file_format=args.input_file_format, data_type=args.input_data_type, separator=args.input_separator)
 
@@ -71,6 +74,11 @@ if __name__ == '__main__':
     
 """ COMMAND
 spark-submit spark_entrance.py -i /Users/ZwEin/job_works/StudentWork_USC-ISI/projects/WEDC/tests/data/webpage_jsonline.jsonl --input_file_format text --input_data_type jsonlines --input_separator '\n' -s /Users/ZwEin/job_works/StudentWork_USC-ISI/projects/WEDC/tests/data/seeds -l /Users/ZwEin/job_works/StudentWork_USC-ISI/projects/WEDC/tests/data/labelled_data -o /Users/ZwEin/job_works/StudentWork_USC-ISI/projects/WEDC/tests/data/spark_output
+
+"""
+
+""" COMMAND
+spark-submit --jars /Users/ZwEin/job_works/StudentWork_USC-ISI/projects/WEDC/tests/data/labelprop.jar --driver-class-path /Users/ZwEin/job_works/StudentWork_USC-ISI/projects/WEDC/tests/data/labelprop.jar spark_entrance.py -i /Users/ZwEin/job_works/StudentWork_USC-ISI/projects/WEDC/tests/data/webpage_jsonline.jsonl --input_file_format text --input_data_type jsonlines --input_separator '\n' -s /Users/ZwEin/job_works/StudentWork_USC-ISI/projects/WEDC/tests/data/seeds -l /Users/ZwEin/job_works/StudentWork_USC-ISI/projects/WEDC/tests/data/labelled_data -o /Users/ZwEin/job_works/StudentWork_USC-ISI/projects/WEDC/tests/data/spark_output
 
 """
 

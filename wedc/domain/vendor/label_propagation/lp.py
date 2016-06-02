@@ -2,10 +2,12 @@ import os
 from pyspark import SparkContext
 from py4j.java_gateway import java_import
 
-def run_by_py4j(sc, data, iter=100, eps=0.00001):
-    java_import(sc._jvm, "org.ooxo.*")
-    lp = sc._jvm.LProp()
-    raw_output = lp.do_lp(lines, eps, iter)
+def run_by_py4j(do_lp, data, iter=100, eps=0.00001):
+    # sc = SparkContext(appName="LabelProp")
+    # java_import(sc._jvm, "org.ooxo.*")
+    # lp = sc._jvm.LProp()
+    # raw_output = lp.do_lp(lines, eps, iter)
+    raw_output = do_lp(lines, eps, iter)
     return refine_result(raw_output)
 
 def run_by_jar(input, output=None, iter=100, eps=0.00001):

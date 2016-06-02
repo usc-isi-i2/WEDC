@@ -1,8 +1,6 @@
 import numpy as np
 import os
 import shutil
-import tempfile
-
 
 from sklearn import datasets
 from sklearn.semi_supervised import LabelPropagation
@@ -21,7 +19,7 @@ from wedc.domain.vendor.label_propagation import lp
 #   Run Label Propagation
 #######################################################
 
-def run(sc, data, labelled_data, n_neighbors=10):
+def run(do_lp, data, labelled_data, n_neighbors=10, iter=100, eps=0.00001):
     pid = 1
     mapping = {}    # from pid to sid
     X = []
@@ -52,13 +50,14 @@ def run(sc, data, labelled_data, n_neighbors=10):
     X = np.array(np.mat(';'.join([_ for _ in X]))) # in order, asc
     y = np.copy(y)    # in order, asc
 
+    # graph
     graph_input = [[pids[_], X[_], y[_]] for _ in range(len(pids))]
+    graph = knn.build(graph_input, n_neighbors=n_neighbors)
 
-    graph_path_ = tempfile.NamedTemporaryFile(delete=False)
-    graph = knn.build(graph_input, output=graph_path_, n_neighbors=n_neighbors)
-    rtn_lp = run_lp(graph_path_, output=labelprop_path_)
-    if os.path.isfile(graph_path_):
-        os.remove(graph_path_)
+    # lp
+    lp_data = '\n'.join([str(_) for _ in graph])
+    rtn_lp = lp.run_by_py4j(do_lp, lp_data, iter=iter, eps=eps)
+    
 
     ans = {}
     for preds in rtn_lp:
@@ -69,6 +68,7 @@ def run(sc, data, labelled_data, n_neighbors=10):
         score = rtn_lp[2]
         ans[maping[pid]] = [pred_label, score]
 
+    # return (10, '1')
     return ans
 
 

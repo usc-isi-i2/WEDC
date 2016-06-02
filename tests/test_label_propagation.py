@@ -14,6 +14,7 @@ import unittest
 import shutil
 import numpy as np
 
+
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 TEST_DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
 from wedc.domain.core.ml.classifier.label_propagation import plot
