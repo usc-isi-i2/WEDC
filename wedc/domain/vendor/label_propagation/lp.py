@@ -1,11 +1,12 @@
 import os
+from pyspark import SparkContext
+from py4j.java_gateway import java_import
 
-def run_by_py4j():
-    pass
-    # gateway = JavaGateway()
-    # random = gateway.jvm.java.util.Random()
-
-
+def run_by_py4j(sc, data, iter=100, eps=0.00001):
+    java_import(sc._jvm, "org.ooxo.*")
+    lp = sc._jvm.LProp()
+    raw_output = lp.do_lp(lines, eps, iter)
+    return refine_result(raw_output)
 
 def run_by_jar(input, output=None, iter=100, eps=0.00001):
     import ast
@@ -27,7 +28,9 @@ def run_by_jar(input, output=None, iter=100, eps=0.00001):
         output_file.writelines(raw_output)
         output_file.close()
 
-    # refine result
+    return refine_result(raw_output)
+
+def refine_result(raw_output):
     ans = []
     for line in raw_output.split('\n'):
         if not line:    # actually in the end of file
@@ -44,3 +47,4 @@ def run_by_jar(input, output=None, iter=100, eps=0.00001):
             ans.append(line)
 
     return ans
+

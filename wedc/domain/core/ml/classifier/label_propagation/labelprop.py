@@ -1,6 +1,7 @@
 import numpy as np
 import os
 import shutil
+import tempfile
 
 
 from sklearn import datasets
@@ -20,26 +21,44 @@ from wedc.domain.vendor.label_propagation import lp
 #   Run Label Propagation
 #######################################################
 
-def run(data, labelled_data):
+def run(sc, data, labelled_data, n_neighbors=10):
     pid = 1
-    dataset = []
     mapping = {}    # from pid to sid
+    X = []
+    y = []
+    pids = []
     
     # load data
     for i, kv in enumerate(data):
         sid, vector = kv
         mapping[pid] = sid
-        dataset.append([pid, vector, 0])
+        pids.append(pid)
+        X.append(vector)
+        y.append(0)
+        # dataset.append([pid, vector, 0])
         pid = i + 1
 
     # load labelled data
     for item in labelled_data: 
         vector = item[0]
         label = item[1]
-        dataset.append([0, vector, label])
+        pids.append(pid)
+        X.append(vector)
+        y.append(label)
+        # dataset.append([pid, vector, label])
+        pid = i + 1
 
-    graph = knn.build(dataset, output=graph_path_, n_neighbors=n_neighbors)
+    # prepare X, y for graph
+    X = np.array(np.mat(';'.join([_ for _ in X]))) # in order, asc
+    y = np.copy(y)    # in order, asc
+
+    graph_input = [[pids[_], X[_], y[_]] for _ in range(len(pids))]
+
+    graph_path_ = tempfile.NamedTemporaryFile(delete=False)
+    graph = knn.build(graph_input, output=graph_path_, n_neighbors=n_neighbors)
     rtn_lp = run_lp(graph_path_, output=labelprop_path_)
+    if os.path.isfile(graph_path_):
+        os.remove(graph_path_)
 
     ans = {}
     for preds in rtn_lp:
@@ -51,7 +70,6 @@ def run(data, labelled_data):
         ans[maping[pid]] = [pred_label, score]
 
     return ans
-
 
 
 def run_lp(input, output=None):
@@ -129,7 +147,7 @@ def do_evaluation(output_path, num_of_tests=1, test_rate=.9, n_neighbors=10, max
 
         # build knn graph
         graph = knn.build(graph_input, output=graph_path_, n_neighbors=n_neighbors)
-        rtn_lp = run_lp(graph_path_, output=labelprop_path_)
+        rtn_lp = run_lp(graph_path_, output=labelprop_path_, iter=max_iter, tol=0.00001)
         
         valid_pid_set = [_[0] for _ in rtn_lp if _[0] in testing_pid_set]   # in order, asc
 

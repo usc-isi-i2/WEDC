@@ -5,6 +5,7 @@ import argparse
 from pyspark import SparkContext, SparkConf
 
 from wedc.infrastructure.model.seed_dict import SeedDict
+from wedc.infrastructure.model.labelled_data import LabelledData
 
 import webpage_util
 import cleaning_util
@@ -40,6 +41,9 @@ if __name__ == '__main__':
     seeds = SeedDict.load_seed_file(args.seed_file)
     broadcast_seeds = sc.broadcast(seeds)
 
+    labelled_data = LabelledData.load_labelled_data_file(args.labelled_data)
+    broadcast_labelled_data = sc.broadcast(labelled_data)
+
     # implement features first
     # put the code here for broadcast variable only
     from wedc.domain.core.data.seed.seed_vector import generate_vector
@@ -50,13 +54,12 @@ if __name__ == '__main__':
 
     from wedc.domain.core.ml.classifier.label_propagation import labelprop
     def map_labelprop(iterator):
-        labelled_data = load_labelled_data(args.labelled_data)
-
-        return labelprop.run(list(iterator), labelled_data)
+        labelled_data = broadcast_labelled_data.value
+        return labelprop.run(sc, list(iterator), labelled_data)
 
     rdd_jsonlines = webpage_util.load_jsonlines(sc, args.input_file, file_format=args.input_file_format, data_type=args.input_data_type, separator=args.input_separator)
 
-    rdd = rdd_jsonlines.map(webpage_util.map_text).map(cleaning_util.map_clean).map(map_vectorize)#.mapPartitions(labelprop_util.map_labelprop)
+    rdd = rdd_jsonlines.map(webpage_util.map_text).map(cleaning_util.map_clean).map(map_vectorize).mapPartitions(map_labelprop)
     print rdd.collect()
     
     # remove output dir
@@ -67,7 +70,7 @@ if __name__ == '__main__':
 
     
 """ COMMAND
-spark-submit spark_entrance.py -i /Users/ZwEin/job_works/StudentWork_USC-ISI/projects/WEDC/tests/data/webpage_jsonline.jsonl --input_file_format text --input_data_type jsonlines --input_separator '\n' -s /Users/ZwEin/job_works/StudentWork_USC-ISI/projects/WEDC/tests/data/seeds -o /Users/ZwEin/job_works/StudentWork_USC-ISI/projects/WEDC/tests/data/spark_output
+spark-submit spark_entrance.py -i /Users/ZwEin/job_works/StudentWork_USC-ISI/projects/WEDC/tests/data/webpage_jsonline.jsonl --input_file_format text --input_data_type jsonlines --input_separator '\n' -s /Users/ZwEin/job_works/StudentWork_USC-ISI/projects/WEDC/tests/data/seeds -l /Users/ZwEin/job_works/StudentWork_USC-ISI/projects/WEDC/tests/data/labelled_data -o /Users/ZwEin/job_works/StudentWork_USC-ISI/projects/WEDC/tests/data/spark_output
 
 """
 
