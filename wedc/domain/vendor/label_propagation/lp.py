@@ -58,9 +58,10 @@ def refine_result(raw_output):
         # line[2:]: categories with weight
         line = ast.literal_eval(line)
 
-        # filter invalid predictionobject
-        if sum([float(_[1]) for _ in line[2:]]):
-            ans.append(line)
+        # filter invalid predictio nobject
+        score = sum([float(_[1]) for _ in line[2:]])
+        if score:
+            ans.append([line[0], line[1], score])
 
     return ans
 

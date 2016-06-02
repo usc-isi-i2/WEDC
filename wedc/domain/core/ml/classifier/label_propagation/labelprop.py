@@ -53,23 +53,22 @@ def run(data, labelled_data, n_neighbors=10, iter=100, eps=0.00001):
     # graph
     graph_input = [[pids[_], X[_], y[_]] for _ in range(len(pids))]
     graph = knn.build(graph_input, n_neighbors=n_neighbors)
-    return ('helloworld', graph)
 
     # lp
-    # lp_data = '\n'.join([str(_) for _ in graph])
-    # rtn_lp = lp.run_by_py4j(lp_data, iter=iter, eps=eps)
+    lp_data = '\n'.join([str(_) for _ in graph])
+    rtn_lp = lp.run_by_py4j(lp_data, iter=iter, eps=eps)
     
     # return (10, '1')
 
-    # ans = {}
-    # for preds in rtn_lp:
-    #     pid = rtn_lp[0]
-    #     if pid not in mapping:
-    #         continue
-    #     pred_label = rtn_lp[1]
-    #     score = rtn_lp[2]
-    #     ans[maping[pid]] = [pred_label, score]
-    # return ans
+    ans = {}
+    for preds in rtn_lp:
+        pid = int(preds[0])
+        if pid not in mapping:
+            continue
+        pred_label = preds[1]
+        score = preds[2]
+        ans[mapping[pid]] = [pred_label, score]
+    return (mapping, ans)
 
 
 def run_lp(input, output=None):
