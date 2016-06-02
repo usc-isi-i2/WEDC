@@ -59,15 +59,23 @@ if __name__ == '__main__':
         seeds = broadcast_seeds.value
         return (key, generate_vector(tokens, seeds))
 
+    # label prop
     from wedc.domain.core.ml.classifier.label_propagation import labelprop
     def map_labelprop(iterator):
         labelled_data = broadcast_labelled_data.value
         return labelprop.run(list(iterator), labelled_data)
 
+    # reduce
+    def reduce_labelprop(a, b):
+        # z = x.copy()
+        a.update(b)
+        return a
+
     rdd_jsonlines = webpage_util.load_jsonlines(sc, args.input_file, file_format=args.input_file_format, data_type=args.input_data_type, separator=args.input_separator)
 
-    rdd = rdd_jsonlines.map(webpage_util.map_text).map(cleaning_util.map_clean).map(map_vectorize).mapPartitions(map_labelprop)
-    print rdd.collect()
+    rdd = rdd_jsonlines.map(webpage_util.map_text).map(cleaning_util.map_clean).map(map_vectorize).mapPartitions(map_labelprop).reduceByKey(reduce_labelprop).groupByKey().mapValues(list)
+    ans = rdd.collect()
+    print ans[0][1][0]
     
     # remove output dir
     if os.path.isdir(args.output_dir):

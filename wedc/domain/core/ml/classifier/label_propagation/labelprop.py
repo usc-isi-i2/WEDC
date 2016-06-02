@@ -68,7 +68,7 @@ def run(data, labelled_data, n_neighbors=10, iter=100, eps=0.00001):
         pred_label = preds[1]
         score = preds[2]
         ans[mapping[pid]] = [pred_label, score]
-    return (1, ans)
+    return [(1, ans)]
 
 
 def run_lp(input, output=None):
