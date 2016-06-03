@@ -5,13 +5,13 @@ import argparse
 from pyspark import SparkContext, SparkConf
 
 
-# from wedc.infrastructure.model.seed_dict import SeedDict
-# from wedc.infrastructure.model.labelled_data import LabelledData
+from wedc.infrastructure.model.seed_dict import SeedDict
+from wedc.infrastructure.model.labelled_data import LabelledData
 
 import webpage_util
-# import cleaning_util
-# import vectorize_util
-# import labelprop_util
+import cleaning_util
+import vectorize_util
+import labelprop_util
 
 if __name__ == '__main__':
 
@@ -41,7 +41,7 @@ if __name__ == '__main__':
     
     sc.addFile(args.lp_jar)
 
-    """
+    # """
     seeds = SeedDict.load_seed_file(args.seed_file)
     broadcast_seeds = sc.broadcast(seeds)
 
@@ -67,12 +67,12 @@ if __name__ == '__main__':
         # z = x.copy()
         a.update(b)
         return a
-    """
+    # """
     rdd = webpage_util.load_jsonlines(sc, args.input_file, file_format=args.input_file_format, data_type=args.input_data_type, separator=args.input_separator)
 
-    # rdd = rdd_jsonlines.map(webpage_util.map_text).map(cleaning_util.map_clean).map(map_vectorize).mapPartitions(map_labelprop).reduceByKey(reduce_labelprop).groupByKey().mapValues(list)
+    rdd = rdd.map(webpage_util.map_text).map(cleaning_util.map_clean).map(map_vectorize).mapPartitions(map_labelprop).reduceByKey(reduce_labelprop).groupByKey().mapValues(list)
 
-    """
+    # """
     # ans = rdd.collect()
     # print ans[0][1][0]
     
@@ -80,7 +80,7 @@ if __name__ == '__main__':
     if os.path.isdir(args.output_dir):
         shutil.rmtree(args.output_dir)
     rdd.saveAsTextFile(args.output_dir)
-    """
+    # """
 
 
     
