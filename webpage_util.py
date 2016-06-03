@@ -5,7 +5,7 @@ from digSparkUtil.fileUtil import FileUtil
 
 def load_jsonlines(sc, input, output=None, file_format='text', data_type='jsonlines', separator='\n'):
     fUtil = FileUtil(sc)
-    rdd_strings = sc.textFile(input)
+    # rdd_strings = sc.textFile(input)
 
     rdd_strings = fUtil.load_file(input, file_format=file_format, data_type=data_type, separator=separator)
     # print rdd_strings.collect()
