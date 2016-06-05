@@ -12,7 +12,7 @@ class WEDC():
     # def initialize(self):
     #     session = self.initialize_db()
 
-api = WEDC()
+# api = WEDC()
 
 
 

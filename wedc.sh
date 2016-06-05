@@ -1,6 +1,6 @@
 /usr/lib/spark/bin/spark-submit \
 --master yarn-client \
---py-files wedc.zip,python-lib.zip \
+--py-files wedc-lib.zip \
 spark_entrance.py \
 $@
 

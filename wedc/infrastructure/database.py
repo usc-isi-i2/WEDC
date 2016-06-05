@@ -2,14 +2,14 @@
 import os
 import sys
 
-from wedc.application.api import api
+# from wedc.application.api import api
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from contextlib import contextmanager
 
 def load_engine():
-    db_uri = api.config('DATABASE_URI')
+    db_uri = 'sqlite:///wedc.db' # api.config('DATABASE_URI')
     engine = create_engine(db_uri)
     return engine
 
