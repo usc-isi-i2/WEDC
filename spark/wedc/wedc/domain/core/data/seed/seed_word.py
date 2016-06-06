@@ -1,7 +1,7 @@
 import os
 from wedc.domain.conf.storage import __res_dir__
 
-from wedc.domain.vendor.word2vec import w2v
+# from wedc.domain.vendor.word2vec import w2v
 from wedc.domain.vendor.nltk import stem
 
 ############################################################

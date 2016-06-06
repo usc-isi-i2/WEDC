@@ -2,7 +2,7 @@ import sys
 import os
 import shutil
 import argparse
-from pyspark import SparkContext, SparkConf, SparkFiles
+from pyspark import SparkContext, SparkConf
 
 
 from wedc.infrastructure.model.seed_dict import SeedDict
@@ -13,12 +13,7 @@ import cleaning_util
 import vectorize_util
 import labelprop_util
 
-libenchant = SparkFiles.get('libenchant.so.1.6.0')
-os.environ['PYENCHANT_LIBRARY_PATH'] = libenchant
-
 if __name__ == '__main__':
-
-
 
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument('-i','--input_file', required=True)
