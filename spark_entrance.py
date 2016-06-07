@@ -4,27 +4,14 @@ import shutil
 import argparse
 from pyspark import SparkContext, SparkConf, SparkFiles
 
-
-from wedc.infrastructure.model.seed_dict import SeedDict
-from wedc.infrastructure.model.labelled_data import LabelledData
-
-import webpage_util
-import cleaning_util
-import vectorize_util
-import labelprop_util
-
-libenchant = SparkFiles.get('libenchant.so.1.6.0')
-os.environ['PYENCHANT_LIBRARY_PATH'] = libenchant
-
 if __name__ == '__main__':
-
-
 
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument('-i','--input_file', required=True)
     arg_parser.add_argument('-s','--seed_file', required=True)
     arg_parser.add_argument('-l','--labelled_data', required=True)
     arg_parser.add_argument('--lp_jar', required=True)
+    arg_parser.add_argument('--enchant_so', required=True)
     arg_parser.add_argument('--input_file_format', default='sequence')
     arg_parser.add_argument('--input_data_type', default='json')
     arg_parser.add_argument('--input_separator', default='\t')
@@ -40,11 +27,26 @@ if __name__ == '__main__':
     args.input_separator = "\t" if args.input_separator=='tab' else args.input_separator
     # args.output_separator = "\t" if args.output_separator=='tab' else args.output_separator
 
-
+    
     spark_config = SparkConf().setAppName('WEDC')#.setMaster('local[4]')
+    # spark_config.setExecutorEnv("PYTHON_EGG_CACHE", System.getenv("/tmp"))
+    # spark_config.setExecutorEnv("PYENCHANT_LIBRARY_PATH", libenchant)
     sc = SparkContext(conf=spark_config)
     
     sc.addFile(args.lp_jar)
+    sc.addFile(args.enchant_so)
+
+    libenchant = SparkFiles.get('libenchant.so.1.6.0')
+    os.environ['PYENCHANT_LIBRARY_PATH'] = libenchant
+    print 'helloworld: ', libenchant
+
+    from wedc.infrastructure.model.seed_dict import SeedDict
+    from wedc.infrastructure.model.labelled_data import LabelledData
+
+    import webpage_util
+    import cleaning_util
+    import vectorize_util
+    import labelprop_util
 
     # """
     seeds = SeedDict.load_seed_file(args.seed_file)
@@ -75,9 +77,9 @@ if __name__ == '__main__':
     # """
     rdd = webpage_util.load_jsonlines(sc, args.input_file, file_format=args.input_file_format, data_type=args.input_data_type, separator=args.input_separator)
 
-    rdd = rdd.map(webpage_util.map_text).map(cleaning_util.map_clean).map(map_vectorize).mapPartitions(map_labelprop).reduceByKey(reduce_labelprop).groupByKey().mapValues(list)
+    # rdd = rdd.map(webpage_util.map_text).map(cleaning_util.map_clean).map(map_vectorize).mapPartitions(map_labelprop).reduceByKey(reduce_labelprop).groupByKey().mapValues(list)
 
-    # """
+    """
     # ans = rdd.collect()
     # print ans[0][1][0]
     
@@ -85,7 +87,7 @@ if __name__ == '__main__':
     if os.path.isdir(args.output_dir):
         shutil.rmtree(args.output_dir)
     rdd.saveAsTextFile(args.output_dir)
-    # """
+    """
 
 
     
