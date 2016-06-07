@@ -1,9 +1,21 @@
+# export PYENCHANT_LIBRARY_PATH="/user/lteng/wedc/lib/libenchant.so.1.6.0" 
+# PYSPARK_PYTHON=/user/lteng/wedc/venv/bin/python 
+
+# export TENCHANTPATH=libenchant.so.1.6.0
+
+# echo PYENCHANT_LIBRARY_PATH
+# echo TENCHANTPATH
+
 /usr/lib/spark/bin/spark-submit \
+--conf spark.executorEnv.PYENCHANT_LIBRARY_PATH=libenchant.so.1.6.0 \
 --master yarn-client \
---py-files wedc-lib.zip \
+--py-files wedc-lib.zip,site-packages,pyenchant-1.6.7-py2.7.egg \
+--archives python-lib.zip \
 spark_entrance.py \
 $@
 
+# --conf PYENCHANT_LIBRARY_PATH=/user/lteng/wedc/lib/libenchant.so.1.6.0 \
+# --conf spark.yarn.appMasterEnv.PYSPARK_PYTHON=/user/lteng/wedc/venv/bin/python \
 
  # --master yarn-client \
  # --executor-memory 10g  --executor-cores 2  --num-executors 5 \
