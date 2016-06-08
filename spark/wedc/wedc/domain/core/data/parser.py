@@ -1,6 +1,5 @@
 import re
 
-
 from wedc.domain.core.data import cleaner
 from wedc.domain.vendor.crf.crf_tokenizer import CrfTokenizer
 
