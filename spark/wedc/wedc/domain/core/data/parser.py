@@ -20,18 +20,3 @@ def text_preprocessing(text):
 
 def token_preprocessing(token):
     return cleaner.clean_token(token)
-
-
-"""
-# for more domain ext
-# domain_ext_list = domain.get_domain_ext_list()
-# text = re.sub(r'^[a-z0-9\-\.]+\.('+'|'.join(domain_ext_list)+')$', '', text)
-from nltk.tokenize import sent_tokenize
-# for sentence processing
-from nltk.tokenize import word_tokenize
-tokens = [token_preprocessing(token) for token in word_tokenize(text)]
-
-# sentences = [sentence for sentence in sent_tokenize(text)]
-# sentences = [nltk.word_tokenize(sent) for sent in sentences]
-
-"""
