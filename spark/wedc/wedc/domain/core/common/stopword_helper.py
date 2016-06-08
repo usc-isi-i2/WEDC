@@ -8,7 +8,6 @@ def get_stopword_set():
     numbers = get_numbers()
     nationality = get_nationality_names()
     stop_set = set(stops) | set(numbers) | set(names) | set(nationality) | set(country) | set(country_abbr)
-    # stop_set = [str(stem.stemming(_).strip()) for _ in stop_set]
     return stop_set
 
 def get_numbers():

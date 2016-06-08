@@ -43,25 +43,7 @@ def valid_stemming(word):
     return None
 
 
-    # porter = stem.porter.PorterStemmer()
-    # lancaster = stem.lancaster.LancasterStemmer()
-    # 
-    # return snowball.stem(word)
-    
-    
-
-
-    # return snowball.stem(word)
-
-    # stemmer = Stemmer.Stemmer('english')
-    # return stemmer.stemWord(word)
-    
-    
-    
-    # word = stem.snowball.SnowballStemmer("english", ignore_stopwords=False).stem(word)
-
-
-    
+print stemming('changed')
 
 
 
