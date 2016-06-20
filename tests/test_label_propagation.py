@@ -28,9 +28,9 @@ lp_jar_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'labelprop.jar'))
 lp_evaluation_dir_ = os.path.expanduser(os.path.join(TEST_DATA_DIR, 'evaluation'))
 
 
-from wedc.domain.core.ml.graph import knn
+# from wedc.domain.core.ml.graph import knn
+from wedc.domain.core.ml.classifier.label_propagation import knn
 from wedc.domain.core.ml.helper import label
-from wedc.domain.core.ml.classifier.label_propagation import lp
 from wedc.domain.core.ml.classifier.label_propagation import labelprop
 
 class TestLabelPropagationMethods(unittest.TestCase):
@@ -119,7 +119,7 @@ class TestLabelPropagationMethods(unittest.TestCase):
             valid_pid_set = label_data[2]
 
     def test_run_lp_tmp(self):
-
+        pass
         
     def tearDown(self):
         pass
@@ -164,10 +164,10 @@ if __name__ == '__main__':
         # suite.addTest(TestLabelPropagationMethods("test_evaluate"))
         # suite.addTest(TestLabelPropagationMethods("test_run"))
         # suite.addTest(TestLabelPropagationMethods("test_do_evaluation"))
-        suite.addTest(TestLabelPropagationMethods("test_run_lp_tmp"))
+        # suite.addTest(TestLabelPropagationMethods("test_run_lp_tmp"))
 
         ### Test Graph ###
-        # suite.addTest(TestGraphMethods("test_build_knn_graph"))
+        suite.addTest(TestGraphMethods("test_build_knn_graph"))
         
         ### Test Plot ###
         # suite.addTest(TestPlotMethods("test_accuracy_plot"))

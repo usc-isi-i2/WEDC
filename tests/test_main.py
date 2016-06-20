@@ -15,7 +15,7 @@ if __name__ == '__main__':
         suite = unittest.TestSuite() 
 
         # required
-        # suite.addTest(TestDataLoaderMethods("test_data_loader"))
+        suite.addTest(TestDataLoaderMethods("test_data_loader"))
         # suite.addTest(TestWord2VecMethods("test_setup_model"))
         # suite.addTest(TestSeedWordMethods("test_cache_seed_similar_words_original"))
         # suite.addTest(TestSeedWordMethods("test_generate_weighted_seed_dict"))
