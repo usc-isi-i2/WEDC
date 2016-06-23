@@ -1,8 +1,12 @@
 # WEDC
 
+a utility compatible with Spark to identify specific categories of posts based word2vec and label propagation
+
 ## Todo List
 
-## Change Log
+- [ ] Documentation
+- [ ] Python version graph and label propagation implementation
+
 
 
 
