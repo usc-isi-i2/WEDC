@@ -106,8 +106,8 @@ if __name__ == '__main__':
         # suite.addTest(TestLabelledDataMethods("test_load_data"))
         # suite.addTest(TestLabelledDataMethods("test_clear_data"))
         # suite.addTest(TestLabelledDataMethods("test_load_potential_seeds"))
-        # suite.addTest(TestLabelledDataMethods("test_generate_labelled_data_file"))
-        suite.addTest(TestLabelledDataMethods("test_load_labelled_data_file"))
+        suite.addTest(TestLabelledDataMethods("test_generate_labelled_data_file"))
+        # suite.addTest(TestLabelledDataMethods("test_load_labelled_data_file"))
         
         # suite.addTest(TestSeedDictMethods("test_insert_from_txt"))
         # suite.addTest(TestSeedDictMethods("test_load_data"))

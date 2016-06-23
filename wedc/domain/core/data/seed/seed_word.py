@@ -43,3 +43,4 @@ def load_seed_words_with_category():
                 for line in lines:
                     seeds[cate].append(line.strip().lower())
     return seeds
+

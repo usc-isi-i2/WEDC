@@ -5,7 +5,7 @@ import string
 import enchant
 
 
-from wedc.domain.core.common import stem_helper
+from wedc.domain.vendor.nltk import stem
 from wedc.domain.core.common import stopword_helper
 from wedc.domain.core.common import str_helper
 from wedc.domain.core.data.seed import seed_word
@@ -41,6 +41,8 @@ token_mapping = {
 
 seed_words = seed_word.load_seed_words()
 
+# print seed_words
+
 ############################################################
 #   Posts
 ############################################################
@@ -68,6 +70,21 @@ def remove_dups(posts, mapping_path=None):
     if mapping_file:
         mapping_file.close()
     return no_dups
+
+"""
+def remove_dups_from_file(input, output):
+    import hashlib
+    hs = set()
+    output = open(output, 'wb')
+    with open(input, 'rb') as f:
+        for line in f:
+            hashobj = hashlib.sha256()
+            hashobj.update(line.strip())
+            hash_value = hashobj.hexdigest().lower()
+            if hash_value not in hs:
+                hs.add(hash_value)
+                output.write(line)
+"""
 
 ############################################################
 #   Text
@@ -198,7 +215,7 @@ def clean_token(token):
     if token in stopset:
         return None
     
-    token = stem_helper.stemming(token.lower()).strip()
+    token = stem.stemming(token.lower()).strip()
     if token in stopset:   # double check for unexpected text form, like 'marias'
         return None
 

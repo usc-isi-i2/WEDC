@@ -2,11 +2,6 @@ import os
 import ast
 # import subprocess
 
-from pyspark import SparkContext
-from pyspark import SparkConf
-from pyspark import SparkFiles
-from py4j.java_gateway import java_import
-from py4j.java_gateway import JavaGateway
 from subprocess import check_output
 from decimal import Decimal
 
