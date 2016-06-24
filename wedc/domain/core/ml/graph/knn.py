@@ -24,14 +24,22 @@ class KNNGraph():
         def euclidean_distance(x,y):
             return math.sqrt(sum([(a-b)**2 for (a,b) in zip(x,y)]))
 
-        def jaccard_distance(x,y):
-            x = [round(_) for _ in x]
-            y = [round(_) for _ in y]
+        def jaccard_distance(x,y,weighted=True):
+            x = [round(_,2) for _ in x]
+            y = [round(_,2) for _ in y]
             set1, set2 = set(x), set(y)
-            return 1 - len(set1 & set2) / float(len(set1 | set2))
+            if not sum(set1) or not sum(set2):
+                return 0
+            if weighted:
+                intersection = set1 & set2
+                union = set1 | set2
+                return 1 - sum(intersection) / float(sum(union))
+            else:
+                return 1 - len(set1 & set2) / float(len(set1 | set2))
+                # return 1 - sum([min(a,b) for (a,b) in zip(x,y)]) / sum([max(a,b) for (a,b) in zip(x,y)])
 
         def cosine_distance(x,y):
-            return 1 - sum([a*b for (a,b) in zip(x,y)]) / (math.sqrt(sum([a*a for (a,b) in zip(x,y)])) * math.sqrt(sum([b*b for (a,b) in zip(x,y)])))
+            return 1 - float(sum([a*b for (a,b) in zip(x,y)])) / (math.sqrt(sum([_**2 for _ in x])) * math.sqrt(sum([_**2 for _ in y])))
 
         def knn(data, k, distance):
             def nn(x):
