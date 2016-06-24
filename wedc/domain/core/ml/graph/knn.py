@@ -8,15 +8,19 @@ class KNNGraph():
     KNN_GRAPH_DISTANCE_TYPE_JACCARD = 'jaccard'
     KNN_GRAPH_DISTANCE_TYPE_COSINE = 'cosine'
 
-    def __init__(self, n_neighbors=10):
-        self.n_neighbors = n_neighbors
+    def __init__(self, dist_type='euclidean'):
+        self.set_graph_distance_type(dist_type)
 
-    def set_n_neighbors(self, n_neighbors=10):
+    def set_graph_distance_type(self, dist_type):
+        if dist_type not in [KNNGraph.KNN_GRAPH_DISTANCE_TYPE_EUCLIDEAN, KNNGraph.KNN_GRAPH_DISTANCE_TYPE_JACCARD, KNNGraph.KNN_GRAPH_DISTANCE_TYPE_COSINE]:
+            raise Exception('graph distance type should be "euclidean", "jaccard" or "cosine"')
+        self.dist_type = dist_type
+
+    def validate_n_neighbors(self, n_neighbors):
         if n_neighbors < 1:
             raise Exception('the value for n_neighbors should be bigger than zero')
-        self.n_neighbors = n_neighbors
 
-    def calc_distance(self, node, data, labels, n_neighbors=None, dist_type='euclidean'):
+    def calc_distance(self, node, data, n_neighbors=None):
         def euclidean_distance(x,y):
             return math.sqrt(sum([(a-b)**2 for (a,b) in zip(x,y)]))
 
@@ -29,7 +33,7 @@ class KNNGraph():
         def cosine_distance(x,y):
             return 1 - sum([a*b for (a,b) in zip(x,y)]) / (math.sqrt(sum([a*a for (a,b) in zip(x,y)])) * math.sqrt(sum([b*b for (a,b) in zip(x,y)])))
 
-        def knn(data, labels, k, distance):
+        def knn(data, k, distance):
             def nn(x):
                 # get k nearest neighbors (itself included)
                 closestPoints = heapq.nsmallest(k, enumerate(data), key=lambda y: distance(x, y[1]))
@@ -44,24 +48,23 @@ class KNNGraph():
 
             return nn
 
-        if not n_neighbors:
-            n_neighbors = self.n_neighbors
+        self.validate_n_neighbors(n_neighbors)
         n_neighbors += 1 # not including itself
 
-        if dist_type == KNNGraph.KNN_GRAPH_DISTANCE_TYPE_EUCLIDEAN:
-            nn = knn(data, labels, n_neighbors, euclidean_distance)
-        elif dist_type == KNNGraph.KNN_GRAPH_DISTANCE_TYPE_JACCARD:
-            nn = knn(data, labels, n_neighbors, euclidean_distance)
-        elif dist_type == KNNGraph.KNN_GRAPH_DISTANCE_TYPE_COSINE:
-            nn = knn(data, labels, n_neighbors, euclidean_distance)
+        if self.dist_type == KNNGraph.KNN_GRAPH_DISTANCE_TYPE_EUCLIDEAN:
+            nn = knn(data, n_neighbors, euclidean_distance)
+        elif self.dist_type == KNNGraph.KNN_GRAPH_DISTANCE_TYPE_JACCARD:
+            nn = knn(data, n_neighbors, euclidean_distance)
+        elif self.dist_type == KNNGraph.KNN_GRAPH_DISTANCE_TYPE_COSINE:
+            nn = knn(data, n_neighbors, euclidean_distance)
 
         return nn(node)[1:]
 
 
 
-    def build(self, graph_input, output=None, n_neighbors=None):
-        if not n_neighbors:
-            n_neighbors = self.n_neighbors
+    def build(self, graph_input, output=None, n_neighbors=10):
+
+        self.validate_n_neighbors(n_neighbors)
 
         size = len(graph_input)
         if n_neighbors > size:
@@ -72,26 +75,19 @@ class KNNGraph():
         X = [_[1] for _ in graph_input]
         y = [_[2] for _ in graph_input]
 
-
-
-        nbrs = NearestNeighbors(n_neighbors=n_neighbors, algorithm=algorithm).fit(X)
-        # Because the query set matches the training set, the nearest neighbor of each point is the point itself, at a distance of zero.
-        distances, indices = nbrs.kneighbors(X)
-        distances = preprocessing.normalize(distances, norm='l2')
-
         graph = []
 
         post_weight_sum_dict = {}
         for i in range(size):
             post_id = pid_set[i]
             graph_item = [post_id, y[i]]
-            post_indices = indices[i]
-            post_k_distances = distances[i]
-            post_weight_sum_dict[str(post_id)] = sum(post_k_distances) # for sort post by weight only
+            knn_pairs = self.calc_distance(X[i], X, n_neighbors=n_neighbors)
+            # post_weight_sum_dict[str(post_id)] = sum(post_k_distances) # for sort post by weight only
 
             post_neighbors = []
-            for idx in range(1, n_neighbors):   # 0 is itself
-                post_neighbors.append([pid_set[post_indices[idx]], 1-post_k_distances[idx]])
+            for idx in range(n_neighbors):
+                post_neighbors.append([pid_set[knn_pairs[idx][0]], knn_pairs[idx][1]])
+
             graph_item.append(post_neighbors)
             graph.append(graph_item) # graph.append(str(graph_item)), if reutrn graph is not required
 
@@ -102,11 +98,11 @@ class KNNGraph():
             output_fh.close()
 
         # sort post by weight
-        if top_k_rate:
-            top_k_size = int(top_k_rate * size)
-            post_weight_sum_dict = sorted(post_weight_sum_dict.iteritems(), key=lambda x: x[1], reverse=True)
-            post_weight_sum_dict = [int(_[0]) for _ in post_weight_sum_dict]
-            return post_weight_sum_dict[:top_k_size]
+        # if top_k_rate:
+        #     top_k_size = int(top_k_rate * size)
+        #     post_weight_sum_dict = sorted(post_weight_sum_dict.iteritems(), key=lambda x: x[1], reverse=True)
+        #     post_weight_sum_dict = [int(_[0]) for _ in post_weight_sum_dict]
+        #     return post_weight_sum_dict[:top_k_size]
 
         return graph
 

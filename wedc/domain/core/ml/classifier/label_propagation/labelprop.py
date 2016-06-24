@@ -7,6 +7,7 @@ from sklearn.semi_supervised import LabelPropagation
 from wedc.domain.core.ml.helper import label
 # from wedc.domain.core.ml.graph import knn
 from wedc.domain.core.ml.classifier.label_propagation import knn
+from wedc.domain.core.ml.graph.knn import KNNGraph
 from wedc.domain.core.data.seed import seed_vector
 
 from wedc.infrastructure import database
@@ -135,9 +136,13 @@ def do_evaluation(output_path, num_of_tests=1, test_rate=.9, n_neighbors=10, max
         testing_label = [_[1] for _ in dataset if _[0] in testing_pid_set]
 
         # prepare X, y for graph
-        X = np.array(np.mat(';'.join([_[3] for _ in dataset]))) # in order, asc
-        y = np.copy([_[1] for _ in dataset])    # in order, asc
-        y[[pid_set.index(_) for _ in testing_pid_set]] = 0  # in order, asc
+        # X = np.array(np.mat(';'.join([_[3] for _ in dataset]))) # in order, asc
+        # y = np.copy([_[1] for _ in dataset])    # in order, asc
+        # y[[pid_set.index(_) for _ in testing_pid_set]] = 0  # in order, asc
+        X = [[float(v) for v in _[3].split()] for _ in dataset] # in order, asc
+        y = [_[1] for _ in dataset]    # in order, asc
+        for _ in testing_pid_set:
+            y[pid_set.index(_)] = 0
 
         # item[0]: post id
         # item[1]: vector in numpy
@@ -145,7 +150,9 @@ def do_evaluation(output_path, num_of_tests=1, test_rate=.9, n_neighbors=10, max
         graph_input = [[pid_set[_], X[_], y[_]] for _ in range(len(pid_set))]
 
         # build knn graph
-        graph = knn.build(graph_input, output=graph_path_, n_neighbors=n_neighbors)
+        graph = KNNGraph().build(graph_input, output=graph_path_, n_neighbors=n_neighbors)
+
+        # graph = knn.build(graph_input, output=graph_path_, n_neighbors=n_neighbors)
         rtn_lp = run_lp(graph_path_, output=labelprop_path_, iter=max_iter, eps=0.00001)
         
         valid_pid_set = [_[0] for _ in rtn_lp if _[0] in testing_pid_set]   # in order, asc
