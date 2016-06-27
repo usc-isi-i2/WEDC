@@ -1,6 +1,5 @@
 import math
 import heapq
-import random   
 
 class KNNGraph():
 

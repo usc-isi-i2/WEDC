@@ -15,6 +15,7 @@ from wedc.infrastructure.model.labelled_data import LabelledData
 from wedc.infrastructure.model.seed_dict import SeedDict
 
 from wedc.domain.vendor.label_propagation import lp
+from wedc.domain.core.ml.labelprop import LabelProp
 
 #######################################################
 #   Run Label Propagation
@@ -151,10 +152,24 @@ def do_evaluation(output_path, num_of_tests=1, test_rate=.9, n_neighbors=10, max
 
         # build knn graph
         graph = KNNGraph().build(graph_input, output=graph_path_, n_neighbors=n_neighbors)
-
         # graph = knn.build(graph_input, output=graph_path_, n_neighbors=n_neighbors)
-        rtn_lp = run_lp(graph_path_, output=labelprop_path_, iter=max_iter, eps=0.00001)
         
+        # rtn_lp = run_lp(graph_path_, output=labelprop_path_, iter=max_iter, eps=tol)
+
+        labelprop = LabelProp()
+        labelprop.load_data_from_mem(graph)
+        rtn_lp = labelprop.run(tol, max_iter, clean_result=True)
+        # rtn_valid = []
+        # for line in rtn_lp:
+        #     try:
+        #         score = sum([float(_[1]) for _ in line[2:]])
+        #         if score:
+        #             rtn_valid.append([line[0], line[1], score])
+        #     except Exception as e:
+        #         raise Exception('r')
+        # rtn_lp = rtn_valid
+
+
         valid_pid_set = [_[0] for _ in rtn_lp if _[0] in testing_pid_set]   # in order, asc
 
         y_predict = [_[1] for _ in rtn_lp if _[0] in valid_pid_set] # in order, asc
