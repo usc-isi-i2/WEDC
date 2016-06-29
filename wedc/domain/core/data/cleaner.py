@@ -2,16 +2,14 @@ import os
 import sys
 import re
 import string
-import enchant
 
-
-from wedc.domain.vendor.nltk import stem
+from wedc.domain.core.common import stem_helper
+# from wedc.domain.vendor.nltk import stem
 from wedc.domain.core.common import stopword_helper
 from wedc.domain.core.common import str_helper
 from wedc.domain.core.data.seed import seed_word
 from wedc.domain.core.common import hash_helper
 
-enchant_dict = enchant.Dict("en_US")
 stopset = stopword_helper.get_stopword_set()
 
 token_mapping = {
@@ -41,7 +39,6 @@ token_mapping = {
 
 seed_words = seed_word.load_seed_words()
 
-# print seed_words
 
 ############################################################
 #   Posts
@@ -71,20 +68,6 @@ def remove_dups(posts, mapping_path=None):
         mapping_file.close()
     return no_dups
 
-"""
-def remove_dups_from_file(input, output):
-    import hashlib
-    hs = set()
-    output = open(output, 'wb')
-    with open(input, 'rb') as f:
-        for line in f:
-            hashobj = hashlib.sha256()
-            hashobj.update(line.strip())
-            hash_value = hashobj.hexdigest().lower()
-            if hash_value not in hs:
-                hs.add(hash_value)
-                output.write(line)
-"""
 
 ############################################################
 #   Text
@@ -124,57 +107,12 @@ def clean_text(text):
 #   Token
 ############################################################
 
-def split_token(token):
-    def camel_case(word): 
-        if re.search(r'([a-z])([A-Z])', word):
-            tokens = re.sub("([a-z])([A-Z])","\g<1> \g<2>", word).split()
-            return splited_handler(tokens)
-        return None
-
-    def first_cap_case(word):
-        if re.search(r'([A-Z])([A-Z])([a-z])', word):
-            tokens = re.sub("([A-Z])([A-Z])([a-z])","\g<1> \g<2>\g<3>", word).split()
-            return splited_handler(tokens)
-        return None
-
-        
-    def splited_handler(splited_list):
-        word = None
-        if len(splited_list) > 1:
-            splited = []
-            for t in splited_list:
-                t = clean_token(t)
-                if t and (enchant_dict.check(t) or t in seed_words):
-                    splited.append(t)
-            if splited:
-                word = ' '.join(splited)
-        return word
-
-    if not enchant_dict.check(token.lower()):
-        # print token
-        tmp = first_cap_case(token)
-        if tmp: return tmp
-        tmp = camel_case(token)
-        if tmp: return tmp
-        
-    return token
-
 def mars2norm(token):
-    # if re.search(r'^(hrs)$', token.lower()):
-    #     return 'hour'
     if token.lower() in token_mapping:
         return token_mapping[token.lower()]
     return token
 
 def clean_token(token):
-    if not enchant_dict.check(token) and re.search(r'([a-zA-Z])\1{1,}', token.lower()):
-        tmp = re.sub(r"([a-zA-Z])\1{1,}","\g<1>", token.lower())
-        if enchant_dict.check(tmp):
-            token = tmp
-
-    token = split_token(token)
-    if not token:
-        return None
 
     if token.lower() in seed_words:
         return token.lower()
@@ -209,13 +147,13 @@ def clean_token(token):
     if len(token) <= 2 or re.search(r'^(.)\1*$', token): 
         # only contain one character or repeat character
         return None
-    if len(token) > 20 and not enchant_dict.check(token.lower()):
+    if len(token) > 20: # and not enchant_dict.check(token.lower()):
         return None
 
     if token in stopset:
         return None
     
-    token = stem.stemming(token.lower()).strip()
+    token = stem_helper.stemming(token.lower()).strip()
     if token in stopset:   # double check for unexpected text form, like 'marias'
         return None
 
@@ -228,13 +166,8 @@ def clean_token(token):
     if len(token) <= 2 or re.search(r'^(.)\1*$', token): 
         # only contain one character or repeat character
         return None
-    if len(token) > 20 and not enchant_dict.check(token.lower()):
+    if len(token) > 20: # and not enchant_dict.check(token.lower()):
         return None
-
-    if not enchant_dict.check(token) and re.search(r'([a-zA-Z])\1{1,}', token):
-        tmp = re.sub(r"([a-zA-Z])\1{1,}","\g<1>", token)
-        if enchant_dict.check(tmp):
-            token = tmp
 
     return token.lower()
 

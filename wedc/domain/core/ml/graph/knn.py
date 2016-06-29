@@ -50,7 +50,10 @@ class KNNGraph():
 
                 # normalize, and weighed (1-)
                 sum_values = sum([_[1] for _ in closestPoints])
-                closestPoints = [(node_id, 1-float(dis)/sum_values) for node_id, dis in closestPoints]
+                if sum_values:
+                    closestPoints = [(node_id, 1-float(dis)/sum_values) for node_id, dis in closestPoints]
+                else:
+                    closestPoints = [(node_id, 1) for node_id, dis in closestPoints]
                 return closestPoints
 
             return nn

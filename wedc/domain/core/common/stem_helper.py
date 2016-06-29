@@ -5,7 +5,7 @@ https://www.nodebox.net/code/index.php/Linguistics#verb_conjugation
 """
 import sys
 import os
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "vendor"))
+# sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "vendor"))
 import en
 be_words = ['am', 'is', 'are', 'was', 'were', 'been']
 

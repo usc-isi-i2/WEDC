@@ -1,21 +1,11 @@
-import numpy as np
-import os
-import shutil
 
-from sklearn import datasets
-from sklearn.semi_supervised import LabelPropagation
+import os
+
 from wedc.domain.core.ml.helper import label
-# from wedc.domain.core.ml.graph import knn
-from wedc.domain.core.ml.classifier.label_propagation import knn
+from wedc.domain.core.ml.labelprop import LabelProp
 from wedc.domain.core.ml.graph.knn import KNNGraph
 from wedc.domain.core.data.seed import seed_vector
 
-from wedc.infrastructure import database
-from wedc.infrastructure.model.labelled_data import LabelledData
-from wedc.infrastructure.model.seed_dict import SeedDict
-
-from wedc.domain.vendor.label_propagation import lp
-from wedc.domain.core.ml.labelprop import LabelProp
 
 #######################################################
 #   Run Label Propagation
@@ -37,6 +27,8 @@ def run(data, labelled_data, n_neighbors=10, iter=100, eps=0.00001):
         y.append(0)
         # dataset.append([pid, vector, 0])
         pid = pid + 1
+        if pid == 10:
+            break
 
     # load labelled data
     for item in labelled_data: 
@@ -48,19 +40,29 @@ def run(data, labelled_data, n_neighbors=10, iter=100, eps=0.00001):
         # dataset.append([pid, vector, label])
         pid = pid + 1
 
-    # prepare X, y for graph
-    X = np.array(np.mat(';'.join([_ for _ in X]))) # in order, asc
-    y = np.copy(y)    # in order, asc
-
-    # graph
-    graph_input = [[pids[_], X[_], y[_]] for _ in range(len(pids))]
-    graph = knn.build(graph_input, n_neighbors=n_neighbors)
-
-    # lp
-    lp_data = '\n'.join([str(_) for _ in graph])
-    rtn_lp = lp.run_by_py4j(lp_data, iter=iter, eps=eps)
+    X = [[float(v) for v in _.split()] for _ in X] # in order, asc
     
-    # return (10, '1')
+    graph_input = [[pids[_], X[_], y[_]] for _ in range(len(pids))]
+
+    # build knn graph
+    graph = KNNGraph().build(graph_input, n_neighbors=n_neighbors)
+    # graph = knn.build(graph_input, output=graph_path_, n_neighbors=n_neighbors)
+    
+    # rtn_lp = run_lp(graph_path_, output=labelprop_path_, iter=max_iter, eps=tol)
+
+    labelprop = LabelProp()
+    labelprop.load_data_from_mem(graph)
+    rtn_lp = labelprop.run(eps, iter, clean_result=True)
+
+    # # graph
+    # graph_input = [[pids[_], X[_], y[_]] for _ in range(len(pids))]
+    # graph = knn.build(graph_input, n_neighbors=n_neighbors)
+
+    # # lp
+    # lp_data = '\n'.join([str(_) for _ in graph])
+    # rtn_lp = lp.run_by_py4j(lp_data, iter=iter, eps=eps)
+    
+    # return (1, rtn_lp)
 
     ans = {}
     for preds in rtn_lp:
@@ -70,18 +72,20 @@ def run(data, labelled_data, n_neighbors=10, iter=100, eps=0.00001):
         pred_label = preds[1]
         score = preds[2]
         ans[mapping[pid]] = [pred_label, score]
-    return [(1, ans)]
+    return ans
 
 
-def run_lp(input, output=None, iter=100, eps=0.00001):
-    return lp.run_by_jar(input, output=output, iter=iter, eps=eps)
+# def run_lp(input, output=None, iter=100, eps=0.00001):
+#     return lp.run_by_jar(input, output=output, iter=iter, eps=eps)
 
 #######################################################
 #   Evaluation
 #######################################################
 
 def do_evaluation(output_path, num_of_tests=1, test_rate=.9, n_neighbors=10, max_iter=100, tol=0.00001):
-    
+    import numpy as np
+    import shutil
+    from wedc.infrastructure.model.seed_dict import SeedDict
     # load data and label
     dataset = load_dataset()
 
@@ -273,6 +277,7 @@ def generate_report(report_path_, round_id, random_seed, info_data, label_data):
 #######################################################
 
 def load_dataset():
+    from wedc.infrastructure.model.labelled_data import LabelledData
     
     # load dataset from database
     labelled_dataset = LabelledData.load_data()

@@ -1,6 +1,6 @@
 # WEDC
 
-a utility compatible with Spark to identify specific categories of posts based word2vec and label propagation
+Word embedding for document classification (WEDC) is a utility compatible with Spark to identify specific categories of documents based word2vec and label propagation
 
 ## Todo List
 
