@@ -27,7 +27,7 @@ class TestSeedWordMethods(unittest.TestCase):
 
     def test_load_seed_words(self):
         categories = ['massage', 'escort','job_ads']
-        print seed_word.load_seed_words(category=categories[2])
+        print seed_word.load_seed_words(category=categories[1])
 
     def test_load_seed_similar_words(self):
         categories = ['massage', 'escort','job_ads']
@@ -60,14 +60,14 @@ if __name__ == '__main__':
         suite = unittest.TestSuite()
 
         # suite.addTest(TestSeedWordMethods("test_get_seed_files"))
-        # suite.addTest(TestSeedWordMethods("test_load_seed_words"))
+        suite.addTest(TestSeedWordMethods("test_load_seed_words"))
         # suite.addTest(TestSeedWordMethods("test_load_seed_similar_words"))
         # suite.addTest(TestSeedWordMethods("test_cache_seed_similar_words_original"))
         # suite.addTest(TestSeedWordMethods("test_cache_seed_similar_words_gn"))
         # suite.addTest(TestSeedWordMethods("test_generate_weighted_seed_dict"))
         # suite.addTest(TestSeedWordMethods("test_load_weighted_seed_dict"))
         
-        suite.addTest(TestSeedWordMethods("test_generate_seed_dict"))
+        # suite.addTest(TestSeedWordMethods("test_generate_seed_dict"))
 
         runner = unittest.TextTestRunner()
         runner.run(suite)
