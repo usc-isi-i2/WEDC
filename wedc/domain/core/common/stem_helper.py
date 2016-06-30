@@ -5,28 +5,40 @@ https://www.nodebox.net/code/index.php/Linguistics#verb_conjugation
 """
 import sys
 import os
+
 # sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "vendor"))
-import en
+# import en
+
+import inflection
+
 be_words = ['am', 'is', 'are', 'was', 'were', 'been']
 
 def stemming(word):
 
-    if word in be_words:
-        return 'be'
+    # if word in be_words:
+    #     return 'be'
 
-    try:
-        if en.is_noun(word):
-            word = en.noun.singular(word)
-        elif en.is_adjective(word) or en.is_adverb(word):
-            return word
-        else:
-            word = en.verb.present(word)
-    except Exception:
-        pass
-        
-    return en.spelling.correct(word)
+    # try:
+    #     if en.is_noun(word):
+    #         word = en.noun.singular(word)
+    #     elif en.is_adjective(word) or en.is_adverb(word):
+    #         return word
+    #     else:
+    #         word = en.verb.present(word)
+    # except Exception:
+    #     pass
+    # return en.spelling.correct(word)
+    
+    word = inflection.singularize(word)
+    return word
 
 
+    
 
+if __name__ == "__main__":
+
+    word = 'words'
+    word = inflection.singularize(word)
+    print word
 
 

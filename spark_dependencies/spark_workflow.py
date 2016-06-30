@@ -2,7 +2,7 @@
 # @Author: ZwEin
 # @Date:   2016-06-20 10:55:39
 # @Last Modified by:   ZwEin
-# @Last Modified time: 2016-06-29 14:10:13
+# @Last Modified time: 2016-06-29 18:38:53
 
 
 
@@ -21,7 +21,11 @@ spark-submit \
 --input_file /Users/ZwEin/job_works/StudentWork_USC-ISI/projects/WEDC/tests/data/memex_data \
 --output_dir /Users/ZwEin/job_works/StudentWork_USC-ISI/projects/WEDC/tests/data/spark_output \
 --seed_file /Users/ZwEin/job_works/StudentWork_USC-ISI/projects/WEDC/spark_dependencies/seeds \
---labelled_data /Users/ZwEin/job_works/StudentWork_USC-ISI/projects/WEDC/spark_dependencies/labelled_data \
+--labelled_data /Users/ZwEin/job_works/StudentWork_USC-ISI/projects/WEDC/spark_dependencies/labelled_data
+
+
+
+
 --files_dir /Users/ZwEin/job_works/StudentWork_USC-ISI/projects/WEDC/spark_dependencies/python_files
 
 """
@@ -74,16 +78,13 @@ def extract_content(raw):
     return ' '.join(content)
 
 
-def run(sc, input_file, output_dir, seed_file, labelled_data_file, files_dir):
+def run(sc, input_file, output_dir, seed_file, labelled_data_file):
 
     seeds = load_seed_file(seed_file)
     broadcast_seeds = sc.broadcast(seeds)
 
     labelled_data = load_labelled_data_file(labelled_data_file)
     broadcast_labelled_data = sc.broadcast(labelled_data)
-
-
-
 
 
     def map_load_data(data):
@@ -115,9 +116,9 @@ def run(sc, input_file, output_dir, seed_file, labelled_data_file, files_dir):
         for k, v in ans.items():
             yield (k, v)
 
-    for file_path in os.listdir(files_dir):
-        if file_path[0] != '.':
-            sc.addFile(os.path.join(files_dir, file_path))
+    # for file_path in os.listdir(files_dir):
+    #     if file_path[0] != '.':
+    #         sc.addFile(os.path.join(files_dir, file_path))
     
 
     # print os.listdir(SparkFiles.getRootDirectory())
@@ -125,17 +126,18 @@ def run(sc, input_file, output_dir, seed_file, labelled_data_file, files_dir):
     # if os.path.isfile(SparkFiles.get(os.path.join('python_files.zip', 'en', 'lexnames'))):
     #     print 'exist'
     
-    
-    
-    rdd = load_jsonlines(sc, input_file)
 
-
-    rdd = rdd.map(map_load_data).map(map_clean).map(map_vectorize)
+    rdd_original = load_jsonlines(sc, input_file)
+    rdd_content = rdd_original.map(map_load_data)
+    rdd_extraction = rdd_content.map(map_clean)
+    rdd_vector = rdd_extraction.map(map_vectorize)
     
     # rdd = sc.textFile(input_file)
-    rdd = rdd.mapPartitions(map_labelprop)
+    rdd_prediction = rdd_vector.mapPartitions(map_labelprop)
     # ans = rdd.collect()
     
+    rdd = rdd_prediction.join(rdd_content)
+
     rdd.saveAsTextFile(output_dir)
     # save_jsonlines(sc, rdd, output_dir, file_format='sequence', data_type='json')
     
@@ -147,11 +149,11 @@ if __name__ == '__main__':
     arg_parser.add_argument('-o','--output_dir')#, required=True)
     arg_parser.add_argument('-s','--seed_file', required=True)
     arg_parser.add_argument('-l','--labelled_data_file', required=True)
-    arg_parser.add_argument('-f','--files_dir', required=True)
+    # arg_parser.add_argument('-f','--files_dir', required=True)
 
     args = arg_parser.parse_args()
 
     spark_config = SparkConf().setAppName('WEDC')
     sc = SparkContext(conf=spark_config)
 
-    run(sc, args.input_file, args.output_dir, args.seed_file, args.labelled_data_file, args.files_dir)
+    run(sc, args.input_file, args.output_dir, args.seed_file, args.labelled_data_file)

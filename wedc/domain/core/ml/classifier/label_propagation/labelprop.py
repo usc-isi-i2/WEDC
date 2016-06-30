@@ -17,54 +17,48 @@ def run(data, labelled_data, n_neighbors=10, iter=100, eps=0.00001):
     X = []
     y = []
     pids = []
+    labelled_pids = []
+    ans = {}
     
     # load data
     for i, kv in enumerate(data):
         sid, vector = kv
-        mapping[pid] = sid
-        pids.append(pid)
-        X.append(vector)
-        y.append(0)
-        # dataset.append([pid, vector, 0])
-        pid = pid + 1
-        if pid == 10:
-            break
+        vector = [float(_) for _ in vector.split()]
+        if max(vector) == 0:
+            ans[sid] = [1, 1]
+        else:
+            mapping[pid] = sid
+            pids.append(pid)
+            X.append(vector)
+            y.append(0)
+            pid = pid + 1
 
     # load labelled data
     for item in labelled_data: 
         vector = item[0]
         label = item[1]
-        pids.append(pid)
-        X.append(vector)
-        y.append(label)
-        # dataset.append([pid, vector, label])
-        pid = pid + 1
-
-    X = [[float(v) for v in _.split()] for _ in X] # in order, asc
+        vector = [float(_) for _ in vector.split()]
+        if max(vector) == 0:
+            ans[sid] = [1, 1]
+        else:
+            pids.append(pid)
+            labelled_pids.append(pid)
+            X.append(vector)
+            y.append(label)
+            pid = pid + 1
     
     graph_input = [[pids[_], X[_], y[_]] for _ in range(len(pids))]
 
-    # build knn graph
     graph = KNNGraph().build(graph_input, n_neighbors=n_neighbors)
-    # graph = knn.build(graph_input, output=graph_path_, n_neighbors=n_neighbors)
-    
-    # rtn_lp = run_lp(graph_path_, output=labelprop_path_, iter=max_iter, eps=tol)
 
     labelprop = LabelProp()
     labelprop.load_data_from_mem(graph)
     rtn_lp = labelprop.run(eps, iter, clean_result=True)
 
-    # # graph
-    # graph_input = [[pids[_], X[_], y[_]] for _ in range(len(pids))]
-    # graph = knn.build(graph_input, n_neighbors=n_neighbors)
 
-    # # lp
-    # lp_data = '\n'.join([str(_) for _ in graph])
-    # rtn_lp = lp.run_by_py4j(lp_data, iter=iter, eps=eps)
+
+    rtn_lp = [_ for _ in rtn_lp if _[0] not in labelled_pids]   # in order, asc
     
-    # return (1, rtn_lp)
-
-    ans = {}
     for preds in rtn_lp:
         pid = int(preds[0])
         if pid not in mapping:
@@ -148,6 +142,7 @@ def do_evaluation(output_path, num_of_tests=1, test_rate=.9, n_neighbors=10, max
         y = [_[1] for _ in dataset]    # in order, asc
         for _ in testing_pid_set:
             y[pid_set.index(_)] = 0
+
 
         # item[0]: post id
         # item[1]: vector in numpy

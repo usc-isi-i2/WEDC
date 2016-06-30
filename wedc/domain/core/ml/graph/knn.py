@@ -89,6 +89,7 @@ class KNNGraph():
 
         post_weight_sum_dict = {}
         for i in range(size):
+
             post_id = pid_set[i]
             graph_item = [post_id, y[i]]
             knn_pairs = self.calc_distance(X[i], X, n_neighbors=n_neighbors)
